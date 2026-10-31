@@ -32,21 +32,39 @@ body.dark-mode footer {
 
 .theme-toggle-btn {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     right: 20px;
-    background: var(--primary);
-    color: white;
+    background: #cbd5e1;
     border: none;
     width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    height: 26px;
+    border-radius: 13px;
     cursor: pointer;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: relative;
+    transition: background 0.3s;
     z-index: 1000;
+}
+
+.theme-toggle-btn::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+body.dark-mode .theme-toggle-btn {
+    background: var(--primary);
+}
+
+body.dark-mode .theme-toggle-btn::after {
+    transform: translateX(24px);
+}
+
 }
 
 }
