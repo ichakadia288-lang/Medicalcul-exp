@@ -139,6 +139,23 @@ body.dark-mode footer {
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
+<button class="theme-toggle-btn" onclick="toggleDarkMode()">Mode Sombre / Clair</button>
+
+<script>
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    // Sauvegarde la préférence de l'utilisateur
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+}
+
+// Recharge la préférence au démarrage
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+});
+</script>
 
 <div class="container">
     <header>
