@@ -299,6 +299,16 @@ window.addEventListener('DOMContentLoaded', () => {
         resDiv.innerHTML = `Clairance : ${clairance.toFixed(2)} mL/min`;
     }
 <script>
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    if (menu.style.right === '0px') {
+        menu.style.right = '-250px';
+    } else {
+        menu.style.right = '0px';
+    }
+}
+
+
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
