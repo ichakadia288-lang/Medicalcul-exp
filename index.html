@@ -165,12 +165,15 @@ body.dark-mode .theme-toggle-btn::after {
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <!-- Barre de menu supérieure -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--bg); border-bottom: 1px solid #cbd5e1;">
-        <h3 style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
-        <!-- Bouton menu hamburger -->
-        <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);">☰</button>
-    </header>
+    function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    if (menu.style.right === '0px') {
+        menu.style.right = '-250px';
+    } else {
+        menu.style.right = '0px';
+    }
+}
+
 
     <!-- Panneau du menu latéral (caché par défaut) -->
     <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid #cbd5e1;">
