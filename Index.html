@@ -1,1 +1,211 @@
-App.jsx [generated with web_code_canvas tool]
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCalcul Express</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        button:active {
+            background-color: var(--primary-dark);
+        }
+
+        .result {
+            margin-top: 12px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>MediCalcul Express</h1>
+        <p>Outils de calculs médicaux rapides</p>
+    </header>
+
+    <!-- Calculateur IMC -->
+    <div class="card">
+        <h2>Calcul de l'IMC (Indice de Masse Corporelle)</h2>
+        <div class="form-group">
+            <label for=" poids">Poids (kg)</label>
+            <input type="number" id="poids" placeholder="Ex: 70" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="taille">Taille (cm)</label>
+            <input type="number" id="taille" placeholder="Ex: 175" step="1">
+        </div>
+        <button onclick="calculerIMC()">Calculer l'IMC</button>
+        <div id="resultat-imc" class="result">Résultat : --</div>
+    </div>
+
+    <!-- Calculateur Clairance de la Créatinine (Cockcroft & Gault) -->
+    <div class="card">
+        <h2>Clairance de la Créatinine (Cockcroft & Gault)</h2>
+        <div class="form-group">
+            <label for="creat-age">Âge (années)</label>
+            <input type="number" id="creat-age" placeholder="Ex: 50">
+        </div>
+        <div class="form-group">
+            <label for="creat-poids">Poids (kg)</label>
+            <input type="number" id="creat-poids" placeholder="Ex: 70" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="creat-taux">Créatininémie (µmol/L)</label>
+            <input type="number" id="creat-taux" placeholder="Ex: 90" step="1">
+        </div>
+        <div class="form-group">
+            <label for="creat-sexe">Sexe</label>
+            <select id="creat-sexe">
+                <option value="homme">Homme</option>
+                <option value="femme">Femme</option>
+            </select>
+        </div>
+        <button onclick="calculerCockcroft()">Calculer la Clairance</button>
+        <div id="resultat-creat" class="result">Résultat : --</div>
+    </div>
+</div>
+
+<script>
+    function calculerIMC() {
+        const poids = parseFloat(document.getElementById('poids').value);
+        const tailleCm = parseFloat(document.getElementById('taille').value);
+        const resDiv = document.getElementById('resultat-imc');
+
+        if (!poids || !tailleCm || poids <= 0 || tailleCm <= 0) {
+            resDiv.innerHTML = "Veuillez entrer des valeurs valides.";
+            return;
+        }
+
+        const tailleM = tailleCm / 100;
+        const imc = poids / (tailleM * tailleM);
+        let interpretation = "";
+
+        if (imc < 18.5) interpretation = "Insuffisance pondérale (maigreur)";
+        else if (imc < 25) interpretation = "Corpulence normale";
+        else if (imc < 30) interpretation = "Surpoids";
+        else interpretation = "Obésité";
+
+        resDiv.innerHTML = `IMC : ${imc.toFixed(2)} kg/m² (${interpretation})`;
+    }
+
+    function calculerCockcroft() {
+        const age = parseFloat(document.getElementById('creat-age').value);
+        const poids = parseFloat(document.getElementById('creat-poids').value);
+        const creat = parseFloat(document.getElementById('creat-taux').value);
+        const sexe = document.getElementById('creat-sexe').value;
+        const resDiv = document.getElementById('resultat-creat');
+
+        if (!age || !poids || !creat || age <= 0 || poids <= 0 || creat <= 0) {
+            resDiv.innerHTML = "Veuillez entrer des valeurs valides.";
+            return;
+        }
+
+        // Formule de Cockcroft et Gault
+        // Clairance = [(140 - âge) x poids] / (0.814 x créatininémie en µmol/L)
+        // Multiplié par 0.85 si c'est une femme
+        let clairance = ((140 - age) * poids) / (0.814 * creat);
+        if (sexe === 'femme') {
+            clairance *= 0.85;
+        }
+
+        resDiv.innerHTML = `Clairance : ${clairance.toFixed(2)} mL/min`;
+    }
+</script>
+
+</body>
+</html>
+
