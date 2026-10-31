@@ -29,18 +29,26 @@ body.dark-mode footer {
     border-color: #334155;
 }
 
-/* Style du bouton de bascule */
+
 .theme-toggle-btn {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     background: var(--primary);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
 }
 
         body {
