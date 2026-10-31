@@ -249,6 +249,17 @@ window.addEventListener('DOMContentLoaded', () => {
         resDiv.innerHTML = `Clairance : ${clairance.toFixed(2)} mL/min`;
     }
 </script>
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+});
 
 </body>
 </html>
