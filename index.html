@@ -165,7 +165,27 @@ body.dark-mode .theme-toggle-btn::after {
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
+    <!-- Barre de menu supérieure -->
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--bg); border-bottom: 1px solid #cbd5e1;">
+        <h3 style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
+        <!-- Bouton menu hamburger -->
+        <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);">☰</button>
+    </header>
+
+    <!-- Panneau du menu latéral (caché par défaut) -->
+    <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid #cbd5e1;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h4 style="margin: 0;">Paramètres</h4>
+            <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
+        </div>
+        
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span>Mode Sombre</span>
+            <!-- Ton interrupteur moderne -->
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
+        </div>
+    </div>
+
 
 
 <script>
