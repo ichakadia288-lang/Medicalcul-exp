@@ -121,7 +121,7 @@
     <div class="card">
         <h2>Calcul de l'IMC (Indice de Masse Corporelle)</h2>
         <div class="form-group">
-            <label for=" poids">Poids (kg)</label>
+            <label for="poids">Poids (kg)</label>
             <input type="number" id="poids" placeholder="Ex: 70" step="0.1">
         </div>
         <div class="form-group">
@@ -195,8 +195,6 @@
         }
 
         // Formule de Cockcroft et Gault
-        // Clairance = [(140 - âge) x poids] / (0.814 x créatininémie en µmol/L)
-        // Multiplié par 0.85 si c'est une femme
         let clairance = ((140 - age) * poids) / (0.814 * creat);
         if (sexe === 'femme') {
             clairance *= 0.85;
@@ -208,4 +206,3 @@
 
 </body>
 </html>
-
