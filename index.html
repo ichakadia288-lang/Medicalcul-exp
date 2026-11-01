@@ -127,8 +127,12 @@
 <body>
 
     <!-- Barre de menu supérieure -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
-        <h3 style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
+        <!-- Bloc gauche : Logo miniature + Titre décalé à droite[span_1](start_span)[span_1](end_span) -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="logo.png" alt="Logo" style="height: 35px; width: auto; object-fit: contain; display: block;">
+            <h3 id="appTitleHeader" style="margin: 0; font-size: 19px; line-height: 1;">MediCalcul Express</h3>
+        </div>
         
         <!-- Bloc droit : Sélecteur de langue + Bouton menu -->
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -344,9 +348,25 @@
         <div id="resultatTemps" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
     </div>
 
+    <!-- Pied de page -->
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
+      <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
+      <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
+    </footer>
+
+    <!-- Fenêtre modale légale -->
+    <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+      <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
+        <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
+        <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
+        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
+        <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
+        <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
+      </div>
+    </div>
+
     <!-- Scripts JavaScript -->
     <script>
-        // Dictionnaire de traduction FR / EN
         const traductions = {
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", calTitle: "Calendrier & Date",
@@ -362,7 +382,26 @@
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
                 tempTitle: "Conversion de Température",
                 tempsTitle: "Conversion de Temps", tempsVal: "Valeur", optHMin: "Heures vers Minutes", optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes",
-                footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité"
+                footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité",
+                quizTitle: "Quiz : Quantité des Éléments", btnTrue: "VRAI", btnFalse: "FAUX",
+                qWater: "Le corps humain contient environ 60% d'eau.",
+                qHeart: "Le cœur bat en moyenne 100 000 fois par jour.",
+                qFemur: "L'os le plus long du corps humain est le péroné.",
+                qLiver: "Le foie est le plus grand organe interne du corps.",
+                qVeins: "Le sang rouge oxygéné circule dans les veines.",
+                qTeeth: "Un adulte possède normalement 32 dents.",
+                qAcid: "L'estomac produit de l'acide chlorhydrique.",
+                qRBC: "Les globules rouges contiennent de l'hémoglobine.",
+                qBrain: "Le cerveau humain pèse environ 5 kg.",
+                qKidneys: "Les reins filtrent le sang pour produire l'urine.",
+                qMuscles: "Le corps humain compte plus de 600 muscles.",
+                qSkin: "L'épiderme est la couche la plus profonde de la peau.",
+                qSun: "La vitamine D est principalement synthétisée grâce au soleil.",
+                qPancreas: "Le pancréas sécrète de l'insuline.",
+                qLungs: "Les poumons possèdent exactement le même volume d'air.",
+                goodRes: "✓ Bonne réponse !", badRes: "✕ Mauvaise réponse.",
+                scoreAct: "Score actuel : ", quizEnd: "🎉 Quiz terminé pour aujourd'hui !",
+                finalScore: "Score final : ", quizMax: " / 15", retryText: "Revenez demain pour de nouvelles questions !"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", calTitle: "Calendar & Date",
@@ -378,14 +417,35 @@
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
                 tempTitle: "Temperature Conversion",
                 tempsTitle: "Time Conversion", tempsVal: "Value", optHMin: "Hours to Minutes", optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes",
-                footerText: "© 2026 MediCalcul Express — All rights reserved", legalText: "Legal Notice & Privacy"
+                footerText: "© 2026 MediCalcul Express — All rights reserved", legalText: "Legal Notices & Privacy",
+                quizTitle: "Quiz: Quantity of Elements", btnTrue: "TRUE", btnFalse: "FALSE",
+                qWater: "The human body is about 60% water.",
+                qHeart: "The heart beats an average of 100,000 times a day.",
+                qFemur: "The fibula is the longest bone in the human body.",
+                qLiver: "The liver is the body's largest internal organ.",
+                qVeins: "Oxygenated red blood flows through the veins.",
+                qTeeth: "An adult normally has 32 teeth.",
+                qAcid: "The stomach produces hydrochloric acid.",
+                qRBC: "Red blood cells contain hemoglobin.",
+                qBrain: "The human brain weighs about 5 kg.",
+                qKidneys: "The kidneys filter blood to produce urine.",
+                qMuscles: "The human body has more than 600 muscles.",
+                qSkin: "The epidermis is the deepest layer of the skin.",
+                qSun: "Vitamin D is mainly synthesized thanks to the sun.",
+                qPancreas: "The pancreas secretes insulin.",
+                qLungs: "Both lungs have exactly the same air volume.",
+                goodRes: "✓ Correct answer!", badRes: "✕ Wrong answer.",
+                scoreAct: "Current score: ", quizEnd: "🎉 Quiz over for today!",
+                finalScore: "Final score: ", quizMax: " / 15", retryText: "Come back tomorrow for new questions!"
             }
         };
+
+        let questionsData = [];
 
         function changerLangue() {
             const lang = document.getElementById('langSelect').value;
             const t = traductions[lang];
-
+            
             document.getElementById('txtParam').innerText = t.param;
             document.getElementById('txtDarkMode').innerText = t.darkMode;
             document.getElementById('txtCalTitle').innerText = t.calTitle;
@@ -432,162 +492,24 @@
             document.getElementById('optHMin').innerText = t.optHMin;
             document.getElementById('optMinSec').innerText = t.optMinSec;
             document.getElementById('optSecMin').innerText = t.optSecMin;
-            document.getElementById('footerCopy').innerText = t.footerText;
+            document.getElementById('footerCopyright').innerText = t.footerText;
             document.getElementById('footerLegal').innerText = t.legalText;
+            
+            document.getElementById('quizTitle').innerText = t.quizTitle;
+            document.getElementById('btnTrue').innerText = t.btnTrue;
+            document.getElementById('btnFalse').innerText = t.btnFalse;
 
-            localStorage.setItem('lang', lang);
-        }
-
-        // --- BANQUE DE 15 QUESTIONS QUOTIDIENNES VRAI / FAUX ---
-        const questionsQuiz = {
-            fr: [
-                { q: "L'eau représente environ 60% du poids corporel chez un adulte sain.", rep: true },
-                { q: "La natrémie normale se situe généralement entre 135 et 145 mmol/L.", rep: true },
-                { q: "Le potassium (K+) est principalement un ion intracellulaire.", rep: false },
-                { q: "Une clairance de la créatinine à 120 mL/min témoigne d'une insuffisance rénale sévère.", rep: false },
-                { q: "Le corps humain contient plus de calcium dans les os que dans le sang.", rep: true },
-                { q: "Le pH sanguin normal se situe strictement entre 7,35 et 7,45.", rep: true },
-                { q: "La volémie totale chez l'adulte est d'environ 10 à 12 litres.", rep: false },
-                { q: "Le sodium (Na+) est le principal cation du secteur extracellulaire.", rep: true },
-                { q: "Une glycémie à jeun supérieure à 7,0 mmol/L évoque un diabète.", rep: true },
-                { q: "Le bicarbonate (HCO3-) joue un rôle clé dans la régulation du pH sanguin.", rep: true },
-                { q: "La température corporelle normale mesurée au tympan est de l'ordre de 35°C.", rep: false },
-                { q: "Le magnésium est un oligo-élément principalement intracellulaire.", rep: true },
-                { q: "La posologie des médicaments chez l'enfant se calcule généralement en fonction de sa taille.", rep: false },
-                { q: "Une hyperkaliémie grave peut entraîner des troubles du rythme cardiaque menaçant le pronostic vital.", rep: true },
-                { q: "Le volume globulaire normal représente environ 80% du volume sanguin total.", rep: false }
-            ],
-            en: [
-                { q: "Water accounts for about 60% of body weight in a healthy adult.", rep: true },
-                { q: "Normal natremia is generally between 135 and 145 mmol/L.", rep: true },
-                { q: "Potassium (K+) is primarily an extracellular ion.", rep: false },
-                { q: "A creatinine clearance of 120 mL/min indicates severe renal failure.", rep: false },
-                { q: "The human body contains more calcium in the bones than in the blood.", rep: true },
-                { q: "Normal blood pH strictly ranges between 7.35 and 7.45.", rep: true },
-                { q: "Total blood volume in adults is approximately 10 to 12 liters.", rep: false },
-                { q: "Sodium (Na+) is the main cation of the extracellular compartment.", rep: true },
-                { q: "Fasting blood glucose above 7.0 mmol/L suggests diabetes.", rep: true },
-                { q: "Bicarbonate (HCO3-) plays a key role in blood pH regulation.", rep: true },
-                { q: "Normal body temperature measured at the tympanic membrane is around 35°C.", rep: false },
-                { q: "Magnesium is a predominantly intracellular mineral.", rep: true },
-                { q: "Pediatric drug dosage is generally calculated based on the child's height.", rep: false },
-                { q: "Severe hyperkalemia can cause life-threatening cardiac arrhythmias.", rep: true },
-                { q: "Normal red blood cell volume accounts for about 80% of total blood volume.", rep: false }
-            ]
-        };
-
-        function getSelectedDateString() {
-            const calInput = document.getElementById('appCalendar');
-            if (calInput && calInput.value) {
-                return calInput.value;
-            }
-            const d = new Date();
-            return d.toISOString().split('T')[0];
-        }
-
-        function verifierEtMettreAJourQuotaJour() {
-            const selectedDate = getSelectedDateString();
-            let lastDate = localStorage.getItem('quizLastDate');
-            let answeredCount = parseInt(localStorage.getItem('quizCountToday') || '0', 10);
-
-            if (lastDate !== selectedDate) {
-                localStorage.setItem('quizLastDate', selectedDate);
-                localStorage.setItem('quizCountToday', '0');
-                answeredCount = 0;
-            }
-            return answeredCount;
-        }
-
-        function changerDateCalendrier() {
-            // Réinitialise ou charge le quota associé à la date sélectionnée
-            verifierEtMettreAJourQuotaJour();
-        }
-
-        let scoreSessionQuiz = 0;
-
-        function ouvrirQuiz() {
-            document.getElementById('quizModal').style.display = 'flex';
-            scoreSessionQuiz = 0;
-            chargerQuestionQuiz();
-        }
-
-        function fermerQuiz() {
-            document.getElementById('quizModal').style.display = 'none';
-        }
-
-        function chargerQuestionQuiz() {
-            const lang = document.getElementById('langSelect').value;
-            const listeQ = questionsQuiz[lang];
-            const qEl = document.getElementById('quizQuestion');
-            const feedbackEl = document.getElementById('quizFeedback');
-            const scoreEl = document.getElementById('quizScore');
-            const buttonsDiv = document.getElementById('quizButtons');
-
-            feedbackEl.innerText = "";
-            let answeredToday = verifierEtMettreAJourQuotaJour();
-
-            if (answeredToday >= 15) {
-                qEl.innerText = lang === 'en' 
-                    ? "The quiz for this date is finished! You have already answered the 15 questions. Please select another date or wait."
-                    : "Le quiz de cette date est terminé ! Vous avez déjà répondu aux 15 questions. Veuillez sélectionner une autre date ou patienter.";
-                buttonsDiv.style.display = 'none';
-                scoreEl.innerText = "";
-            } else {
-                buttonsDiv.style.display = 'flex';
-                let qIndex = answeredToday % listeQ.length;
-                qEl.innerText = `Question ${answeredToday + 1} / 15 : ${listeQ[qIndex].q}`;
-                scoreEl.innerText = lang === 'en' ? `Answered for this date: ${answeredToday}/15` : `Répondues pour cette date : ${answeredToday}/15`;
-                document.getElementById('btnTrue').style.display = 'block';
-                document.getElementById('btnFalse').style.display = 'block';
+            questionsData = [
+                { q: t.qWater, r: true }, { q: t.qHeart, r: true }, { q: t.qFemur, r: false }, { q: t.qLiver, r: true }, { q: t.qVeins, r: false },
+                { q: t.qTeeth, r: true }, { q: t.qAcid, r: true }, { q: t.qRBC, r: true }, { q: t.qBrain, r: false }, { q: t.qKidneys, r: true },
+                { q: t.qMuscles, r: true }, { q: t.qSkin, r: false }, { q: t.qSun, r: true }, { q: t.qPancreas, r: true }, { q: t.qLungs, r: false }
+            ];
+            
+            if(document.getElementById('quizModal').style.display === 'flex') {
+                afficherQuestionQuiz(); 
             }
         }
 
-        function repondreQuiz(choixUser) {
-            const lang = document.getElementById('langSelect').value;
-            const listeQ = questionsQuiz[lang];
-            let answeredToday = verifierEtMettreAJourQuotaJour();
-            if (answeredToday >= 15) return;
-
-            let qIndex = answeredToday % listeQ.length;
-            const bonneReponse = listeQ[qIndex].rep;
-            const feedbackEl = document.getElementById('quizFeedback');
-
-            if (choixUser === bonneReponse) {
-                feedbackEl.innerHTML = lang === 'en' ? '<span class="status-good">Correct! Good evaluation.</span>' : '<span class="status-good">Correct ! C’est une bonne évaluation.</span>';
-                scoreSessionQuiz++;
-            } else {
-                feedbackEl.innerHTML = lang === 'en' ? '<span class="status-bad">Incorrect. Bad evaluation.</span>' : '<span class="status-bad">Incorrect. Mauvais résultat.</span>';
-            }
-
-            answeredToday++;
-            localStorage.setItem('quizCountToday', answeredToday);
-
-            setTimeout(() => {
-                chargerQuestionQuiz();
-            }, 1500);
-        }
-        // --- FIN DU QUIZ ---
-
-        // Restauration de la date, langue et mode au chargement
-        window.addEventListener('DOMContentLoaded', () => {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const calInput = document.getElementById('appCalendar');
-            if (calInput) {
-                calInput.value = todayStr;
-            }
-            localStorage.setItem('quizLastDate', todayStr);
-
-            const savedLang = localStorage.getItem('lang');
-            if (savedLang) {
-                document.getElementById('langSelect').value = savedLang;
-                changerLangue();
-            }
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-        });
-
-        // Fonction pour ouvrir/fermer le menu latéral
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             if (menu.style.right === '0px') {
@@ -597,7 +519,66 @@
             }
         }
 
-        // Fonction de calcul de l'IMC avec évaluation
+        function changerDateCalendrier() {
+            const dateVal = document.getElementById('appCalendar').value;
+            if(dateVal) {
+                console.log("Date sélectionnée :", dateVal);
+            }
+        }
+
+        let currentQuizIndex = 0;
+        let scoreQuiz = 0;
+
+        function ouvrirQuiz() {
+            document.getElementById('quizModal').style.display = 'flex';
+            currentQuizIndex = 0;
+            scoreQuiz = 0;
+            if(questionsData.length === 0) changerLangue();
+            afficherQuestionQuiz();
+        }
+
+        function fermerQuiz() {
+            document.getElementById('quizModal').style.display = 'none';
+        }
+
+        function afficherQuestionQuiz() {
+            const lang = document.getElementById('langSelect').value;
+            const t = traductions[lang];
+            
+            if (currentQuizIndex < questionsData.length) {
+                document.getElementById('quizQuestion').innerText = `Q${currentQuizIndex + 1}/15 : ${questionsData[currentQuizIndex].q}`;
+                document.getElementById('quizFeedback').innerText = "";
+                document.getElementById('quizScore').innerText = `${t.scoreAct}${scoreQuiz}${t.quizMax}`;
+                document.getElementById('quizButtons').style.display = 'flex';
+            } else {
+                document.getElementById('quizQuestion').innerText = t.quizEnd;
+                document.getElementById('quizButtons').style.display = 'none';
+                document.getElementById('quizFeedback').innerText = `${t.finalScore}${scoreQuiz}${t.quizMax}`;
+                document.getElementById('quizFeedback').className = "status-good";
+                document.getElementById('quizScore').innerText = t.retryText;
+            }
+        }
+
+        function repondreQuiz(reponseUtilisateur) {
+            const bonneReponse = questionsData[currentQuizIndex].r;
+            const feedbackDiv = document.getElementById('quizFeedback');
+            const lang = document.getElementById('langSelect').value;
+            const t = traductions[lang];
+            
+            if (reponseUtilisateur === bonneReponse) {
+                scoreQuiz++;
+                feedbackDiv.innerText = t.goodRes;
+                feedbackDiv.className = "status-good";
+            } else {
+                feedbackDiv.innerText = t.badRes;
+                feedbackDiv.className = "status-bad";
+            }
+            
+            currentQuizIndex++;
+            document.getElementById('quizButtons').style.display = 'none';
+            setTimeout(afficherQuestionQuiz, 1200);
+        }
+
         function calculerIMC() {
             const poids = parseFloat(document.getElementById('poids').value);
             const tailleCm = parseFloat(document.getElementById('taille').value);
@@ -606,26 +587,25 @@
             const lang = document.getElementById('langSelect').value;
             
             if (isNaN(poids) || isNaN(tailleCm) || tailleCm <= 0) {
-                resultatDiv.innerText = lang === 'en' ? "Result: Please enter valid values." : "Résultat : Veuillez entrer des valeurs valides.";
+                resultatDiv.innerText = lang === 'fr' ? "Résultat : Entrez des valeurs valides." : "Result: Enter valid values.";
                 interpDiv.innerText = "";
                 return;
             }
             const tailleM = tailleCm / 100;
             const imc = poids / (tailleM * tailleM);
-            resultatDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + imc.toFixed(2);
+            resultatDiv.innerText = `Résultat : ${imc.toFixed(2)}`;
 
             if (imc < 18.5) {
-                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-warn">Underweight</span>' : 'Évaluation : <span class="status-warn">Insuffisance pondérale (Maigreur)</span>');
-            } else if (imc >= 18.5 && imc < 25) {
-                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-good">Normal weight (Good)</span>' : 'Évaluation : <span class="status-good">Corpulence normale (Bon résultat)</span>');
-            } else if (imc >= 25 && imc < 30) {
-                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-warn">Overweight</span>' : 'Évaluation : <span class="status-warn">Surpoids</span>');
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Insuffisance pondérale</span>' : 'Evaluation: <span class="status-warn">Underweight</span>';
+            } else if (imc < 25) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Corpulence normale</span>' : 'Evaluation: <span class="status-good">Normal weight</span>';
+            } else if (imc < 30) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Surpoids</span>' : 'Evaluation: <span class="status-warn">Overweight</span>';
             } else {
-                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-bad">Obesity (High risk / Bad)</span>' : 'Évaluation : <span class="status-bad">Obésité (Mauvais / Risque élevé)</span>');
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Obésité</span>' : 'Evaluation: <span class="status-bad">Obesity</span>';
             }
         }
 
-        // --- MODULE URGENCES & RÉANIMATION ---
         function calculerCockcroft() {
             const poids = parseFloat(document.getElementById('crPoids').value);
             const age = parseFloat(document.getElementById('crAge').value);
@@ -636,27 +616,25 @@
             const lang = document.getElementById('langSelect').value;
 
             if (isNaN(poids) || isNaN(age) || isNaN(creat) || creat <= 0) {
-                resDiv.innerText = lang === 'en' ? "Clearance: Please fill in all fields correctly." : "Clairance : Veuillez remplir tous les champs correctement.";
+                resDiv.innerText = lang === 'fr' ? "Clairance : Entrez des valeurs valides." : "Clearance: Enter valid values.";
                 interpDiv.innerText = "";
                 return;
             }
 
             let clairance = ((140 - age) * poids) / (0.815 * creat);
-            if (sexe === 'femme') {
-                clairance *= 0.85;
-            }
-            resDiv.innerText = (lang === 'en' ? "Estimated clearance: " : "Clairance estimée : ") + clairance.toFixed(2) + " mL/min";
+            if (sexe === 'femme') clairance *= 0.85;
+            resDiv.innerText = `Clairance estimée : ${clairance.toFixed(2)} mL/min`;
 
             if (clairance >= 90) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-good">Normal renal function (Good)</span>' : 'Évaluation : <span class="status-good">Fonction rénale normale (Bon)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Normale</span>' : 'Evaluation: <span class="status-good">Normal</span>';
             } else if (clairance >= 60) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-warn">Mild renal impairment</span>' : 'Évaluation : <span class="status-warn">Insuffisance rénale légère</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Légère</span>' : 'Evaluation: <span class="status-warn">Mild</span>';
             } else if (clairance >= 30) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-warn">Moderate renal impairment</span>' : 'Évaluation : <span class="status-warn">Insuffisance rénale modérée</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Modérée</span>' : 'Evaluation: <span class="status-warn">Moderate</span>';
             } else if (clairance >= 15) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Severe renal impairment (Bad)</span>' : 'Évaluation : <span class="status-bad">Insuffisance rénale sévère (Mauvais)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Sévère</span>' : 'Evaluation: <span class="status-bad">Severe</span>';
             } else {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">End-stage renal disease / Dialysis (Critical)</span>' : 'Évaluation : <span class="status-bad">Insuffisance rénale terminale / Dialyse (Critique)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Terminale</span>' : 'Evaluation: <span class="status-bad">End-stage</span>';
             }
         }
 
@@ -667,12 +645,10 @@
             const lang = document.getElementById('langSelect').value;
 
             if (isNaN(poids) || isNaN(doseKg)) {
-                resDiv.innerText = lang === 'en' ? "Total dose: Please enter valid values." : "Dose totale : Veuillez entrer des valeurs valides.";
+                resDiv.innerText = lang === 'fr' ? "Dose totale : Entrez des valeurs valides." : "Total dose: Enter valid values.";
                 return;
             }
-
-            const doseTotale = poids * doseKg;
-            resDiv.innerText = (lang === 'en' ? "Total dose per intake: " : "Dose totale par prise : ") + doseTotale.toFixed(2) + " mg (" + (lang === 'en' ? "Check maximum dosage" : "Vérifier la posologie maximale") + ")";
+            resDiv.innerText = `Dose totale : ${(poids * doseKg).toFixed(2)} mg`;
         }
 
         function calculerDeficitEau() {
@@ -683,20 +659,20 @@
             const lang = document.getElementById('langSelect').value;
 
             if (isNaN(poids) || isNaN(na)) {
-                resDiv.innerText = lang === 'en' ? "Estimated deficit: Please enter valid values." : "Déficit estimé : Veuillez entrer des valeurs valides.";
+                resDiv.innerText = lang === 'fr' ? "Déficit estimé : Entrez des valeurs valides." : "Estimated deficit: Enter valid values.";
                 interpDiv.innerText = "";
                 return;
             }
 
             const deficit = 0.6 * poids * ((na / 140) - 1);
-            resDiv.innerText = (lang === 'en' ? "Estimated free water deficit: " : "Déficit en eau libre estimé : ") + deficit.toFixed(2) + " Liters";
+            resDiv.innerText = `Déficit : ${deficit.toFixed(2)} Litres`;
 
             if (na > 145) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Confirmed hypernatremia (Bad / Neurological risk)</span>' : 'Évaluation : <span class="status-bad">Hypernatrémie avérée (Mauvais / Risque neurologique)</span>';
-            } else if (na >= 135 && na <= 145) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-good">Normal natremia</span>' : 'Évaluation : <span class="status-good">Natrémie normale</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Hypernatrémie</span>' : 'Evaluation: <span class="status-bad">Hypernatremia</span>';
+            } else if (na >= 135) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Normale</span>' : 'Evaluation: <span class="status-good">Normal</span>';
             } else {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-warn">Hyponatremia</span>' : 'Évaluation : <span class="status-warn">Hyponatrémie (Ne correspond pas à un déficit en eau libre pur)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Hyponatrémie</span>' : 'Evaluation: <span class="status-warn">Hyponatremia</span>';
             }
         }
 
@@ -708,78 +684,46 @@
             const lang = document.getElementById('langSelect').value;
 
             if (isNaN(na) || isNaN(gly)) {
-                resDiv.innerText = lang === 'en' ? "Corrected Na+: Please enter valid values." : "Na+ corrigée : Veuillez entrer des valeurs valides.";
+                resDiv.innerText = lang === 'fr' ? "Na+ corrigée : Entrez des valeurs valides." : "Corrected Na+: Enter valid values.";
                 interpDiv.innerText = "";
                 return;
             }
 
             const naCorr = na + 0.3 * (gly - 5.5);
-            resDiv.innerText = (lang === 'en' ? "Corrected natremia: " : "Natrémie corrigée : ") + naCorr.toFixed(2) + " mmol/L";
+            resDiv.innerText = `Na+ corrigée : ${naCorr.toFixed(2)} mmol/L`;
 
             if (naCorr >= 135 && naCorr <= 145) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-good">Normal corrected natremia (Good)</span>' : 'Évaluation : <span class="status-good">Natrémie corrigée normale (Bon)</span>';
-            } else if (naCorr < 135) {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Corrected hyponatremia (Bad)</span>' : 'Évaluation : <span class="status-bad">Hyponatrémie corrigée (Mauvais / Attention aux mouvements d’eau)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Normale</span>' : 'Evaluation: <span class="status-good">Normal</span>';
             } else {
-                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Corrected hypernatremia (Bad)</span>' : 'Évaluation : <span class="status-bad">Hypernatrémie corrigée (Mauvais / Risque de déshydratation intracellulaire)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Anormale</span>' : 'Evaluation: <span class="status-bad">Abnormal</span>';
             }
         }
 
-        // Conversions diverses
         function convertMasse() {
             const val = parseFloat(document.getElementById('masseVal').value);
             const unit = document.getElementById('masseUnit').value;
             const resDiv = document.getElementById('resultatMasse');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(val)) {
-                resDiv.innerText = lang === 'en' ? "Result: --" : "Résultat : --";
-                return;
-            }
-
-            if (unit === 'mg') {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 1000) + " µg";
-            } else {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val / 1000) + " mg";
-            }
+            if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
+            resDiv.innerText = unit === 'mg' ? `Résultat : ${(val * 1000).toFixed(0)} µg` : `Résultat : ${(val / 1000).toFixed(6)} mg`;
         }
 
         function convertVolume() {
             const val = parseFloat(document.getElementById('volVal').value);
             const unit = document.getElementById('volUnit').value;
             const resDiv = document.getElementById('resultatVolume');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(val)) {
-                resDiv.innerText = lang === 'en' ? "Result: --" : "Résultat : --";
-                return;
-            }
-
-            if (unit === 'L_mL') {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 1000) + " mL";
-            } else {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val / 1000) + " L";
-            }
+            if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
+            resDiv.innerText = unit === 'L_mL' ? `Résultat : ${(val * 1000).toFixed(0)} mL` : `Résultat : ${(val / 1000).toFixed(6)} L`;
         }
 
         function convertTemp(unit) {
             const cInput = document.getElementById('tempC');
             const fInput = document.getElementById('tempF');
-            
             if (unit === 'C') {
                 const c = parseFloat(cInput.value);
-                if (!isNaN(c)) {
-                    fInput.value = (c * 9/5 + 32).toFixed(1);
-                } else {
-                    fInput.value = '';
-                }
+                fInput.value = !isNaN(c) ? (c * 9/5 + 32).toFixed(1) : '';
             } else {
                 const f = parseFloat(fInput.value);
-                if (!isNaN(f)) {
-                    cInput.value = ((f - 32) * 5/9).toFixed(1);
-                } else {
-                    cInput.value = '';
-                }
+                cInput.value = !isNaN(f) ? ((f - 32) * 5/9).toFixed(1) : '';
             }
         }
 
@@ -787,54 +731,26 @@
             const val = parseFloat(document.getElementById('tempsVal').value);
             const unit = document.getElementById('tempsUnit').value;
             const resDiv = document.getElementById('resultatTemps');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(val)) {
-                resDiv.innerText = lang === 'en' ? "Result: --" : "Résultat : --";
-                return;
-            }
-
-            if (unit === 'h_min') {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + " min (" + (val * 3600) + " sec)";
-            } else if (unit === 'min_sec') {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + (lang === 'en' ? " seconds" : " secondes");
-            } else {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val / 60).toFixed(2) + (lang === 'en' ? " minutes" : " minutes");
-            }
+            if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
+            if (unit === 'h_min') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} minutes`;
+            else if (unit === 'min_sec') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} secondes`;
+            else resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
         }
 
-        // Mode Sombre
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         }
 
-        // Modale Mentions Légales
-        function openModal() {
-            document.getElementById('legalModal').style.display = 'flex';
-        }
+        function openModal() { document.getElementById('legalModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('legalModal').style.display = 'none'; }
 
-        function closeModal() {
-            document.getElementById('legalModal').style.display = 'none';
-        }
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appCalendar').value = today;
+            changerLangue();
+        });
     </script>
-
-    <!-- Pied de page -->
-    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
-      <p id="footerCopy">© 2026 MediCalcul Express — Tous droits réservés</p>
-      <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
-    </footer>
-
-    <!-- Fenêtre modale des mentions légales -->
-    <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-      <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: var(--text);">
-        <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
-        <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
-        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
-        <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
-        <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
-      </div>
-    </div>
 </body>
 </html>
