@@ -137,6 +137,32 @@
         <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
     </div>
+        <!-- Convertisseur d'Unités Médicales -->
+    <div class="container">
+        <h3 style="margin-top: 0;">Conversions d'Unités</h3>
+        
+        <!-- Sous-section Masse -->
+        <label for="masseVal">Masse</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
+            <select id="masseUnit" onchange="convertMasse()">
+                <option value="mg">mg vers µg</option>
+                <option value="ug">µg vers mg</option>
+            </select>
+        </div>
+        <div id="resultatMasse" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
+
+        <!-- Sous-section Volume -->
+        <label for="volVal" style="margin-top: 15px; display: block;">Volume</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
+            <select id="volUnit" onchange="convertVolume()">
+                <option value="L_mL">L vers mL</option>
+                <option value="mL_L">mL vers L</option>
+            </select>
+        </div>
+        <div id="resultatVolume" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
+    </div>
     <!-- Convertisseur de Température -->
     <div class="container">
         <h3 style="margin-top: 0;">Conversion de Température</h3>
@@ -179,7 +205,42 @@
                 }
             }
         }
-   }
+          // Conversion de masse (mg <-> µg)
+        function convertMasse() {
+            const val = parseFloat(document.getElementById('masseVal').value);
+            const unit = document.getElementById('masseUnit').value;
+            const resDiv = document.getElementById('resultatMasse');
+
+            if (isNaN(val)) {
+                resDiv.innerText = "Résultat : --";
+                return;
+            }
+
+            if (unit === 'mg') {
+                resDiv.innerText = `Résultat : ${val * 1000} µg`;
+            } else {
+                resDiv.innerText = `Résultat : ${val / 1000} mg`;
+            }
+        }
+
+        // Conversion de volume (L <-> mL)
+        function convertVolume() {
+            const val = parseFloat(document.getElementById('volVal').value);
+            const unit = document.getElementById('volUnit').value;
+            const resDiv = document.getElementById('resultatVolume');
+
+            if (isNaN(val)) {
+                resDiv.innerText = "Résultat : --";
+                return;
+            }
+
+            if (unit === 'L_mL') {
+                resDiv.innerText = `Résultat : ${val * 1000} mL`;
+            } else {
+                resDiv.innerText = `Résultat : ${val / 1000} L`;
+            }
+        }
+ }
     </script>
 
     <script>
