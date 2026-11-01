@@ -10,7 +10,7 @@
     <!-- Importation des polices Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Variables pour les thèmes */
+        /* Variables dynamiques pour les thèmes et le style du texte */
         :root {
             --bg: #f8fafc;
             --text: #1e293b;
@@ -19,6 +19,9 @@
             --border: #cbd5e1;
             --input-bg: #ffffff;
             --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-style: normal;
+            --font-weight: normal;
+            --font-size: 1rem;
         }
 
         body.dark-mode {
@@ -32,6 +35,9 @@
 
         body {
             font-family: var(--font-family);
+            font-style: var(--font-style);
+            font-weight: var(--font-weight);
+            font-size: var(--font-size);
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
@@ -90,6 +96,8 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-family: var(--font-family);
+            font-style: var(--font-style);
+            font-size: inherit;
         }
 
         button.calc-btn {
@@ -102,6 +110,7 @@
             font-weight: bold;
             cursor: pointer;
             font-family: var(--font-family);
+            font-size: inherit;
         }
         
         .badge-urg {
@@ -136,12 +145,12 @@
         <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite -->
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="logo.png" alt="Icône" style="height: 35px; width: auto; object-fit: contain; display: block; border-radius: 6px;">
-            <h3 id="appTitleHeader" style="margin: 0; font-size: 19px; line-height: 1; font-weight: 700;">MediCalcul Express</h3>
+            <h3 id="appTitleHeader" style="margin: 0; font-size: 1.2rem; line-height: 1;">MediCalcul Express</h3>
         </div>
         
         <!-- Bloc droit : Sélecteur de langue + Bouton menu -->
         <div style="display: flex; align-items: center; gap: 12px;">
-            <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 5px 8px; font-size: 13px; width: auto; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
+            <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 5px 8px; font-size: 0.9rem; width: auto; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
                 <option value="fr">FR</option>
                 <option value="en">EN</option>
             </select>
@@ -166,9 +175,9 @@
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
         <!-- Option Choix de la police d'écriture -->
-        <div style="margin-bottom: 20px;">
-            <span id="txtFontTitle" style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">Police d'écriture</span>
-            <select id="fontSelect" onchange="changerPolice()" style="margin: 0; padding: 8px; font-size: 13px; cursor: pointer; width: 100%;">
+        <div style="margin-bottom: 15px;">
+            <span id="txtFontTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;">Police d'écriture</span>
+            <select id="fontSelect" onchange="mettreAJourStyleTexte()" style="margin: 0; padding: 8px; cursor: pointer; width: 100%;">
                 <option value="'Inter', sans-serif">Inter (Moderne)</option>
                 <option value="'Poppins', sans-serif">Poppins (Chaleureuse)</option>
                 <option value="'Roboto', sans-serif">Roboto (Clean)</option>
@@ -176,12 +185,33 @@
             </select>
         </div>
 
+        <!-- Option Style du texte (Gras / Italique) -->
+        <div style="margin-bottom: 15px;">
+            <span id="txtStyleTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;">Style du texte</span>
+            <select id="styleSelect" onchange="mettreAJourStyleTexte()" style="margin: 0; padding: 8px; cursor: pointer; width: 100%;">
+                <option value="normal|normal">Normal</option>
+                <option value="normal|bold">Gras</option>
+                <option value="italic|normal">Italique</option>
+                <option value="italic|bold">Italique & Gras</option>
+            </select>
+        </div>
+
+        <!-- Option Taille du texte -->
+        <div style="margin-bottom: 20px;">
+            <span id="txtSizeTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;">Taille du texte</span>
+            <select id="sizeSelect" onchange="mettreAJourStyleTexte()" style="margin: 0; padding: 8px; cursor: pointer; width: 100%;">
+                <option value="0.85rem">Petite</option>
+                <option value="1rem" selected>Normale</option>
+                <option value="1.15rem">Grande</option>
+            </select>
+        </div>
+
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
         <!-- Calendrier de dates -->
         <div style="margin-bottom: 20px;">
-            <span id="txtCalTitle" style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">Calendrier & Date</span>
-            <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; padding: 8px; font-size: 13px; cursor: pointer;">
+            <span id="txtCalTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 8px;">Calendrier & Date</span>
+            <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; padding: 8px; cursor: pointer;">
         </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
@@ -189,10 +219,10 @@
         <!-- Option Quiz Corps Humain -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 14px;">Quiz : Éléments du Corps</span>
-                <button onclick="ouvrirQuiz()" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;" id="btnOpenQuiz">Lancer</button>
+                <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 0.9rem;">Quiz : Éléments du Corps</span>
+                <button onclick="ouvrirQuiz()" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;" id="btnOpenQuiz">Lancer</button>
             </div>
-            <p style="font-size: 12px; color: var(--border); margin: 0;" id="txtQuizMenuDesc">15 questions par jour (Vrai/Faux)</p>
+            <p style="font-size: 0.8rem; color: var(--border); margin: 0;" id="txtQuizMenuDesc">15 questions par jour (Vrai/Faux)</p>
         </div>
     </div>
 
@@ -205,26 +235,26 @@
             </div>
             
             <div id="quizContent">
-                <p id="quizQuestion" style="font-size: 15px; font-weight: 500; min-height: 50px;"></p>
+                <p id="quizQuestion" style="font-weight: 500; min-height: 50px;"></p>
                 
                 <div id="quizButtons" style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
                     <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
                 </div>
                 
-                <div id="quizFeedback" style="font-size: 14px; margin-bottom: 15px; min-height: 40px; font-weight: bold;"></div>
-                <div id="quizScore" style="font-size: 13px; color: var(--border);"></div>
+                <div id="quizFeedback" style="margin-bottom: 15px; min-height: 40px; font-weight: bold;"></div>
+                <div id="quizScore" style="color: var(--border);"></div>
             </div>
         </div>
     </div>
 
     <!-- Contenu principal -->
     <div class="container">
-        <h2 style="text-align: center; margin-top: 0; font-weight: 700;">MediCalcul Express</h2>
+        <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
         <p style="text-align: center; color: var(--border);" id="txtSubTitle">Outils de calculs et conversions médicales rapides</p>
 
         <!-- Calculatrice IMC -->
-        <h3 id="txtImcTitle" style="font-weight: 600;">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
+        <h3 id="txtImcTitle">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
         <label for="poids" id="txtPoids">Poids (kg)</label>
         <input type="number" id="poids" placeholder="Ex: 70">
 
@@ -233,14 +263,14 @@
 
         <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
-        <div id="interpretationIMC" style="margin-top: 5px; font-size: 14px;"></div>
+        <div id="interpretationIMC" style="margin-top: 5px;"></div>
     </div>
 
     <!-- MODULE URGENCES & RÉANIMATION -->
     <div class="container" style="border-left: 4px solid #ef4444;">
-        <h3 style="margin-top: 0; font-weight: 700;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
+        <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
-        <h4 style="color: var(--primary); font-weight: 600;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
+        <h4 style="color: var(--primary);" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="crPoids" id="txtCrPoids">Poids (kg)</label>
@@ -259,22 +289,22 @@
             <option value="femme" id="optFemme">Femme</option>
         </select>
         <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
-        <div id="resCockcroft" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Clairance : --</div>
-        <div id="interpCockcroft" style="margin-top: 5px; font-size: 14px;"></div>
+        <div id="resCockcroft" style="margin-top: 10px; font-weight: bold;">Clairance : --</div>
+        <div id="interpCockcroft" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <h4 style="color: var(--primary); font-weight: 600;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+        <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
         <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
         <input type="number" id="pedPoids" placeholder="Ex: 15">
         <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
         <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
         <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
-        <div id="resPediatrie" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Dose totale : --</div>
+        <div id="resPediatrie" style="margin-top: 10px; font-weight: bold;">Dose totale : --</div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <h4 style="color: var(--primary); font-weight: 600;" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
+        <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="eauPoids" id="txtEauPoids">Poids (kg)</label>
@@ -286,12 +316,12 @@
             </div>
         </div>
         <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
-        <div id="resEau" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Déficit estimé : --</div>
-        <div id="interpEau" style="margin-top: 5px; font-size: 14px;"></div>
+        <div id="resEau" style="margin-top: 10px; font-weight: bold;">Déficit estimé : --</div>
+        <div id="interpEau" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <h4 style="color: var(--primary); font-weight: 600;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
+        <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="corrNa" id="txtCorrNa">Na+ mesurée (mmol/L)</label>
@@ -303,13 +333,13 @@
             </div>
         </div>
         <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
-        <div id="resNaCorr" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Na+ corrigée : --</div>
-        <div id="interpNaCorr" style="margin-top: 5px; font-size: 14px;"></div>
+        <div id="resNaCorr" style="margin-top: 10px; font-weight: bold;">Na+ corrigée : --</div>
+        <div id="interpNaCorr" style="margin-top: 5px;"></div>
     </div>
 
     <!-- Convertisseur d'Unités de Masse -->
     <div class="container">
-        <h3 style="margin-top: 0; font-weight: 600;" id="txtMasseTitle">Conversion de Masse</h3>
+        <h3 style="margin-top: 0;" id="txtMasseTitle">Conversion de Masse</h3>
         <label for="masseVal" id="txtMasseVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
@@ -318,12 +348,12 @@
                 <option value="ug" id="optUgMg">µg vers mg</option>
             </select>
         </div>
-        <div id="resultatMasse" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
+        <div id="resultatMasse" style="margin-top: 5px; color: var(--primary);">Résultat : --</div>
     </div>
 
     <!-- Convertisseur d'Unités de Volume -->
     <div class="container">
-        <h3 style="margin-top: 0; font-weight: 600;" id="txtVolTitle">Conversion de Volume</h3>
+        <h3 style="margin-top: 0;" id="txtVolTitle">Conversion de Volume</h3>
         <label for="volVal" id="txtVolVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
@@ -332,12 +362,12 @@
                 <option value="mL_L" id="optMlL">mL vers L</option>
             </select>
         </div>
-        <div id="resultatVolume" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
+        <div id="resultatVolume" style="margin-top: 5px; color: var(--primary);">Résultat : --</div>
     </div>
 
     <!-- Convertisseur de Température -->
     <div class="container">
-        <h3 style="margin-top: 0; font-weight: 600;" id="txtTempTitle">Conversion de Température</h3>
+        <h3 style="margin-top: 0;" id="txtTempTitle">Conversion de Température</h3>
         <label for="tempC">Celsius (°C)</label>
         <input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
 
@@ -347,7 +377,7 @@
 
     <!-- Convertisseur de Temps -->
     <div class="container">
-        <h3 style="margin-top: 0; font-weight: 600;" id="txtTempsTitle">Conversion de Temps</h3>
+        <h3 style="margin-top: 0;" id="txtTempsTitle">Conversion de Temps</h3>
         <label for="tempsVal" id="txtTempsVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
@@ -357,11 +387,11 @@
                 <option value="sec_min" id="optSecMin">Secondes vers Minutes</option>
             </select>
         </div>
-        <div id="resultatTemps" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
+        <div id="resultatTemps" style="margin-top: 5px; color: var(--primary);">Résultat : --</div>
     </div>
 
     <!-- Pied de page -->
-    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; color: #64748b;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
       <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
     </footer>
@@ -381,7 +411,7 @@
     <script>
         const traductions = {
             fr: {
-                param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", calTitle: "Calendrier & Date",
+                param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
                 quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "15 questions par jour (Vrai/Faux)", btnOpenQuiz: "Lancer",
                 subTitle: "Outils de calculs et conversions médicales rapides",
                 imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
@@ -416,7 +446,7 @@
                 finalScore: "Score final : ", quizMax: " / 15", retryText: "Revenez demain pour de nouvelles questions !"
             },
             en: {
-                param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", calTitle: "Calendar & Date",
+                param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
                 quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "15 questions per day (True/False)", btnOpenQuiz: "Start",
                 subTitle: "Fast medical calculation and conversion tools",
                 imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
@@ -461,6 +491,8 @@
             document.getElementById('txtParam').innerText = t.param;
             document.getElementById('txtDarkMode').innerText = t.darkMode;
             document.getElementById('txtFontTitle').innerText = t.fontTitle;
+            document.getElementById('txtStyleTitle').innerText = t.styleTitle;
+            document.getElementById('txtSizeTitle').innerText = t.sizeTitle;
             document.getElementById('txtCalTitle').innerText = t.calTitle;
             document.getElementById('txtQuizMenuTitle').innerText = t.quizMenuTitle;
             document.getElementById('txtQuizMenuDesc').innerText = t.quizMenuDesc;
@@ -532,10 +564,19 @@
             }
         }
 
-        function changerPolice() {
+        function mettreAJourStyleTexte() {
             const fontValue = document.getElementById('fontSelect').value;
+            const styleValue = document.getElementById('styleSelect').value.split('|');
+            const sizeValue = document.getElementById('sizeSelect').value;
+
             document.documentElement.style.setProperty('--font-family', fontValue);
+            document.documentElement.style.setProperty('--font-style', styleValue[0]);
+            document.documentElement.style.setProperty('--font-weight', styleValue[1]);
+            document.documentElement.style.setProperty('--font-size', sizeValue);
+
             localStorage.setItem('selectedFont', fontValue);
+            localStorage.setItem('selectedStyle', document.getElementById('styleSelect').value);
+            localStorage.setItem('selectedSize', sizeValue);
         }
 
         function changerDateCalendrier() {
@@ -771,6 +812,20 @@
             if (savedFont) {
                 document.documentElement.style.setProperty('--font-family', savedFont);
                 document.getElementById('fontSelect').value = savedFont;
+            }
+
+            const savedStyle = localStorage.getItem('selectedStyle');
+            if (savedStyle) {
+                const styleParts = savedStyle.split('|');
+                document.documentElement.style.setProperty('--font-style', styleParts[0]);
+                document.documentElement.style.setProperty('--font-weight', styleParts[1]);
+                document.getElementById('styleSelect').value = savedStyle;
+            }
+
+            const savedSize = localStorage.getItem('selectedSize');
+            if (savedSize) {
+                document.documentElement.style.setProperty('--font-size', savedSize);
+                document.getElementById('sizeSelect').value = savedSize;
             }
 
             const today = new Date().toISOString().split('T')[0];
