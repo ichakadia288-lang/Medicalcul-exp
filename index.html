@@ -123,6 +123,22 @@
             float: right;
         }
 
+        /* Petit bouton de réinitialisation */
+        .reset-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            transition: background 0.2s;
+        }
+        .reset-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
         /* Styles des statuts cliniques */
         .status-good {
             color: #10b981;
@@ -250,11 +266,12 @@
 
     <!-- Contenu principal -->
     <div class="container">
-        <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
-        <p style="text-align: center; color: var(--border);" id="txtSubTitle">Outils de calculs et conversions médicales rapides</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 id="txtImcTitle" style="margin: 0;">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
+            <button class="reset-btn" onclick="resetImc()" id="btnResetImc">↺ Réinit</button>
+        </div>
+        <p style="text-align: center; color: var(--border); margin-top: 0;" id="txtSubTitle">Outils de calculs et conversions médicales rapides</p>
 
-        <!-- Calculatrice IMC -->
-        <h3 id="txtImcTitle">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
         <label for="poids" id="txtPoids">Poids (kg)</label>
         <input type="number" id="poids" placeholder="Ex: 70">
 
@@ -271,8 +288,11 @@
         <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
         <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
-        <h4 style="color: var(--primary);" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
+            <button class="reset-btn" onclick="resetCockcroft()" id="btnResetCockcroft">↺ Réinit</button>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
             <div style="flex: 1;">
                 <label for="crPoids" id="txtCrPoids">Poids (kg)</label>
                 <input type="number" id="crPoids" placeholder="Ex: 70">
@@ -296,19 +316,27 @@
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 2. Posologie Pédiatrique -->
-        <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
-        <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
-        <input type="number" id="pedPoids" placeholder="Ex: 15">
-        <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
-        <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
-        <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
-        <div id="resPediatrie" style="margin-top: 10px; font-weight: bold;">Dose totale : --</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+            <button class="reset-btn" onclick="resetPed()" id="btnResetPed">↺ Réinit</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
+            <input type="number" id="pedPoids" placeholder="Ex: 15">
+            <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
+            <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
+            <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
+            <div id="resPediatrie" style="margin-top: 10px; font-weight: bold;">Dose totale : --</div>
+        </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 3. Déficit en Eau -->
-        <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
+            <button class="reset-btn" onclick="resetEau()" id="btnResetEau">↺ Réinit</button>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
             <div style="flex: 1;">
                 <label for="eauPoids" id="txtEauPoids">Poids (kg)</label>
                 <input type="number" id="eauPoids" placeholder="Ex: 70">
@@ -325,8 +353,11 @@
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 4. Correction de la Natrémie -->
-        <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
+            <button class="reset-btn" onclick="resetCorr()" id="btnResetCorr">↺ Réinit</button>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
             <div style="flex: 1;">
                 <label for="corrNa" id="txtCorrNa">Na+ mesurée (mmol/L)</label>
                 <input type="number" id="corrNa" placeholder="Ex: 130">
@@ -342,97 +373,115 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 5. Score de Glasgow (GCS) -->
-        <h4 style="color: var(--primary);" id="txtGcsTitle">5. Score de Glasgow (GCS - Conscience)</h4>
-        <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
-        <select id="gcsE">
-            <option value="4" id="optE4">4 - Spontanée</option>
-            <option value="3" id="optE3">3 - À la voix / demande</option>
-            <option value="2" id="optE2">2 - À la douleur</option>
-            <option value="1" id="optE1">1 - Absente</option>
-        </select>
+        <!-- 5. Score de Glasgow -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
+            <button class="reset-btn" onclick="resetGcs()" id="btnResetGcs">↺ Réinit</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
+            <select id="gcsE">
+                <option value="4" id="optE4">4 - Spontanée</option>
+                <option value="3" id="optE3">3 - À la voix / demande</option>
+                <option value="2" id="optE2">2 - À la douleur</option>
+                <option value="1" id="optE1">1 - Absente</option>
+            </select>
 
-        <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
-        <select id="gcsV">
-            <option value="5" id="optV5">5 - Orientée et cohérente</option>
-            <option value="4" id="optV4">4 - Confuse / conversation décousue</option>
-            <option value="3" id="optV3">3 - Mots inappropriés</option>
-            <option value="2" id="optV2">2 - Sons incompréhensibles</option>
-            <option value="1" id="optV1">1 - Absente</option>
-        </select>
+            <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
+            <select id="gcsV">
+                <option value="5" id="optV5">5 - Orientée et cohérente</option>
+                <option value="4" id="optV4">4 - Confuse / conversation décousue</option>
+                <option value="3" id="optV3">3 - Mots inappropriés</option>
+                <option value="2" id="optV2">2 - Sons incompréhensibles</option>
+                <option value="1" id="optV1">1 - Absente</option>
+            </select>
 
-        <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
-        <select id="gcsM">
-            <option value="6" id="optM6">6 - Exécute les ordres sur commande</option>
-            <option value="5" id="optM5">5 - Orientée à la douleur / localise</option>
-            <option value="4" id="optM4">4 - Retrait / évitement à la douleur</option>
-            <option value="3" id="optM3">3 - Flexion anormale (décortication)</option>
-            <option value="2" id="optM2">2 - Extension anormale (décérébration)</option>
-            <option value="1" id="optM1">1 - Absente / flaccide</option>
-        </select>
-        <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer le Score de Glasgow</button>
-        <div id="resGcs" style="margin-top: 10px; font-weight: bold;">Score total : --</div>
-        <div id="interpGcs" style="margin-top: 5px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- 6. Score qSOFA (Sepsis) -->
-        <h4 style="color: var(--primary);" id="txtQsofaTitle">6. Score qSOFA (Dépistage Sepsis / Urgences)</h4>
-        <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
-        <select id="qsofaRr">
-            <option value="0" id="qsofaRrNo">Non</option>
-            <option value="1" id="qsofaRrYes">Oui (+1 point)</option>
-        </select>
-
-        <label for="qsofaPas" id="txtQsofaPas">Pression artérielle systolique (PAS) ≤ 100 mmHg</label>
-        <select id="qsofaPas">
-            <option value="0" id="qsofaPasNo">Non</option>
-            <option value="1" id="qsofaPasYes">Oui (+1 point)</option>
-        </select>
-
-        <label for="qsofaConsc" id="txtQsofaConsc">Altération de l'état de conscience (Glasgow &lt; 15)</label>
-        <select id="qsofaConsc">
-            <option value="0" id="qsofaConscNo">Non</option>
-            <option value="1" id="qsofaConscYes">Oui (+1 point)</option>
-        </select>
-        <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
-        <div id="resQsofa" style="margin-top: 10px; font-weight: bold;">Score qSOFA : --</div>
-        <div id="interpQsofa" style="margin-top: 5px;"></div>
+            <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
+            <select id="gcsM">
+                <option value="6" id="optM6">6 - Exécute les ordres sur commande</option>
+                <option value="5" id="optM5">5 - Orientée à la douleur / localise</option>
+                <option value="4" id="optM4">4 - Retrait / évitement à la douleur</option>
+                <option value="3" id="optM3">3 - Flexion anormale (décortication)</option>
+                <option value="2" id="optM2">2 - Extension anormale (décérébration)</option>
+                <option value="1" id="optM1">1 - Absente / flaccide</option>
+            </select>
+            <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer le Score de Glasgow</button>
+            <div id="resGcs" style="margin-top: 10px; font-weight: bold;">Score total : --</div>
+            <div id="interpGcs" style="margin-top: 5px;"></div>
+        </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 7. Score de Wells (Embolie Pulmonaire) -->
-        <h4 style="color: var(--primary);" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire - EP)</h4>
-        <label for="wells1" id="txtWells1">Signes cliniques de thrombose veineuse profonde (phlébite)</label>
-        <select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+        <!-- 6. Score qSOFA -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
+            <button class="reset-btn" onclick="resetQsofa()" id="btnResetQsofa">↺ Réinit</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
+            <select id="qsofaRr">
+                <option value="0" id="qsofaRrNo">Non</option>
+                <option value="1" id="qsofaRrYes">Oui (+1 point)</option>
+            </select>
 
-        <label for="wells2" id="txtWells2">Diagnostic d'embolie pulmonaire plus probable que tout autre</label>
-        <select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+            <label for="qsofaPas" id="txtQsofaPas">Pression artérielle systolique (PAS) ≤ 100 mmHg</label>
+            <select id="qsofaPas">
+                <option value="0" id="qsofaPasNo">Non</option>
+                <option value="1" id="qsofaPasYes">Oui (+1 point)</option>
+            </select>
 
-        <label for="wells3" id="txtWells3">Fréquence cardiaque &gt; 100 bpm</label>
-        <select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-
-        <label for="wells4" id="txtWells4">Chirurgie récente (&lt; 4 sem.) ou immobilisation</label>
-        <select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-
-        <label for="wells5" id="txtWells5">Antécédents de TVP ou d'embolie pulmonaire</label>
-        <select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-
-        <label for="wells6" id="txtWells6">Hémoptysie</label>
-        <select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
-
-        <label for="wells7" id="txtWells7">Cancer actif (traité dans les 6 derniers mois)</label>
-        <select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
-
-        <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Score de Wells</button>
-        <div id="resWells" style="margin-top: 10px; font-weight: bold;">Score de Wells : --</div>
-        <div id="interpWells" style="margin-top: 5px;"></div>
+            <label for="qsofaConsc" id="txtQsofaConsc">Altération de l'état de conscience (Glasgow < 15)</label>
+            <select id="qsofaConsc">
+                <option value="0" id="qsofaConscNo">Non</option>
+                <option value="1" id="qsofaConscYes">Oui (+1 point)</option>
+            </select>
+            <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
+            <div id="resQsofa" style="margin-top: 10px; font-weight: bold;">Score qSOFA : --</div>
+            <div id="interpQsofa" style="margin-top: 5px;"></div>
+        </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 8. Surface Corporelle (BSA - Mosteller) -->
-        <h4 style="color: var(--primary);" id="txtBsaTitle">8. Surface Corporelle (BSA - Formule de Mosteller)</h4>
-        <div style="display: flex; gap: 10px;">
+        <!-- 7. Score de Wells -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
+            <button class="reset-btn" onclick="resetWells()" id="btnResetWells">↺ Réinit</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="wells1" id="txtWells1">Signes cliniques de thrombose veineuse profonde (phlébite)</label>
+            <select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+
+            <label for="wells2" id="txtWells2">Diagnostic d'embolie pulmonaire plus probable que tout autre</label>
+            <select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+
+            <label for="wells3" id="txtWells3">Fréquence cardiaque > 100 bpm</label>
+            <select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+
+            <label for="wells4" id="txtWells4">Chirurgie récente (< 4 sem.) ou immobilisation</label>
+            <select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+
+            <label for="wells5" id="txtWells5">Antécédents de TVP ou d'embolie pulmonaire</label>
+            <select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+
+            <label for="wells6" id="txtWells6">Hémoptysie</label>
+            <select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+
+            <label for="wells7" id="txtWells7">Cancer actif (traité dans les 6 derniers mois)</label>
+            <select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+
+            <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Score de Wells</button>
+            <div id="resWells" style="margin-top: 10px; font-weight: bold;">Score de Wells : --</div>
+            <div id="interpWells" style="margin-top: 5px;"></div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 8. Surface Corporelle (BSA) -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: var(--primary); margin: 0;" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
+            <button class="reset-btn" onclick="resetBsa()" id="btnResetBsa">↺ Réinit</button>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
             <div style="flex: 1;">
                 <label for="bsaPoids" id="txtBsaPoids">Poids (kg)</label>
                 <input type="number" id="bsaPoids" placeholder="Ex: 70">
@@ -525,20 +574,20 @@
                 subTitle: "Outils de calculs et conversions médicales rapides",
                 imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
-                cockcroftTitle: "1. Fonction Rénale (Clairance Créatinine - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (années)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
+                cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (années)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
                 pedTitle: "2. Posologie Pédiatrique (Dose / kg)", pedPoids: "Poids de l'enfant (kg)", pedDose: "Dose unitaire recommandée (mg/kg)", btnPed: "Calculer la Dose",
-                eauTitle: "3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)", eauPoids: "Poids (kg)", eauNa: "Natrémie mesurée (mmol/L)", btnEau: "Calculer Déficit en Eau",
-                corrTitle: "4. Correction Ionique (Natrémie Corrigée / hyperglycémie)", corrNa: "Na+ mesurée (mmol/L)", corrGly: "Glycémie (mmol/L)", btnCorr: "Calculer Na+ Corrigée",
-                gcsTitle: "5. Score de Glasgow (GCS - Conscience)",
+                eauTitle: "3. Déficit en Eau (Adrogué-Madias)", eauPoids: "Poids (kg)", eauNa: "Natrémie mesurée (mmol/L)", btnEau: "Calculer Déficit en Eau",
+                corrTitle: "4. Correction Ionique (Natrémie Corrigée)", corrNa: "Na+ mesurée (mmol/L)", corrGly: "Glycémie (mmol/L)", btnCorr: "Calculer Na+ Corrigée",
+                gcsTitle: "5. Score de Glasgow (GCS)",
                 txtGcsE: "Ouverture des yeux (E)", txtGcsV: "Réponse verbale (V)", txtGcsM: "Réponse motrice (M)", btnGcs: "Calculer le Score de Glasgow",
                 optE4: "4 - Spontanée", optE3: "3 - À la voix / demande", optE2: "2 - À la douleur", optE1: "1 - Absente",
                 optV5: "5 - Orientée et cohérente", optV4: "4 - Confuse / conversation décousue", optV3: "3 - Mots inappropriés", optV2: "2 - Sons incompréhensibles", optV1: "1 - Absente",
                 optM6: "6 - Exécute les ordres sur commande", optM5: "5 - Orientée à la douleur / localise", optM4: "4 - Retrait / évitement à la douleur", optM3: "3 - Flexion anormale (décortication)", optM2: "2 - Extension anormale (décérébration)", optM1: "1 - Absente / flaccide",
-                qsofaTitle: "6. Score qSOFA (Dépistage Sepsis / Urgences)",
+                qsofaTitle: "6. Score qSOFA (Sepsis)",
                 txtQsofaRr: "Fréquence respiratoire ≥ 22 /min", qsofaRrNo: "Non", qsofaRrYes: "Oui (+1 point)",
                 txtQsofaPas: "Pression artérielle systolique (PAS) ≤ 100 mmHg", qsofaPasNo: "Non", qsofaPasYes: "Oui (+1 point)",
                 txtQsofaConsc: "Altération de l'état de conscience (Glasgow < 15)", qsofaConscNo: "Non", qsofaConscYes: "Oui (+1 point)", btnQsofa: "Calculer qSOFA",
-                wellsTitle: "7. Score de Wells (Embolie Pulmonaire - EP)",
+                wellsTitle: "7. Score de Wells (Embolie Pulmonaire)",
                 txtWells1: "Signes cliniques de thrombose veineuse profonde (phlébite)",
                 txtWells2: "Diagnostic d'embolie pulmonaire plus probable que tout autre",
                 txtWells3: "Fréquence cardiaque > 100 bpm",
@@ -546,7 +595,7 @@
                 txtWells5: "Antécédents de TVP ou d'embolie pulmonaire",
                 txtWells6: "Hémoptysie",
                 txtWells7: "Cancer actif (traité dans les 6 derniers mois)", btnWells: "Calculer Score de Wells",
-                bsaTitle: "8. Surface Corporelle (BSA - Formule de Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la Surface Corporelle",
+                bsaTitle: "8. Surface Corporelle (BSA - Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la Surface Corporelle",
                 masseTitle: "Conversion de Masse", masseVal: "Valeur", optMgUg: "mg vers µg", optUgMg: "µg vers mg",
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
                 tempTitle: "Conversion de Température",
@@ -578,20 +627,20 @@
                 subTitle: "Fast medical calculation and conversion tools",
                 imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
-                cockcroftTitle: "1. Renal Function (Creatinine Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
+                cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
                 pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
-                eauTitle: "3. Water Deficit (Adrogué-Madias Formula / Natremia)", eauPoids: "Weight (kg)", eauNa: "Measured Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
-                corrTitle: "4. Ionic Correction (Corrected Natremia / Hyperglycemia)", corrNa: "Measured Na+ (mmol/L)", corrGly: "Glycemia (mmol/L)", btnCorr: "Calculate Corrected Na+",
-                gcsTitle: "5. Glasgow Coma Scale (GCS - Consciousness)",
+                eauTitle: "3. Water Deficit (Adrogué-Madias)", eauPoids: "Weight (kg)", eauNa: "Measured Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
+                corrTitle: "4. Ionic Correction (Corrected Natremia)", corrNa: "Measured Na+ (mmol/L)", corrGly: "Glycemia (mmol/L)", btnCorr: "Calculate Corrected Na+",
+                gcsTitle: "5. Glasgow Coma Scale (GCS)",
                 txtGcsE: "Eye opening (E)", txtGcsV: "Verbal response (V)", txtGcsM: "Motor response (M)", btnGcs: "Calculate Glasgow Score",
                 optE4: "4 - Spontaneous", optE3: "3 - To voice / speech", optE2: "2 - To pain", optE1: "1 - None",
                 optV5: "5 - Oriented and coherent", optV4: "4 - Confused / disoriented speech", optV3: "3 - Inappropriate words", optV2: "2 - Incomprehensible sounds", optV1: "1 - None",
                 optM6: "6 - Obeys commands", optM5: "5 - Localizes pain", optM4: "4 - Withdrawal / flexion away from pain", optM3: "3 - Abnormal flexion (decorticate)", optM2: "2 - Abnormal extension (decerebrate)", optM1: "1 - None / flaccid",
-                qsofaTitle: "6. qSOFA Score (Sepsis Screening / ER)",
+                qsofaTitle: "6. qSOFA Score (Sepsis)",
                 txtQsofaRr: "Respiratory rate ≥ 22 /min", qsofaRrNo: "No", qsofaRrYes: "Yes (+1 pt)",
                 txtQsofaPas: "Systolic blood pressure (SBP) ≤ 100 mmHg", qsofaPasNo: "No", qsofaPasYes: "Yes (+1 pt)",
                 txtQsofaConsc: "Altered mental status (Glasgow < 15)", qsofaConscNo: "No", qsofaConscYes: "Yes (+1 pt)", btnQsofa: "Calculate qSOFA",
-                wellsTitle: "7. Wells Score (Pulmonary Embolism - PE)",
+                wellsTitle: "7. Wells Score (Pulmonary Embolism)",
                 txtWells1: "Clinical signs of deep vein thrombosis (DVT)",
                 txtWells2: "Alternative diagnosis less likely than pulmonary embolism",
                 txtWells3: "Heart rate > 100 bpm",
@@ -599,7 +648,7 @@
                 txtWells5: "Previous DVT or PE",
                 txtWells6: "Hemoptysis",
                 txtWells7: "Active cancer", btnWells: "Calculate Wells Score",
-                bsaTitle: "8. Body Surface Area (BSA - Mosteller Formula)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
+                bsaTitle: "8. Body Surface Area (BSA - Mosteller)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
                 masseTitle: "Mass Conversion", masseVal: "Value", optMgUg: "mg to µg", optUgMg: "µg to mg",
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
                 tempTitle: "Temperature Conversion",
@@ -742,6 +791,18 @@
             document.getElementById('btnTrue').innerText = t.btnTrue;
             document.getElementById('btnFalse').innerText = t.btnFalse;
 
+            // Textes des boutons de réinitialisation
+            const resetTxt = lang === 'fr' ? '↺ Réinit' : '↺ Reset';
+            document.getElementById('btnResetImc').innerText = resetTxt;
+            document.getElementById('btnResetCockcroft').innerText = resetTxt;
+            document.getElementById('btnResetPed').innerText = resetTxt;
+            document.getElementById('btnResetEau').innerText = resetTxt;
+            document.getElementById('btnResetCorr').innerText = resetTxt;
+            document.getElementById('btnResetGcs').innerText = resetTxt;
+            document.getElementById('btnResetQsofa').innerText = resetTxt;
+            document.getElementById('btnResetWells').innerText = resetTxt;
+            document.getElementById('btnResetBsa').innerText = resetTxt;
+
             questionsData = [
                 { q: t.qWater, r: true }, { q: t.qHeart, r: true }, { q: t.qFemur, r: false }, { q: t.qLiver, r: true }, { q: t.qVeins, r: false },
                 { q: t.qTeeth, r: true }, { q: t.qAcid, r: true }, { q: t.qRBC, r: true }, { q: t.qBrain, r: false }, { q: t.qKidneys, r: true },
@@ -782,6 +843,76 @@
             if(dateVal) {
                 console.log("Date sélectionnée :", dateVal);
             }
+        }
+
+        // --- FONCTIONS DE RÉINITIALISATION (RESET) ---
+        function resetImc() {
+            document.getElementById('poids').value = '';
+            document.getElementById('taille').value = '';
+            document.getElementById('resultatIMC').innerText = 'Résultat : --';
+            document.getElementById('interpretationIMC').innerText = '';
+        }
+
+        function resetCockcroft() {
+            document.getElementById('crPoids').value = '';
+            document.getElementById('crAge').value = '';
+            document.getElementById('crCreat').value = '';
+            document.getElementById('resCockcroft').innerText = 'Clairance : --';
+            document.getElementById('interpCockcroft').innerText = '';
+        }
+
+        function resetPed() {
+            document.getElementById('pedPoids').value = '';
+            document.getElementById('pedDoseKg').value = '';
+            document.getElementById('resPediatrie').innerText = 'Dose totale : --';
+        }
+
+        function resetEau() {
+            document.getElementById('eauPoids').value = '';
+            document.getElementById('eauNa').value = '';
+            document.getElementById('resEau').innerText = 'Déficit estimé : --';
+            document.getElementById('interpEau').innerText = '';
+        }
+
+        function resetCorr() {
+            document.getElementById('corrNa').value = '';
+            document.getElementById('corrGly').value = '';
+            document.getElementById('resNaCorr').innerText = 'Na+ corrigée : --';
+            document.getElementById('interpNaCorr').innerText = '';
+        }
+
+        function resetGcs() {
+            document.getElementById('gcsE').selectedIndex = 0;
+            document.getElementById('gcsV').selectedIndex = 0;
+            document.getElementById('gcsM').selectedIndex = 0;
+            document.getElementById('resGcs').innerText = 'Score total : --';
+            document.getElementById('interpGcs').innerText = '';
+        }
+
+        function resetQsofa() {
+            document.getElementById('qsofaRr').selectedIndex = 0;
+            document.getElementById('qsofaPas').selectedIndex = 0;
+            document.getElementById('qsofaConsc').selectedIndex = 0;
+            document.getElementById('resQsofa').innerText = 'Score qSOFA : --';
+            document.getElementById('interpQsofa').innerText = '';
+        }
+
+        function resetWells() {
+            document.getElementById('wells1').selectedIndex = 0;
+            document.getElementById('wells2').selectedIndex = 0;
+            document.getElementById('wells3').selectedIndex = 0;
+            document.getElementById('wells4').selectedIndex = 0;
+            document.getElementById('wells5').selectedIndex = 0;
+            document.getElementById('wells6').selectedIndex = 0;
+            document.getElementById('wells7').selectedIndex = 0;
+            document.getElementById('resWells').innerText = 'Score de Wells : --';
+            document.getElementById('interpWells').innerText = '';
+        }
+
+        function resetBsa() {
+            document.getElementById('bsaPoids').value = '';
+            document.getElementById('bsaTaille').value = '';
+            document.getElementById('resBsa').innerText = 'BSA : --';
         }
 
         let currentQuizIndex = 0;
@@ -993,7 +1124,7 @@
             if (total >= 2) {
                 interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Risque élevé de sepsis / Mortalité accrue (≥ 2)</span>' : 'Evaluation: <span class="status-bad">High risk of sepsis (≥ 2)</span>';
             } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Risque faible (&lt; 2)</span>' : 'Evaluation: <span class="status-good">Low risk (&lt; 2)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Risque faible (< 2)</span>' : 'Evaluation: <span class="status-good">Low risk (< 2)</span>';
             }
         }
 
@@ -1013,7 +1144,7 @@
             resDiv.innerText = lang === 'fr' ? `Score de Wells : ${total}` : `Wells Score: ${total}`;
 
             if (total > 4) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Embolie Pulmonaire Probable (&gt; 4)</span>' : 'Evaluation: <span class="status-bad">Likely Pulmonary Embolism (&gt; 4)</span>';
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Embolie Pulmonaire Probable (> 4)</span>' : 'Evaluation: <span class="status-bad">Likely Pulmonary Embolism (> 4)</span>';
             } else {
                 interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Embolie Pulmonaire Improbable (≤ 4)</span>' : 'Evaluation: <span class="status-good">Unlikely Pulmonary Embolism (≤ 4)</span>';
             }
@@ -1029,7 +1160,6 @@
                 resDiv.innerText = lang === 'fr' ? "BSA : Entrez des valeurs valides." : "BSA: Enter valid values.";
                 return;
             }
-            // Formule de Mosteller : sqrt(poids * taille / 3600)
             const bsa = Math.sqrt((poids * taille) / 3600);
             resDiv.innerText = lang === 'fr' ? `Surface Corporelle (BSA) : ${bsa.toFixed(2)} m²` : `Body Surface Area (BSA): ${bsa.toFixed(2)} m²`;
         }
