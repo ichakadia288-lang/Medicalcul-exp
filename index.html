@@ -98,6 +98,16 @@
             font-weight: bold;
             cursor: pointer;
         }
+        
+        .badge-urg {
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -138,6 +148,78 @@
 
         <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
+    </div>
+
+    <!-- MODULE URGENCES & RÉANIMATION -->
+    <div class="container" style="border-left: 4px solid #ef4444;">
+        <h3 style="margin-top: 0;">Module Urgences & Réanimation <span class="badge-urg">URG</span></h3>
+
+        <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
+        <h4 style="color: var(--primary);">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label for="crPoids">Poids (kg)</label>
+                <input type="number" id="crPoids" placeholder="Ex: 70">
+            </div>
+            <div style="flex: 1;">
+                <label for="crAge">Âge (années)</label>
+                <input type="number" id="crAge" placeholder="Ex: 50">
+            </div>
+        </div>
+        <label for="crCreat">Créatininémie (µmol/L)</label>
+        <input type="number" id="crCreat" placeholder="Ex: 90">
+        <label for="crSexe">Sexe</label>
+        <select id="crSexe">
+            <option value="homme">Homme</option>
+            <option value="femme">Femme</option>
+        </select>
+        <button class="calc-btn" onclick="calculerCockcroft()">Calculer Clairance</button>
+        <div id="resCockcroft" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Clairance : --</div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 2. Posologie Pédiatrique -->
+        <h4 style="color: var(--primary);">2. Posologie Pédiatrique (Dose / kg)</h4>
+        <label for="pedPoids">Poids de l'enfant (kg)</label>
+        <input type="number" id="pedPoids" placeholder="Ex: 15">
+        <label for="pedDoseKg">Dose unitaire recommandée (mg/kg)</label>
+        <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
+        <button class="calc-btn" onclick="calculerPediatrie()">Calculer la Dose</button>
+        <div id="resPediatrie" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Dose totale : --</div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 3. Déficit en Eau (Déshydratation / Hypernatrémie) -->
+        <h4 style="color: var(--primary);">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label for="eauPoids">Poids (kg)</label>
+                <input type="number" id="eauPoids" placeholder="Ex: 70">
+            </div>
+            <div style="flex: 1;">
+                <label for="eauNa">Natrémie mesurée (mmol/L)</label>
+                <input type="number" id="eauNa" placeholder="Ex: 155">
+            </div>
+        </div>
+        <button class="calc-btn" onclick="calculerDeficitEau()">Calculer Déficit en Eau</button>
+        <div id="resEau" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Déficit estimé : --</div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 4. Correction de la Natrémie en cas d'Hyperglycémie (Katz) -->
+        <h4 style="color: var(--primary);">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label for="corrNa">Na+ mesurée (mmol/L)</label>
+                <input type="number" id="corrNa" placeholder="Ex: 130">
+            </div>
+            <div style="flex: 1;">
+                <label for="corrGly">Glycémie (mmol/L)</label>
+                <input type="number" id="corrGly" placeholder="Ex: 20">
+            </div>
+        </div>
+        <button class="calc-btn" onclick="calculerNaCorrigee()">Calculer Na+ Corrigée</button>
+        <div id="resNaCorr" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Na+ corrigée : --</div>
     </div>
 
     <!-- Convertisseur d'Unités de Masse -->
@@ -219,6 +301,76 @@
             const imc = poids / (tailleM * tailleM);
             resultatDiv.innerText = `Résultat : ${imc.toFixed(2)}`;
         }
+
+        // --- MODULE URGENCES & RÉANIMATION : LOGIQUE JS ---
+
+        // 1. Clairance de la créatinine (Formule de Cockcroft et Gault)
+        function calculerCockcroft() {
+            const poids = parseFloat(document.getElementById('crPoids').value);
+            const age = parseFloat(document.getElementById('crAge').value);
+            const creat = parseFloat(document.getElementById('crCreat').value);
+            const sexe = document.getElementById('crSexe').value;
+            const resDiv = document.getElementById('resCockcroft');
+
+            if (isNaN(poids) || isNaN(age) || isNaN(creat) || creat <= 0) {
+                resDiv.innerText = "Clairance : Veuillez remplir tous les champs correctement.";
+                return;
+            }
+
+            // Formule : ClCR = [(140 - âge) x poids] / (0.815 x créatininémie en µmol/L) [x 0.85 si femme]
+            let clairance = ((140 - age) * poids) / (0.815 * creat);
+            if (sexe === 'femme') {
+                clairance *= 0.85;
+            }
+            resDiv.innerText = `Clairance estimée : ${clairance.toFixed(2)} mL/min`;
+        }
+
+        // 2. Posologie Pédiatrique
+        function calculerPediatrie() {
+            const poids = parseFloat(document.getElementById('pedPoids').value);
+            const doseKg = parseFloat(document.getElementById('pedDoseKg').value);
+            const resDiv = document.getElementById('resPediatrie');
+
+            if (isNaN(poids) || isNaN(doseKg)) {
+                resDiv.innerText = "Dose totale : Veuillez entrer des valeurs valides.";
+                return;
+            }
+
+            const doseTotale = poids * doseKg;
+            resDiv.innerText = `Dose totale par prise : ${doseTotale.toFixed(2)} mg`;
+        }
+
+        // 3. Déficit en Eau (formule simplifiée : 0.6 * Poids * [(Natrémie / 140) - 1])
+        function calculerDeficitEau() {
+            const poids = parseFloat(document.getElementById('eauPoids').value);
+            const na = parseFloat(document.getElementById('eauNa').value);
+            const resDiv = document.getElementById('resEau');
+
+            if (isNaN(poids) || isNaN(na)) {
+                resDiv.innerText = "Déficit estimé : Veuillez entrer des valeurs valides.";
+                return;
+            }
+
+            const deficit = 0.6 * poids * ((na / 140) - 1);
+            resDiv.innerText = `Déficit en eau libre estimé : ${deficit.toFixed(2)} Litres`;
+        }
+
+        // 4. Natrémie Corrigée (Katz : Na + 0.3 * (Glycémie mmol/L - 5.5))
+        function calculerNaCorrigee() {
+            const na = parseFloat(document.getElementById('corrNa').value);
+            const gly = parseFloat(document.getElementById('corrGly').value);
+            const resDiv = document.getElementById('resNaCorr');
+
+            if (isNaN(na) || isNaN(gly)) {
+                resDiv.innerText = "Na+ corrigée : Veuillez entrer des valeurs valides.";
+                return;
+            }
+
+            const naCorr = na + 0.3 * (gly - 5.5);
+            resDiv.innerText = `Natrémie corrigée : ${naCorr.toFixed(2)} mmol/L`;
+        }
+
+        // --- FIN MODULE URGENCES ---
 
         // Conversion de masse (mg <-> µg)
         function convertMasse() {
@@ -314,12 +466,12 @@
             }
         });
         function openModal() {
-    document.getElementById('legalModal').style.display = 'flex';
-}
+            document.getElementById('legalModal').style.display = 'flex';
+        }
 
-function closeModal() {
-    document.getElementById('legalModal').style.display = 'none';
-}
+        function closeModal() {
+            document.getElementById('legalModal').style.display = 'none';
+        }
     </script>
     <!-- Pied de page -->
 <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
@@ -332,7 +484,7 @@ function closeModal() {
   <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
     <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
     <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
-    <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effectuent localement sur votre appareil.</p>
+    <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
     <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
     <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
   </div>
