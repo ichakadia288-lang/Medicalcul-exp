@@ -63,6 +63,20 @@
             backdrop-filter: blur(10px);
         }
 
+        .back-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
         .theme-toggle-btn {
             background: none;
             border: 2px solid var(--border);
@@ -100,6 +114,70 @@
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
             box-sizing: border-box;
+        }
+
+        /* Grille des catégories (style inspiré de l'image) */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 480px;
+            margin: 20px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-card:active {
+            transform: scale(0.96);
+        }
+
+        .category-card:hover {
+            border-color: var(--primary);
+        }
+
+        .category-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-gradient);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.3);
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .section-view {
+            display: none;
+        }
+
+        .section-view.active {
+            display: block;
         }
 
         label {
@@ -191,10 +269,6 @@
             border-color: var(--primary);
             background: var(--border);
         }
-
-        .status-good { color: #10b981; font-weight: 600; }
-        .status-bad { color: #ef4444; font-weight: 600; }
-        .status-warn { color: #f59e0b; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -202,6 +276,7 @@
     <!-- Barre de menu supérieure -->
     <header>
         <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="backBtn" class="back-btn" onclick="retourAccueil()">← <span id="txtBack">Accueil</span></button>
             <img src="logo.png" alt="Logo" style="height: 32px; width: auto; border-radius: 6px;">
             <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px;">MediCalcul <span style="color: var(--primary);">Express</span></h3>
         </div>
@@ -264,266 +339,281 @@
             <span id="txtCalTitle" style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 8px; color: var(--primary);">Calendrier & Date</span>
             <input type="date" id="appCalendar" style="margin: 0; cursor: pointer;">
         </div>
+    </div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+    <!-- PAGE D'ACCUEIL : GRILLE DES CATÉGORIES -->
+    <div id="homeView" class="section-view active">
+        <div style="text-align: center; padding: 20px 20px 10px 20px;">
+            <h2 style="margin: 0 0 6px 0; font-size: 1.3rem;" id="txtHomeHeader">Sélectionnez une Catégorie</h2>
+            <p style="margin: 0; opacity: 0.7; font-size: 0.85rem;" id="txtHomeSub">Accédez rapidement à vos outils de calculs médicaux</p>
+        </div>
 
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <span id="txtQuizMenuTitle" style="font-weight: 600; font-size: 0.85rem;">Quiz : Éléments du Corps</span>
-                <button onclick="ouvrirQuiz()" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600;" id="btnOpenQuiz">Lancer</button>
+        <div class="dashboard-grid">
+            <div class="category-card" onclick="ouvrirSection('imcView')">
+                <div class="category-icon">⚖️</div>
+                <h4 class="category-title" id="catImc">Masse Corporelle (IMC)</h4>
             </div>
-            <p style="font-size: 0.75rem; opacity: 0.7; margin: 0;" id="txtQuizMenuDesc">15 questions par jour (Vrai/Faux)</p>
-        </div>
-    </div>
 
-    <!-- MODALE DU QUIZ -->
-    <div id="quizModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 3000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-        <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 420px; width: 100%; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin: 0; color: var(--primary); font-size: 1.05rem;" id="quizTitle">Quiz : Quantité des Éléments</h3>
-                <button onclick="fermerQuiz()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
+            <div class="category-card" onclick="ouvrirSection('urgencesView')">
+                <div class="category-icon">🏥</div>
+                <h4 class="category-title" id="catUrg">Urgences & Réanimation</h4>
             </div>
-            <p id="quizQuestion" style="font-weight: 500; min-height: 45px; font-size: 1rem;"></p>
-            <div id="quizButtons" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
-                <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
+
+            <div class="category-card" onclick="ouvrirSection('convertisseursView')">
+                <div class="category-icon">⏱️</div>
+                <h4 class="category-title" id="catConv">Calculs & Convertisseurs Express</h4>
             </div>
-            <div id="quizFeedback" style="margin-bottom: 12px; font-weight: 600;"></div>
-            <div id="quizScore" style="opacity: 0.75; font-size: 0.85rem;"></div>
+
+            <div class="category-card" onclick="ouvrirSection('cardioView')">
+                <div class="category-icon">❤️</div>
+                <h4 class="category-title" id="catCardio">Fréquence Cardiaque</h4>
+            </div>
         </div>
     </div>
 
-    <!-- Contenu IMC -->
-    <div class="container">
-        <h3 id="txtImcTitle" style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);">Calcul de l'IMC</h3>
-        <p style="opacity: 0.7; margin-top: 2px; margin-bottom: 16px; font-size: 0.82rem;" id="txtSubTitle">Indice de Masse Corporelle et évaluation</p>
+    <!-- VUE 1 : CALCUL DE L'IMC -->
+    <div id="imcView" class="section-view">
+        <div class="container">
+            <h3 id="txtImcTitle" style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);">Calcul de l'IMC</h3>
+            <p style="opacity: 0.7; margin-top: 2px; margin-bottom: 16px; font-size: 0.82rem;" id="txtSubTitle">Indice de Masse Corporelle et évaluation</p>
 
-        <label for="poids" id="txtPoids">Poids (kg)</label>
-        <input type="number" id="poids" placeholder="Ex: 70">
+            <label for="poids" id="txtPoids">Poids (kg)</label>
+            <input type="number" id="poids" placeholder="Ex: 70">
 
-        <label for="taille" id="txtTaille">Taille (cm)</label>
-        <input type="number" id="taille" placeholder="Ex: 175">
+            <label for="taille" id="txtTaille">Taille (cm)</label>
+            <input type="number" id="taille" placeholder="Ex: 175">
 
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
-            <button class="reset-icon-btn" onclick="resetImc()" title="Réinitialiser">&#8634;</button>
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
+                <button class="reset-icon-btn" onclick="resetImc()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resultatIMC" style="margin-top: 14px; font-weight: 600;">Résultat : --</div>
+            <div id="interpretationIMC" style="margin-top: 4px;"></div>
         </div>
-        <div id="resultatIMC" style="margin-top: 14px; font-weight: 600;">Résultat : --</div>
-        <div id="interpretationIMC" style="margin-top: 4px;"></div>
     </div>
 
-    <!-- MODULE URGENCES & RÉANIMATION -->
-    <div class="container" style="border-left: 4px solid #ef4444;">
-        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
+    <!-- VUE 2 : MODULE URGENCES & RÉANIMATION -->
+    <div id="urgencesView" class="section-view">
+        <div class="container" style="border-left: 4px solid #ef4444;">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
-        <!-- Fonction Rénale -->
-        <h4 style="color: var(--primary); margin-top: 16px; font-size: 0.95rem;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
-        <div style="display: flex; gap: 10px;">
-            <div style="flex: 1;"><label for="crPoids" id="txtCrPoids">Poids (kg)</label><input type="number" id="crPoids" placeholder="Ex: 70"></div>
-            <div style="flex: 1;"><label for="crAge" id="txtCrAge">Âge (ans)</label><input type="number" id="crAge" placeholder="Ex: 50"></div>
+            <!-- Fonction Rénale -->
+            <h4 style="color: var(--primary); margin-top: 16px; font-size: 0.95rem;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;"><label for="crPoids" id="txtCrPoids">Poids (kg)</label><input type="number" id="crPoids" placeholder="Ex: 70"></div>
+                <div style="flex: 1;"><label for="crAge" id="txtCrAge">Âge (ans)</label><input type="number" id="crAge" placeholder="Ex: 50"></div>
+            </div>
+            <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label><input type="number" id="crCreat" placeholder="Ex: 90">
+            <label for="crSexe" id="txtCrSexe">Sexe</label>
+            <select id="crSexe"><option value="homme" id="optHomme">Homme</option><option value="femme" id="optFemme">Femme</option></select>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
+                <button class="reset-icon-btn" onclick="resetCockcroft()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resCockcroft" style="margin-top: 10px; font-weight: 600;">Clairance : --</div>
+            <div id="interpCockcroft" style="margin-top: 4px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- Posologie Pédiatrique -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+            <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label><input type="number" id="pedPoids" placeholder="Ex: 15">
+            <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label><input type="number" id="pedDoseKg" placeholder="Ex: 15">
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
+                <button class="reset-icon-btn" onclick="resetPed()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resPediatrie" style="margin-top: 10px; font-weight: 600;">Dose totale : --</div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- Déficit en Eau -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;"><label for="eauPoids" id="txtEauPoids">Poids (kg)</label><input type="number" id="eauPoids" placeholder="Ex: 70"></div>
+                <div style="flex: 1;"><label for="eauNa" id="txtEauNa">Natrémie (mmol/L)</label><input type="number" id="eauNa" placeholder="Ex: 155"></div>
+            </div>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
+                <button class="reset-icon-btn" onclick="resetEau()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resEau" style="margin-top: 10px; font-weight: 600;">Déficit estimé : --</div>
+            <div id="interpEau" style="margin-top: 4px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- Correction Natrémie -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;"><label for="corrNa" id="txtCorrNa">Na+ mesurée</label><input type="number" id="corrNa" placeholder="Ex: 130"></div>
+                <div style="flex: 1;"><label for="corrGly" id="txtCorrGly">Glycémie</label><input type="number" id="corrGly" placeholder="Ex: 20"></div>
+            </div>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
+                <button class="reset-icon-btn" onclick="resetCorr()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resNaCorr" style="margin-top: 10px; font-weight: 600;">Na+ corrigée : --</div>
+            <div id="interpNaCorr" style="margin-top: 4px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- Glasgow -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
+            <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
+            <select id="gcsE"><option value="4">4 - Spontanée</option><option value="3">3 - À la voix</option><option value="2">2 - À la douleur</option><option value="1">1 - Absente</option></select>
+            <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
+            <select id="gcsV"><option value="5">5 - Orientée</option><option value="4">4 - Confuse</option><option value="3">3 - Inappropriée</option><option value="2">2 - Incompréhensible</option><option value="1">1 - Absente</option></select>
+            <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
+            <select id="gcsM"><option value="6">6 - Exécute</option><option value="5">5 - Localise</option><option value="4">4 - Retrait</option><option value="3">3 - Flexion</option><option value="2">2 - Extension</option><option value="1">1 - Absente</option></select>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer Glasgow</button>
+                <button class="reset-icon-btn" onclick="resetGcs()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resGcs" style="margin-top: 10px; font-weight: 600;">Score total : --</div>
+            <div id="interpGcs" style="margin-top: 4px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- qSOFA -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
+            <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
+            <select id="qsofaRr"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
+            <label for="qsofaPas" id="txtQsofaPas">PAS ≤ 100 mmHg</label>
+            <select id="qsofaPas"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
+            <label for="qsofaConsc" id="txtQsofaConsc">Altération conscience (Glasgow < 15)</label>
+            <select id="qsofaConsc"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
+                <button class="reset-icon-btn" onclick="resetQsofa()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resQsofa" style="margin-top: 10px; font-weight: 600;">Score qSOFA : --</div>
+            <div id="interpQsofa" style="margin-top: 4px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- Wells -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
+            <label id="txtWells1">Signes cliniques de TVP (phlébite)</label><select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+            <label id="txtWells2">EP plus probable que tout autre diagnostic</label><select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+            <label id="txtWells3">Fréquence cardiaque > 100 bpm</label><select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+            <label id="txtWells4">Chirurgie récente ou immobilisation</label><select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+            <label id="txtWells5">Antécédents de TVP ou d'EP</label><select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+            <label id="txtWells6">Hémoptysie</label><select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+            <label id="txtWells7">Cancer actif</label><select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Wells</button>
+                <button class="reset-icon-btn" onclick="resetWells()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resWells" style="margin-top: 10px; font-weight: 600;">Score de Wells : --</div>
+            <div id="interpWells" style="margin-top: 4px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- BSA -->
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;"><label for="bsaPoids">Poids (kg)</label><input type="number" id="bsaPoids" placeholder="Ex: 70"></div>
+                <div style="flex: 1;"><label for="bsaTaille">Taille (cm)</label><input type="number" id="bsaTaille" placeholder="Ex: 175"></div>
+            </div>
+            
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerBsa()" id="btnBsa">Calculer la Surface Corporelle</button>
+                <button class="reset-icon-btn" onclick="resetBsa()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resBsa" style="margin-top: 10px; font-weight: 600;">BSA : --</div>
         </div>
-        <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label><input type="number" id="crCreat" placeholder="Ex: 90">
-        <label for="crSexe" id="txtCrSexe">Sexe</label>
-        <select id="crSexe"><option value="homme" id="optHomme">Homme</option><option value="femme" id="optFemme">Femme</option></select>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
-            <button class="reset-icon-btn" onclick="resetCockcroft()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resCockcroft" style="margin-top: 10px; font-weight: 600;">Clairance : --</div>
-        <div id="interpCockcroft" style="margin-top: 4px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- Posologie Pédiatrique -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
-        <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label><input type="number" id="pedPoids" placeholder="Ex: 15">
-        <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label><input type="number" id="pedDoseKg" placeholder="Ex: 15">
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
-            <button class="reset-icon-btn" onclick="resetPed()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resPediatrie" style="margin-top: 10px; font-weight: 600;">Dose totale : --</div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- Déficit en Eau -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
-        <div style="display: flex; gap: 10px;">
-            <div style="flex: 1;"><label for="eauPoids" id="txtEauPoids">Poids (kg)</label><input type="number" id="eauPoids" placeholder="Ex: 70"></div>
-            <div style="flex: 1;"><label for="eauNa" id="txtEauNa">Natrémie (mmol/L)</label><input type="number" id="eauNa" placeholder="Ex: 155"></div>
-        </div>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
-            <button class="reset-icon-btn" onclick="resetEau()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resEau" style="margin-top: 10px; font-weight: 600;">Déficit estimé : --</div>
-        <div id="interpEau" style="margin-top: 4px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- Correction Natrémie -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
-        <div style="display: flex; gap: 10px;">
-            <div style="flex: 1;"><label for="corrNa" id="txtCorrNa">Na+ mesurée</label><input type="number" id="corrNa" placeholder="Ex: 130"></div>
-            <div style="flex: 1;"><label for="corrGly" id="txtCorrGly">Glycémie</label><input type="number" id="corrGly" placeholder="Ex: 20"></div>
-        </div>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
-            <button class="reset-icon-btn" onclick="resetCorr()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resNaCorr" style="margin-top: 10px; font-weight: 600;">Na+ corrigée : --</div>
-        <div id="interpNaCorr" style="margin-top: 4px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- Glasgow -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
-        <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
-        <select id="gcsE"><option value="4">4 - Spontanée</option><option value="3">3 - À la voix</option><option value="2">2 - À la douleur</option><option value="1">1 - Absente</option></select>
-        <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
-        <select id="gcsV"><option value="5">5 - Orientée</option><option value="4">4 - Confuse</option><option value="3">3 - Inappropriée</option><option value="2">2 - Incompréhensible</option><option value="1">1 - Absente</option></select>
-        <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
-        <select id="gcsM"><option value="6">6 - Exécute</option><option value="5">5 - Localise</option><option value="4">4 - Retrait</option><option value="3">3 - Flexion</option><option value="2">2 - Extension</option><option value="1">1 - Absente</option></select>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer Glasgow</button>
-            <button class="reset-icon-btn" onclick="resetGcs()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resGcs" style="margin-top: 10px; font-weight: 600;">Score total : --</div>
-        <div id="interpGcs" style="margin-top: 4px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- qSOFA -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
-        <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
-        <select id="qsofaRr"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
-        <label for="qsofaPas" id="txtQsofaPas">PAS ≤ 100 mmHg</label>
-        <select id="qsofaPas"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
-        <label for="qsofaConsc" id="txtQsofaConsc">Altération conscience (Glasgow < 15)</label>
-        <select id="qsofaConsc"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
-            <button class="reset-icon-btn" onclick="resetQsofa()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resQsofa" style="margin-top: 10px; font-weight: 600;">Score qSOFA : --</div>
-        <div id="interpQsofa" style="margin-top: 4px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- Wells -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
-        <label id="txtWells1">Signes cliniques de TVP (phlébite)</label><select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
-        <label id="txtWells2">EP plus probable que tout autre diagnostic</label><select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
-        <label id="txtWells3">Fréquence cardiaque > 100 bpm</label><select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-        <label id="txtWells4">Chirurgie récente ou immobilisation</label><select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-        <label id="txtWells5">Antécédents de TVP ou d'EP</label><select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-        <label id="txtWells6">Hémoptysie</label><select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
-        <label id="txtWells7">Cancer actif</label><select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Wells</button>
-            <button class="reset-icon-btn" onclick="resetWells()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resWells" style="margin-top: 10px; font-weight: 600;">Score de Wells : --</div>
-        <div id="interpWells" style="margin-top: 4px;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- BSA -->
-        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
-        <div style="display: flex; gap: 10px;">
-            <div style="flex: 1;"><label for="bsaPoids">Poids (kg)</label><input type="number" id="bsaPoids" placeholder="Ex: 70"></div>
-            <div style="flex: 1;"><label for="bsaTaille">Taille (cm)</label><input type="number" id="bsaTaille" placeholder="Ex: 175"></div>
-        </div>
-        
-        <div class="action-row">
-            <button class="calc-btn" onclick="calculerBsa()" id="btnBsa">Calculer la Surface Corporelle</button>
-            <button class="reset-icon-btn" onclick="resetBsa()" title="Réinitialiser">&#8634;</button>
-        </div>
-        <div id="resBsa" style="margin-top: 10px; font-weight: 600;">BSA : --</div>
     </div>
 
-    <!-- Convertisseur de Masse -->
-    <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtMasseTitle">Conversion de Masse</h3>
-        <label for="masseVal" id="txtMasseVal">Valeur</label>
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
-            <select id="masseUnit" onchange="convertMasse()" style="width: 140px;">
-                <option value="mg" id="optMgUg">mg vers µg</option>
-                <option value="ug" id="optUgMg">µg vers mg</option>
-            </select>
+    <!-- VUE 3 : CALCULS & CONVERTISSEURS EXPRESS -->
+    <div id="convertisseursView" class="section-view">
+        <!-- Convertisseur de Masse -->
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtMasseTitle">Conversion de Masse</h3>
+            <label for="masseVal" id="txtMasseVal">Valeur</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
+                <select id="masseUnit" onchange="convertMasse()" style="width: 140px;">
+                    <option value="mg" id="optMgUg">mg vers µg</option>
+                    <option value="ug" id="optUgMg">µg vers mg</option>
+                </select>
+            </div>
+            <div id="resultatMasse" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
         </div>
-        <div id="resultatMasse" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
+
+        <!-- Convertisseur de Volume -->
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtVolTitle">Conversion de Volume</h3>
+            <label for="volVal" id="txtVolVal">Valeur</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
+                <select id="volUnit" onchange="convertVolume()" style="width: 140px;">
+                    <option value="L_mL" id="optLMl">L vers mL</option>
+                    <option value="mL_L" id="optMlL">mL vers L</option>
+                </select>
+            </div>
+            <div id="resultatVolume" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
+        </div>
+
+        <!-- Convertisseur de Température -->
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempTitle">Conversion de Température</h3>
+            <label for="tempC">Celsius (°C)</label><input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
+            <label for="tempF">Fahrenheit (°F)</label><input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
+        </div>
+
+        <!-- Convertisseur de Temps -->
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempsTitle">Conversion de Temps</h3>
+            <label for="tempsVal" id="txtTempsVal">Valeur</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
+                <select id="tempsUnit" onchange="convertTemps()" style="width: 200px;">
+                    <option value="min_sec" id="optMinSec">Minutes vers Secondes</option>
+                    <option value="sec_min" id="optSecMin">Secondes vers Minutes</option>
+                    <option value="h_min" id="optHMin">Heures vers Minutes</option>
+                    <option value="j_h" id="optJ_H">Jours vers Heures</option>
+                    <option value="h_j" id="optH_J">Heures vers Jours</option>
+                    <option value="m_j" id="optM_J">Mois vers Jours (30j)</option>
+                    <option value="a_j" id="optA_J">Années vers Jours (365j)</option>
+                </select>
+            </div>
+            <div id="resultatTemps" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
+        </div>
     </div>
 
-    <!-- Convertisseur de Volume -->
-    <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtVolTitle">Conversion de Volume</h3>
-        <label for="volVal" id="txtVolVal">Valeur</label>
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
-            <select id="volUnit" onchange="convertVolume()" style="width: 140px;">
-                <option value="L_mL" id="optLMl">L vers mL</option>
-                <option value="mL_L" id="optMlL">mL vers L</option>
-            </select>
+    <!-- VUE 4 : FRÉQUENCE CARDIAQUE -->
+    <div id="cardioView" class="section-view">
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtCardioTitle">Module Fréquence Cardiaque</h3>
+            <p style="opacity: 0.7; font-size: 0.82rem;" id="txtCardioSub">Évaluation rapide de la fréquence et du rythme</p>
+            <label for="fcVal" id="txtFcVal">Nombre de battements par minute (bpm)</label>
+            <input type="number" id="fcVal" placeholder="Ex: 75">
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerFC()" id="btnFc">Analyser la Fréquence</button>
+                <button class="reset-icon-btn" onclick="resetFc()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resFc" style="margin-top: 14px; font-weight: 600;">Résultat : --</div>
         </div>
-        <div id="resultatVolume" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
-    </div>
-
-    <!-- Convertisseur de Température -->
-    <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempTitle">Conversion de Température</h3>
-        <label for="tempC">Celsius (°C)</label><input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
-        <label for="tempF">Fahrenheit (°F)</label><input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
-    </div>
-
-    <!-- Convertisseur de Temps (Ordre logique : Petites vers Grandes unités, puis l'inverse) -->
-    <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempsTitle">Conversion de Temps</h3>
-        <label for="tempsVal" id="txtTempsVal">Valeur</label>
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
-            <select id="tempsUnit" onchange="convertTemps()" style="width: 200px;">
-                <option value="min_sec" id="optMinSec">Minutes vers Secondes</option>
-                <option value="sec_min" id="optSecMin">Secondes vers Minutes</option>
-                <option value="h_min" id="optHMin">Heures vers Minutes</option>
-                <option value="j_h" id="optJ_H">Jours vers Heures</option>
-                <option value="h_j" id="optH_J">Heures vers Jours</option>
-                <option value="m_j" id="optM_J">Mois vers Jours (30j)</option>
-                <option value="a_j" id="optA_J">Années vers Jours (365j)</option>
-            </select>
-        </div>
-        <div id="resultatTemps" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
     </div>
 
     <!-- Pied de page -->
     <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
-      <p><a href="#" onclick="openModal(); return false;" style="color: var(--primary); text-decoration: none; font-weight: 500;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
     </footer>
-
-    <!-- Modale Mentions Légales -->
-    <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-      <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 450px; width: 100%; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);">
-        <h3 style="margin-top: 0; color: var(--primary);">Mentions Légales & Confidentialité</h3>
-        <p style="font-size: 0.9rem; line-height: 1.5;"><strong>1. Éditeur :</strong> MediCalcul Express est un outil gratuit de calculs médicaux.</p>
-        <p style="font-size: 0.9rem; line-height: 1.5;"><strong>2. Données :</strong> Aucun stockage ni transmission externe. Tout fonctionne localement sur votre appareil.</p>
-        <button onclick="closeModal()" style="margin-top: 16px; width: 100%; padding: 11px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Fermer</button>
-      </div>
-    </div>
 
     <script>
         const traductions = {
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
-                quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "15 questions par jour (Vrai/Faux)", btnOpenQuiz: "Lancer",
+                txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "Accédez rapidement à vos outils de calculs médicaux",
+                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque",
                 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -539,13 +629,13 @@
                 tempTitle: "Conversion de Température", tempsTitle: "Conversion de Temps", tempsVal: "Valeur",
                 optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes", optHMin: "Heures vers Minutes",
                 optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
-                footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité",
-                quizTitle: "Quiz : Quantité des Éléments", btnTrue: "VRAI", btnFalse: "FAUX"
+                footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
-                quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "15 questions per day (True/False)", btnOpenQuiz: "Start",
-                subTitle: "Body Mass Index and weight evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
+                txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access your medical calculation tools",
+                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate",
+                subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
                 pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
@@ -560,12 +650,9 @@
                 tempTitle: "Temperature Conversion", tempsTitle: "Time Conversion", tempsVal: "Value",
                 optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes", optHMin: "Hours to Minutes",
                 optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
-                footerText: "© 2026 MediCalcul Express — All rights reserved", legalText: "Legal Notices & Privacy",
-                quizTitle: "Quiz: Quantity of Elements", btnTrue: "TRUE", btnFalse: "FALSE"
+                footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
-
-        let questionsData = [];
 
         function changerLangue() {
             const lang = document.getElementById('langSelect').value;
@@ -574,6 +661,20 @@
                 const el = document.getElementById(id);
                 if (el) el.innerText = t[id];
             }
+        }
+
+        function ouvrirSection(viewId) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.getElementById('backBtn').style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function retourAccueil() {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById('homeView').classList.add('active');
+            document.getElementById('backBtn').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMenu() {
@@ -605,10 +706,7 @@
         function resetQsofa() { document.getElementById('resQsofa').innerText='Score qSOFA : --'; document.getElementById('interpQsofa').innerText=''; }
         function resetWells() { document.getElementById('resWells').innerText='Score de Wells : --'; document.getElementById('interpWells').innerText=''; }
         function resetBsa() { document.getElementById('bsaPoids').value=''; document.getElementById('bsaTaille').value=''; document.getElementById('resBsa').innerText='BSA : --'; }
-
-        function ouvrirQuiz() { document.getElementById('quizModal').style.display = 'flex'; }
-        function fermerQuiz() { document.getElementById('quizModal').style.display = 'none'; }
-        function repondreQuiz(r) { alert("Réponse enregistrée !"); fermerQuiz(); }
+        function resetFc() { document.getElementById('fcVal').value=''; document.getElementById('resFc').innerText='Résultat : --'; }
 
         function calculerIMC() {
             let p = parseFloat(document.getElementById('poids').value), t = parseFloat(document.getElementById('taille').value)/100;
@@ -658,6 +756,12 @@
             let bsa = Math.sqrt((p * t) / 3600);
             document.getElementById('resBsa').innerText = `BSA : ${bsa.toFixed(2)} m²`;
         }
+        function calculerFC() {
+            let fc = parseFloat(document.getElementById('fcVal').value);
+            if(isNaN(fc)) return;
+            let statut = fc < 60 ? "Bradycardie (Lent)" : (fc > 100 ? "Tachycardie (Rapide)" : "Fréquence normale");
+            document.getElementById('resFc').innerText = `Fréquence : ${fc} bpm (${statut})`;
+        }
         function convertMasse() {
             let v = parseFloat(document.getElementById('masseVal').value);
             let u = document.getElementById('masseUnit').value;
@@ -702,8 +806,6 @@
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         }
-        function openModal() { document.getElementById('legalModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('legalModal').style.display = 'none'; }
 
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
