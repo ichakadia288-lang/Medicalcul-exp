@@ -18,6 +18,7 @@
             --primary: #0284c7;
             --border: #cbd5e1;
             --input-bg: #ffffff;
+            --reset-icon: #000000; /* Noir fort par défaut */
             --font-family: 'Inter', system-ui, -apple-system, sans-serif;
             --font-style: normal;
             --font-weight: normal;
@@ -31,6 +32,7 @@
             --primary: #38bdf8;
             --border: #334155;
             --input-bg: #0f172a;
+            --reset-icon: #ffffff; /* Blanc en mode sombre pour garder un fort contraste */
         }
 
         body {
@@ -74,9 +76,9 @@
             transform: translateX(24px);
         }
 
-        /* Style général des conteneurs de calcul */
+        /* Style général des conteneurs de calcul (rétrécis en largeur) */
         .container {
-            max-width: 600px;
+            max-width: 520px;
             margin: 20px auto;
             padding: 20px;
             background: var(--card-bg);
@@ -100,12 +102,20 @@
             font-size: inherit;
         }
 
+        /* Alignement du bouton Calculer et de l'icône de réinitialisation en bas */
+        .action-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         button.calc-btn {
             background-color: var(--primary);
             color: #ffffff;
             border: none;
             padding: 12px;
-            width: 100%;
+            flex: 1;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
@@ -123,20 +133,26 @@
             float: right;
         }
 
-        /* Petit bouton de réinitialisation */
-        .reset-btn {
+        /* Icône de réinitialisation en noir fort / blanc selon le mode */
+        .reset-icon-btn {
             background: none;
             border: 1px solid var(--border);
-            color: var(--text);
-            font-size: 0.8rem;
-            padding: 2px 8px;
-            border-radius: 4px;
+            color: var(--reset-icon);
+            font-size: 1.3rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 6px;
             cursor: pointer;
-            float: right;
-            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+            font-weight: 900;
         }
-        .reset-btn:hover {
+        .reset-icon-btn:hover {
             background: rgba(0,0,0,0.05);
+            border-color: var(--primary);
         }
 
         /* Styles des statuts cliniques */
@@ -158,13 +174,11 @@
 
     <!-- Barre de menu supérieure -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
-        <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span) -->
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="logo.png" alt="Icône" style="height: 35px; width: auto; object-fit: contain; display: block; border-radius: 6px;">
             <h3 id="appTitleHeader" style="margin: 0; font-size: 1.2rem; line-height: 1;">MediCalcul Express</h3>
         </div>
         
-        <!-- Bloc droit : Sélecteur de langue + Bouton menu -->
         <div style="display: flex; align-items: center; gap: 12px;">
             <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 5px 8px; font-size: 0.9rem; width: auto; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
                 <option value="fr">FR</option>
@@ -182,7 +196,6 @@
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
-        <!-- Option Mode Sombre -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
             <span id="txtDarkMode">Mode Sombre</span>
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
@@ -190,7 +203,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
-        <!-- Option Choix de la police d'écriture -->
         <div style="margin-bottom: 15px;">
             <span id="txtFontTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;">Police d'écriture</span>
             <select id="fontSelect" onchange="mettreAJourStyleTexte()" style="margin: 0; padding: 8px; cursor: pointer; width: 100%;">
@@ -201,7 +213,6 @@
             </select>
         </div>
 
-        <!-- Option Style du texte (Gras / Italique) -->
         <div style="margin-bottom: 15px;">
             <span id="txtStyleTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;">Style du texte</span>
             <select id="styleSelect" onchange="mettreAJourStyleTexte()" style="margin: 0; padding: 8px; cursor: pointer; width: 100%;">
@@ -212,7 +223,6 @@
             </select>
         </div>
 
-        <!-- Option Taille du texte -->
         <div style="margin-bottom: 20px;">
             <span id="txtSizeTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px;">Taille du texte</span>
             <select id="sizeSelect" onchange="mettreAJourStyleTexte()" style="margin: 0; padding: 8px; cursor: pointer; width: 100%;">
@@ -224,7 +234,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
-        <!-- Calendrier de dates -->
         <div style="margin-bottom: 20px;">
             <span id="txtCalTitle" style="font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 8px;">Calendrier & Date</span>
             <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; padding: 8px; cursor: pointer;">
@@ -232,7 +241,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
-        <!-- Option Quiz Corps Humain -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 0.9rem;">Quiz : Éléments du Corps</span>
@@ -266,10 +274,7 @@
 
     <!-- Contenu principal -->
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 id="txtImcTitle" style="margin: 0;">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
-            <button class="reset-btn" onclick="resetImc()" id="btnResetImc">↺ Réinit</button>
-        </div>
+        <h3 id="txtImcTitle" style="margin-top: 0;">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
         <p style="text-align: center; color: var(--border); margin-top: 0;" id="txtSubTitle">Outils de calculs et conversions médicales rapides</p>
 
         <label for="poids" id="txtPoids">Poids (kg)</label>
@@ -278,7 +283,10 @@
         <label for="taille" id="txtTaille">Taille (cm)</label>
         <input type="number" id="taille" placeholder="Ex: 175">
 
-        <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
+        <div class="action-row">
+            <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
+            <button class="reset-icon-btn" onclick="resetImc()" title="Réinitialiser">↺</button>
+        </div>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
         <div id="interpretationIMC" style="margin-top: 5px;"></div>
     </div>
@@ -288,10 +296,7 @@
         <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
         <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
-            <button class="reset-btn" onclick="resetCockcroft()" id="btnResetCockcroft">↺ Réinit</button>
-        </div>
+        <h4 style="color: var(--primary); margin-top: 15px;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
         <div style="display: flex; gap: 10px; margin-top: 10px;">
             <div style="flex: 1;">
                 <label for="crPoids" id="txtCrPoids">Poids (kg)</label>
@@ -309,34 +314,32 @@
             <option value="homme" id="optHomme">Homme</option>
             <option value="femme" id="optFemme">Femme</option>
         </select>
-        <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
+        <div class="action-row">
+            <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
+            <button class="reset-icon-btn" onclick="resetCockcroft()" title="Réinitialiser">↺</button>
+        </div>
         <div id="resCockcroft" style="margin-top: 10px; font-weight: bold;">Clairance : --</div>
         <div id="interpCockcroft" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 2. Posologie Pédiatrique -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
-            <button class="reset-btn" onclick="resetPed()" id="btnResetPed">↺ Réinit</button>
-        </div>
-        <div style="margin-top: 10px;">
-            <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
-            <input type="number" id="pedPoids" placeholder="Ex: 15">
-            <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
-            <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
+        <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+        <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
+        <input type="number" id="pedPoids" placeholder="Ex: 15">
+        <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
+        <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
+        <div class="action-row">
             <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
-            <div id="resPediatrie" style="margin-top: 10px; font-weight: bold;">Dose totale : --</div>
+            <button class="reset-icon-btn" onclick="resetPed()" title="Réinitialiser">↺</button>
         </div>
+        <div id="resPediatrie" style="margin-top: 10px; font-weight: bold;">Dose totale : --</div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 3. Déficit en Eau -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
-            <button class="reset-btn" onclick="resetEau()" id="btnResetEau">↺ Réinit</button>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
+        <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="eauPoids" id="txtEauPoids">Poids (kg)</label>
                 <input type="number" id="eauPoids" placeholder="Ex: 70">
@@ -346,18 +349,18 @@
                 <input type="number" id="eauNa" placeholder="Ex: 155">
             </div>
         </div>
-        <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
+        <div class="action-row">
+            <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
+            <button class="reset-icon-btn" onclick="resetEau()" title="Réinitialiser">↺</button>
+        </div>
         <div id="resEau" style="margin-top: 10px; font-weight: bold;">Déficit estimé : --</div>
         <div id="interpEau" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 4. Correction de la Natrémie -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
-            <button class="reset-btn" onclick="resetCorr()" id="btnResetCorr">↺ Réinit</button>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
+        <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="corrNa" id="txtCorrNa">Na+ mesurée (mmol/L)</label>
                 <input type="number" id="corrNa" placeholder="Ex: 130">
@@ -367,121 +370,115 @@
                 <input type="number" id="corrGly" placeholder="Ex: 20">
             </div>
         </div>
-        <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
+        <div class="action-row">
+            <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
+            <button class="reset-icon-btn" onclick="resetCorr()" title="Réinitialiser">↺</button>
+        </div>
         <div id="resNaCorr" style="margin-top: 10px; font-weight: bold;">Na+ corrigée : --</div>
         <div id="interpNaCorr" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 5. Score de Glasgow -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
-            <button class="reset-btn" onclick="resetGcs()" id="btnResetGcs">↺ Réinit</button>
-        </div>
-        <div style="margin-top: 10px;">
-            <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
-            <select id="gcsE">
-                <option value="4" id="optE4">4 - Spontanée</option>
-                <option value="3" id="optE3">3 - À la voix / demande</option>
-                <option value="2" id="optE2">2 - À la douleur</option>
-                <option value="1" id="optE1">1 - Absente</option>
-            </select>
+        <h4 style="color: var(--primary);" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
+        <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
+        <select id="gcsE">
+            <option value="4" id="optE4">4 - Spontanée</option>
+            <option value="3" id="optE3">3 - À la voix / demande</option>
+            <option value="2" id="optE2">2 - À la douleur</option>
+            <option value="1" id="optE1">1 - Absente</option>
+        </select>
 
-            <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
-            <select id="gcsV">
-                <option value="5" id="optV5">5 - Orientée et cohérente</option>
-                <option value="4" id="optV4">4 - Confuse / conversation décousue</option>
-                <option value="3" id="optV3">3 - Mots inappropriés</option>
-                <option value="2" id="optV2">2 - Sons incompréhensibles</option>
-                <option value="1" id="optV1">1 - Absente</option>
-            </select>
+        <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
+        <select id="gcsV">
+            <option value="5" id="optV5">5 - Orientée et cohérente</option>
+            <option value="4" id="optV4">4 - Confuse / conversation décousue</option>
+            <option value="3" id="optV3">3 - Mots inappropriés</option>
+            <option value="2" id="optV2">2 - Sons incompréhensibles</option>
+            <option value="1" id="optV1">1 - Absente</option>
+        </select>
 
-            <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
-            <select id="gcsM">
-                <option value="6" id="optM6">6 - Exécute les ordres sur commande</option>
-                <option value="5" id="optM5">5 - Orientée à la douleur / localise</option>
-                <option value="4" id="optM4">4 - Retrait / évitement à la douleur</option>
-                <option value="3" id="optM3">3 - Flexion anormale (décortication)</option>
-                <option value="2" id="optM2">2 - Extension anormale (décérébration)</option>
-                <option value="1" id="optM1">1 - Absente / flaccide</option>
-            </select>
+        <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
+        <select id="gcsM">
+            <option value="6" id="optM6">6 - Exécute les ordres sur commande</option>
+            <option value="5" id="optM5">5 - Orientée à la douleur / localise</option>
+            <option value="4" id="optM4">4 - Retrait / évitement à la douleur</option>
+            <option value="3" id="optM3">3 - Flexion anormale (décortication)</option>
+            <option value="2" id="optM2">2 - Extension anormale (décérébration)</option>
+            <option value="1" id="optM1">1 - Absente / flaccide</option>
+        </select>
+        <div class="action-row">
             <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer le Score de Glasgow</button>
-            <div id="resGcs" style="margin-top: 10px; font-weight: bold;">Score total : --</div>
-            <div id="interpGcs" style="margin-top: 5px;"></div>
+            <button class="reset-icon-btn" onclick="resetGcs()" title="Réinitialiser">↺</button>
         </div>
+        <div id="resGcs" style="margin-top: 10px; font-weight: bold;">Score total : --</div>
+        <div id="interpGcs" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 6. Score qSOFA -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
-            <button class="reset-btn" onclick="resetQsofa()" id="btnResetQsofa">↺ Réinit</button>
-        </div>
-        <div style="margin-top: 10px;">
-            <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
-            <select id="qsofaRr">
-                <option value="0" id="qsofaRrNo">Non</option>
-                <option value="1" id="qsofaRrYes">Oui (+1 point)</option>
-            </select>
+        <h4 style="color: var(--primary);" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
+        <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
+        <select id="qsofaRr">
+            <option value="0" id="qsofaRrNo">Non</option>
+            <option value="1" id="qsofaRrYes">Oui (+1 point)</option>
+        </select>
 
-            <label for="qsofaPas" id="txtQsofaPas">Pression artérielle systolique (PAS) ≤ 100 mmHg</label>
-            <select id="qsofaPas">
-                <option value="0" id="qsofaPasNo">Non</option>
-                <option value="1" id="qsofaPasYes">Oui (+1 point)</option>
-            </select>
+        <label for="qsofaPas" id="txtQsofaPas">Pression artérielle systolique (PAS) ≤ 100 mmHg</label>
+        <select id="qsofaPas">
+            <option value="0" id="qsofaPasNo">Non</option>
+            <option value="1" id="qsofaPasYes">Oui (+1 point)</option>
+        </select>
 
-            <label for="qsofaConsc" id="txtQsofaConsc">Altération de l'état de conscience (Glasgow < 15)</label>
-            <select id="qsofaConsc">
-                <option value="0" id="qsofaConscNo">Non</option>
-                <option value="1" id="qsofaConscYes">Oui (+1 point)</option>
-            </select>
+        <label for="qsofaConsc" id="txtQsofaConsc">Altération de l'état de conscience (Glasgow < 15)</label>
+        <select id="qsofaConsc">
+            <option value="0" id="qsofaConscNo">Non</option>
+            <option value="1" id="qsofaConscYes">Oui (+1 point)</option>
+        </select>
+        <div class="action-row">
             <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
-            <div id="resQsofa" style="margin-top: 10px; font-weight: bold;">Score qSOFA : --</div>
-            <div id="interpQsofa" style="margin-top: 5px;"></div>
+            <button class="reset-icon-btn" onclick="resetQsofa()" title="Réinitialiser">↺</button>
         </div>
+        <div id="resQsofa" style="margin-top: 10px; font-weight: bold;">Score qSOFA : --</div>
+        <div id="interpQsofa" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 7. Score de Wells -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
-            <button class="reset-btn" onclick="resetWells()" id="btnResetWells">↺ Réinit</button>
-        </div>
-        <div style="margin-top: 10px;">
-            <label for="wells1" id="txtWells1">Signes cliniques de thrombose veineuse profonde (phlébite)</label>
-            <select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+        <h4 style="color: var(--primary);" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
+        <label for="wells1" id="txtWells1">Signes cliniques de thrombose veineuse profonde (phlébite)</label>
+        <select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
 
-            <label for="wells2" id="txtWells2">Diagnostic d'embolie pulmonaire plus probable que tout autre</label>
-            <select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+        <label for="wells2" id="txtWells2">Diagnostic d'embolie pulmonaire plus probable que tout autre</label>
+        <select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
 
-            <label for="wells3" id="txtWells3">Fréquence cardiaque > 100 bpm</label>
-            <select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+        <label for="wells3" id="txtWells3">Fréquence cardiaque > 100 bpm</label>
+        <select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
 
-            <label for="wells4" id="txtWells4">Chirurgie récente (< 4 sem.) ou immobilisation</label>
-            <select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+        <label for="wells4" id="txtWells4">Chirurgie récente (< 4 sem.) ou immobilisation</label>
+        <select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
 
-            <label for="wells5" id="txtWells5">Antécédents de TVP ou d'embolie pulmonaire</label>
-            <select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+        <label for="wells5" id="txtWells5">Antécédents de TVP ou d'embolie pulmonaire</label>
+        <select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
 
-            <label for="wells6" id="txtWells6">Hémoptysie</label>
-            <select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+        <label for="wells6" id="txtWells6">Hémoptysie</label>
+        <select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
 
-            <label for="wells7" id="txtWells7">Cancer actif (traité dans les 6 derniers mois)</label>
-            <select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+        <label for="wells7" id="txtWells7">Cancer actif (traité dans les 6 derniers mois)</label>
+        <select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
 
+        <div class="action-row">
             <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Score de Wells</button>
-            <div id="resWells" style="margin-top: 10px; font-weight: bold;">Score de Wells : --</div>
-            <div id="interpWells" style="margin-top: 5px;"></div>
+            <button class="reset-icon-btn" onclick="resetWells()" title="Réinitialiser">↺</button>
         </div>
+        <div id="resWells" style="margin-top: 10px; font-weight: bold;">Score de Wells : --</div>
+        <div id="interpWells" style="margin-top: 5px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 8. Surface Corporelle (BSA) -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="color: var(--primary); margin: 0;" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
-            <button class="reset-btn" onclick="resetBsa()" id="btnResetBsa">↺ Réinit</button>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <h4 style="color: var(--primary);" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
+        <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="bsaPoids" id="txtBsaPoids">Poids (kg)</label>
                 <input type="number" id="bsaPoids" placeholder="Ex: 70">
@@ -491,7 +488,10 @@
                 <input type="number" id="bsaTaille" placeholder="Ex: 175">
             </div>
         </div>
-        <button class="calc-btn" onclick="calculerBsa()" id="btnBsa">Calculer la Surface Corporelle</button>
+        <div class="action-row">
+            <button class="calc-btn" onclick="calculerBsa()" id="btnBsa">Calculer la Surface Corporelle</button>
+            <button class="reset-icon-btn" onclick="resetBsa()" title="Réinitialiser">↺</button>
+        </div>
         <div id="resBsa" style="margin-top: 10px; font-weight: bold;">BSA : --</div>
     </div>
 
@@ -718,7 +718,6 @@
             document.getElementById('txtCorrGly').innerText = t.txtCorrGly ? t.txtCorrGly : document.getElementById('txtCorrGly').innerText;
             document.getElementById('btnCorr').innerText = t.btnCorr;
             
-            // Glasgow
             document.getElementById('txtGcsTitle').innerText = t.gcsTitle;
             document.getElementById('txtGcsE').innerText = t.txtGcsE;
             document.getElementById('txtGcsV').innerText = t.txtGcsV;
@@ -740,7 +739,6 @@
             document.getElementById('optM2').innerText = t.optM2;
             document.getElementById('optM1').innerText = t.optM1;
 
-            // qSOFA
             document.getElementById('txtQsofaTitle').innerText = t.qsofaTitle;
             document.getElementById('txtQsofaRr').innerText = t.txtQsofaRr;
             document.getElementById('qsofaRrNo').innerText = t.qsofaRrNo;
@@ -753,7 +751,6 @@
             document.getElementById('qsofaConscYes').innerText = t.qsofaConscYes;
             document.getElementById('btnQsofa').innerText = t.btnQsofa;
 
-            // Wells
             document.getElementById('txtWellsTitle').innerText = t.wellsTitle;
             document.getElementById('txtWells1').innerText = t.txtWells1;
             document.getElementById('txtWells2').innerText = t.txtWells2;
@@ -764,7 +761,6 @@
             document.getElementById('txtWells7').innerText = t.txtWells7;
             document.getElementById('btnWells').innerText = t.btnWells;
 
-            // BSA
             document.getElementById('txtBsaTitle').innerText = t.bsaTitle;
             document.getElementById('txtBsaPoids').innerText = t.bsaPoids;
             document.getElementById('txtBsaTaille').innerText = t.bsaTaille;
@@ -790,18 +786,6 @@
             document.getElementById('quizTitle').innerText = t.quizTitle;
             document.getElementById('btnTrue').innerText = t.btnTrue;
             document.getElementById('btnFalse').innerText = t.btnFalse;
-
-            // Textes des boutons de réinitialisation
-            const resetTxt = lang === 'fr' ? '↺ Réinit' : '↺ Reset';
-            document.getElementById('btnResetImc').innerText = resetTxt;
-            document.getElementById('btnResetCockcroft').innerText = resetTxt;
-            document.getElementById('btnResetPed').innerText = resetTxt;
-            document.getElementById('btnResetEau').innerText = resetTxt;
-            document.getElementById('btnResetCorr').innerText = resetTxt;
-            document.getElementById('btnResetGcs').innerText = resetTxt;
-            document.getElementById('btnResetQsofa').innerText = resetTxt;
-            document.getElementById('btnResetWells').innerText = resetTxt;
-            document.getElementById('btnResetBsa').innerText = resetTxt;
 
             questionsData = [
                 { q: t.qWater, r: true }, { q: t.qHeart, r: true }, { q: t.qFemur, r: false }, { q: t.qLiver, r: true }, { q: t.qVeins, r: false },
