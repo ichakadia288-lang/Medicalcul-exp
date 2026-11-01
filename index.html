@@ -124,9 +124,9 @@
     <!-- Contenu principal -->
     <div class="container">
         <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
-        <p style="text-align: center; color: var(--border);">Outils de calculs médicaux rapides</p>
+        <p style="text-align: center; color: var(--border);">Outils de calculs et conversions médicales rapides</p>
 
-        <!-- Exemple de calculatrice IMC -->
+        <!-- Calculatrice IMC -->
         <h3>Calcul de l'IMC (Indice de Masse Corporelle)</h3>
         <label for="poids">Poids (kg)</label>
         <input type="number" id="poids" placeholder="Ex: 70">
@@ -137,12 +137,11 @@
         <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
     </div>
-        <!-- Convertisseur d'Unités Médicales -->
+
+    <!-- Convertisseur d'Unités de Masse -->
     <div class="container">
-        <h3 style="margin-top: 0;">Conversions d'Unités</h3>
-        
-        <!-- Sous-section Masse -->
-        <label for="masseVal">Masse</label>
+        <h3 style="margin-top: 0;">Conversion de Masse</h3>
+        <label for="masseVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
             <select id="masseUnit" onchange="convertMasse()">
@@ -151,9 +150,12 @@
             </select>
         </div>
         <div id="resultatMasse" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
+    </div>
 
-        <!-- Sous-section Volume -->
-        <label for="volVal" style="margin-top: 15px; display: block;">Volume</label>
+    <!-- Convertisseur d'Unités de Volume -->
+    <div class="container">
+        <h3 style="margin-top: 0;">Conversion de Volume</h3>
+        <label for="volVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
             <select id="volUnit" onchange="convertVolume()">
@@ -163,15 +165,30 @@
         </div>
         <div id="resultatVolume" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
     </div>
+
     <!-- Convertisseur de Température -->
     <div class="container">
         <h3 style="margin-top: 0;">Conversion de Température</h3>
-        
         <label for="tempC">Celsius (°C)</label>
         <input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
 
         <label for="tempF">Fahrenheit (°F)</label>
         <input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
+    </div>
+
+    <!-- Convertisseur de Temps (Débit / Posologie) -->
+    <div class="container">
+        <h3 style="margin-top: 0;">Conversion de Temps</h3>
+        <label for="tempsVal">Valeur</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
+            <select id="tempsUnit" onchange="convertTemps()">
+                <option value="h_min">Heures vers Minutes</option>
+                <option value="min_sec">Minutes vers Secondes</option>
+                <option value="sec_min">Secondes vers Minutes</option>
+            </select>
+        </div>
+        <div id="resultatTemps" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
     </div>
 
     <!-- Scripts JavaScript -->
@@ -184,28 +201,24 @@
             } else {
                 menu.style.right = '0px';
             }
-             // Fonction de conversion de température instantanée
-        function convertTemp(unit) {
-            const cInput = document.getElementById('tempC');
-            const fInput = document.getElementById('tempF');
-            
-            if (unit === 'C') {
-                const c = parseFloat(cInput.value);
-                if (!isNaN(c)) {
-                    fInput.value = (c * 9/5 + 32).toFixed(1);
-                } else {
-                    fInput.value = '';
-                }
-            } else {
-                const f = parseFloat(fInput.value);
-                if (!isNaN(f)) {
-                    cInput.value = ((f - 32) * 5/9).toFixed(1);
-                } else {
-                    cInput.value = '';
-                }
-            }
         }
-          // Conversion de masse (mg <-> µg)
+
+        // Fonction de calcul de l'IMC
+        function calculerIMC() {
+            const poids = parseFloat(document.getElementById('poids').value);
+            const tailleCm = parseFloat(document.getElementById('taille').value);
+            const resultatDiv = document.getElementById('resultatIMC');
+            
+            if (isNaN(poids) || isNaN(tailleCm) || tailleCm <= 0) {
+                resultatDiv.innerText = "Résultat : Veuillez entrer des valeurs valides.";
+                return;
+            }
+            const tailleM = tailleCm / 100;
+            const imc = poids / (tailleM * tailleM);
+            resultatDiv.innerText = `Résultat : ${imc.toFixed(2)}`;
+        }
+
+        // Conversion de masse (mg <-> µg)
         function convertMasse() {
             const val = parseFloat(document.getElementById('masseVal').value);
             const unit = document.getElementById('masseUnit').value;
@@ -240,7 +253,48 @@
                 resDiv.innerText = `Résultat : ${val / 1000} L`;
             }
         }
- }
+
+        // Fonction de conversion de température instantanée
+        function convertTemp(unit) {
+            const cInput = document.getElementById('tempC');
+            const fInput = document.getElementById('tempF');
+            
+            if (unit === 'C') {
+                const c = parseFloat(cInput.value);
+                if (!isNaN(c)) {
+                    fInput.value = (c * 9/5 + 32).toFixed(1);
+                } else {
+                    fInput.value = '';
+                }
+            } else {
+                const f = parseFloat(fInput.value);
+                if (!isNaN(f)) {
+                    cInput.value = ((f - 32) * 5/9).toFixed(1);
+                } else {
+                    cInput.value = '';
+                }
+            }
+        }
+
+        // Conversion de temps
+        function convertTemps() {
+            const val = parseFloat(document.getElementById('tempsVal').value);
+            const unit = document.getElementById('tempsUnit').value;
+            const resDiv = document.getElementById('resultatTemps');
+
+            if (isNaN(val)) {
+                resDiv.innerText = "Résultat : --";
+                return;
+            }
+
+            if (unit === 'h_min') {
+                resDiv.innerText = `Résultat : ${val * 60} minutes (${val * 3600} secondes)`;
+            } else if (unit === 'min_sec') {
+                resDiv.innerText = `Résultat : ${val * 60} secondes`;
+            } else {
+                resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
+            }
+        }
     </script>
 
     <script>
