@@ -108,6 +108,20 @@
             font-weight: bold;
             float: right;
         }
+
+        /* Styles des statuts cliniques */
+        .status-good {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .status-bad {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .status-warn {
+            color: #f59e0b;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +162,7 @@
 
         <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
+        <div id="interpretationIMC" style="margin-top: 5px; font-size: 14px;"></div>
     </div>
 
     <!-- MODULE URGENCES & RÉANIMATION -->
@@ -175,6 +190,7 @@
         </select>
         <button class="calc-btn" onclick="calculerCockcroft()">Calculer Clairance</button>
         <div id="resCockcroft" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Clairance : --</div>
+        <div id="interpCockcroft" style="margin-top: 5px; font-size: 14px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
@@ -203,6 +219,7 @@
         </div>
         <button class="calc-btn" onclick="calculerDeficitEau()">Calculer Déficit en Eau</button>
         <div id="resEau" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Déficit estimé : --</div>
+        <div id="interpEau" style="margin-top: 5px; font-size: 14px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
@@ -220,6 +237,7 @@
         </div>
         <button class="calc-btn" onclick="calculerNaCorrigee()">Calculer Na+ Corrigée</button>
         <div id="resNaCorr" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Na+ corrigée : --</div>
+        <div id="interpNaCorr" style="margin-top: 5px; font-size: 14px;"></div>
     </div>
 
     <!-- Convertisseur d'Unités de Masse -->
@@ -287,42 +305,67 @@
             }
         }
 
-        // Fonction de calcul de l'IMC
+        // Fonction de calcul de l'IMC avec évaluation
         function calculerIMC() {
             const poids = parseFloat(document.getElementById('poids').value);
             const tailleCm = parseFloat(document.getElementById('taille').value);
             const resultatDiv = document.getElementById('resultatIMC');
+            const interpDiv = document.getElementById('interpretationIMC');
             
             if (isNaN(poids) || isNaN(tailleCm) || tailleCm <= 0) {
                 resultatDiv.innerText = "Résultat : Veuillez entrer des valeurs valides.";
+                interpDiv.innerText = "";
                 return;
             }
             const tailleM = tailleCm / 100;
             const imc = poids / (tailleM * tailleM);
             resultatDiv.innerText = `Résultat : ${imc.toFixed(2)}`;
+
+            if (imc < 18.5) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance pondérale (Maigreur)</span>';
+            } else if (imc >= 18.5 && imc < 25) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Corpulence normale (Bon résultat)</span>';
+            } else if (imc >= 25 && imc < 30) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Surpoids</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Obésité (Mauvais / Risque élevé)</span>';
+            }
         }
 
-        // --- MODULE URGENCES & RÉANIMATION : LOGIQUE JS ---
+        // --- MODULE URGENCES & RÉANIMATION : LOGIQUE JS & ÉVALUATION ---
 
-        // 1. Clairance de la créatinine (Formule de Cockcroft et Gault)
+        // 1. Clairance de la créatinine (Cockcroft et Gault)
         function calculerCockcroft() {
             const poids = parseFloat(document.getElementById('crPoids').value);
             const age = parseFloat(document.getElementById('crAge').value);
             const creat = parseFloat(document.getElementById('crCreat').value);
             const sexe = document.getElementById('crSexe').value;
             const resDiv = document.getElementById('resCockcroft');
+            const interpDiv = document.getElementById('interpCockcroft');
 
             if (isNaN(poids) || isNaN(age) || isNaN(creat) || creat <= 0) {
                 resDiv.innerText = "Clairance : Veuillez remplir tous les champs correctement.";
+                interpDiv.innerText = "";
                 return;
             }
 
-            // Formule : ClCR = [(140 - âge) x poids] / (0.815 x créatininémie en µmol/L) [x 0.85 si femme]
             let clairance = ((140 - age) * poids) / (0.815 * creat);
             if (sexe === 'femme') {
                 clairance *= 0.85;
             }
             resDiv.innerText = `Clairance estimée : ${clairance.toFixed(2)} mL/min`;
+
+            if (clairance >= 90) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Fonction rénale normale (Bon)</span>';
+            } else if (clairance >= 60) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance rénale légère</span>';
+            } else if (clairance >= 30) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance rénale modérée</span>';
+            } else if (clairance >= 15) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Insuffisance rénale sévère (Mauvais)</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Insuffisance rénale terminale / Dialyse (Critique)</span>';
+            }
         }
 
         // 2. Posologie Pédiatrique
@@ -337,37 +380,57 @@
             }
 
             const doseTotale = poids * doseKg;
-            resDiv.innerText = `Dose totale par prise : ${doseTotale.toFixed(2)} mg`;
+            resDiv.innerText = `Dose totale par prise : ${doseTotale.toFixed(2)} mg (Vérifier la posologie maximale)`;
         }
 
-        // 3. Déficit en Eau (formule simplifiée : 0.6 * Poids * [(Natrémie / 140) - 1])
+        // 3. Déficit en Eau
         function calculerDeficitEau() {
             const poids = parseFloat(document.getElementById('eauPoids').value);
             const na = parseFloat(document.getElementById('eauNa').value);
             const resDiv = document.getElementById('resEau');
+            const interpDiv = document.getElementById('interpEau');
 
             if (isNaN(poids) || isNaN(na)) {
                 resDiv.innerText = "Déficit estimé : Veuillez entrer des valeurs valides.";
+                interpDiv.innerText = "";
                 return;
             }
 
             const deficit = 0.6 * poids * ((na / 140) - 1);
             resDiv.innerText = `Déficit en eau libre estimé : ${deficit.toFixed(2)} Litres`;
+
+            if (na > 145) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hypernatrémie avérée (Mauvais / Risque neurologique)</span>';
+            } else if (na >= 135 && na <= 145) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Natrémie normale</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Hyponatrémie (Ne correspond pas à un déficit en eau libre pur)</span>';
+            }
         }
 
-        // 4. Natrémie Corrigée (Katz : Na + 0.3 * (Glycémie mmol/L - 5.5))
+        // 4. Natrémie Corrigée
         function calculerNaCorrigee() {
             const na = parseFloat(document.getElementById('corrNa').value);
             const gly = parseFloat(document.getElementById('corrGly').value);
             const resDiv = document.getElementById('resNaCorr');
+            const interpDiv = document.getElementById('interpNaCorr');
 
             if (isNaN(na) || isNaN(gly)) {
                 resDiv.innerText = "Na+ corrigée : Veuillez entrer des valeurs valides.";
+                interpDiv.innerText = "";
                 return;
             }
 
             const naCorr = na + 0.3 * (gly - 5.5);
             resDiv.innerText = `Natrémie corrigée : ${naCorr.toFixed(2)} mmol/L`;
+
+            if (naCorr >= 135 && naCorr <= 145) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Natrémie corrigée normale (Bon)</span>';
+            } else if (naCorr < 135) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hyponatrémie corrigée (Mauvais / Attention aux mouvements d’eau)</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hypernatrémie corrigée (Mauvais / Risque de déshydratation intracellulaire)</span>';
+            }
         }
 
         // --- FIN MODULE URGENCES ---
