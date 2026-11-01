@@ -129,19 +129,29 @@
     <!-- Barre de menu supérieure -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
         <h3 style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
-        <!-- Bouton menu hamburger -->
-        <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);">☰</button>
+        
+        <!-- Bloc droit : Sélecteur de langue + Bouton menu -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <!-- Sélecteur de langue -->
+            <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 5px 8px; font-size: 13px; width: auto; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
+                <option value="fr">FR</option>
+                <option value="en">EN</option>
+            </select>
+
+            <!-- Bouton menu hamburger -->
+            <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0;">☰</button>
+        </div>
     </header>
 
     <!-- Panneau du menu latéral (caché par défaut) -->
     <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h4 style="margin: 0;">Paramètres</h4>
+            <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
         <div style="display: flex; align-items: center; justify-content: space-between;">
-            <span>Mode Sombre</span>
+            <span id="txtDarkMode">Mode Sombre</span>
             <!-- Interrupteur du mode sombre -->
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
         </div>
@@ -150,105 +160,105 @@
     <!-- Contenu principal -->
     <div class="container">
         <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
-        <p style="text-align: center; color: var(--border);">Outils de calculs et conversions médicales rapides</p>
+        <p style="text-align: center; color: var(--border);" id="txtSubTitle">Outils de calculs et conversions médicales rapides</p>
 
         <!-- Calculatrice IMC -->
-        <h3>Calcul de l'IMC (Indice de Masse Corporelle)</h3>
-        <label for="poids">Poids (kg)</label>
+        <h3 id="txtImcTitle">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
+        <label for="poids" id="txtPoids">Poids (kg)</label>
         <input type="number" id="poids" placeholder="Ex: 70">
 
-        <label for="taille">Taille (cm)</label>
+        <label for="taille" id="txtTaille">Taille (cm)</label>
         <input type="number" id="taille" placeholder="Ex: 175">
 
-        <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
+        <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
         <div id="interpretationIMC" style="margin-top: 5px; font-size: 14px;"></div>
     </div>
 
     <!-- MODULE URGENCES & RÉANIMATION -->
     <div class="container" style="border-left: 4px solid #ef4444;">
-        <h3 style="margin-top: 0;">Module Urgences & Réanimation <span class="badge-urg">URG</span></h3>
+        <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
         <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
-        <h4 style="color: var(--primary);">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
+        <h4 style="color: var(--primary);" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
-                <label for="crPoids">Poids (kg)</label>
+                <label for="crPoids" id="txtCrPoids">Poids (kg)</label>
                 <input type="number" id="crPoids" placeholder="Ex: 70">
             </div>
             <div style="flex: 1;">
-                <label for="crAge">Âge (années)</label>
+                <label for="crAge" id="txtCrAge">Âge (années)</label>
                 <input type="number" id="crAge" placeholder="Ex: 50">
             </div>
         </div>
-        <label for="crCreat">Créatininémie (µmol/L)</label>
+        <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label>
         <input type="number" id="crCreat" placeholder="Ex: 90">
-        <label for="crSexe">Sexe</label>
+        <label for="crSexe" id="txtCrSexe">Sexe</label>
         <select id="crSexe">
-            <option value="homme">Homme</option>
-            <option value="femme">Femme</option>
+            <option value="homme" id="optHomme">Homme</option>
+            <option value="femme" id="optFemme">Femme</option>
         </select>
-        <button class="calc-btn" onclick="calculerCockcroft()">Calculer Clairance</button>
+        <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
         <div id="resCockcroft" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Clairance : --</div>
         <div id="interpCockcroft" style="margin-top: 5px; font-size: 14px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 2. Posologie Pédiatrique -->
-        <h4 style="color: var(--primary);">2. Posologie Pédiatrique (Dose / kg)</h4>
-        <label for="pedPoids">Poids de l'enfant (kg)</label>
+        <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+        <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
         <input type="number" id="pedPoids" placeholder="Ex: 15">
-        <label for="pedDoseKg">Dose unitaire recommandée (mg/kg)</label>
+        <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
         <input type="number" id="pedDoseKg" placeholder="Ex: 15 (ex: Paracétamol)">
-        <button class="calc-btn" onclick="calculerPediatrie()">Calculer la Dose</button>
+        <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
         <div id="resPediatrie" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Dose totale : --</div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 3. Déficit en Eau (Déshydratation / Hypernatrémie) -->
-        <h4 style="color: var(--primary);">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
+        <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
-                <label for="eauPoids">Poids (kg)</label>
+                <label for="eauPoids" id="txtEauPoids">Poids (kg)</label>
                 <input type="number" id="eauPoids" placeholder="Ex: 70">
             </div>
             <div style="flex: 1;">
-                <label for="eauNa">Natrémie mesurée (mmol/L)</label>
+                <label for="eauNa" id="txtEauNa">Natrémie mesurée (mmol/L)</label>
                 <input type="number" id="eauNa" placeholder="Ex: 155">
             </div>
         </div>
-        <button class="calc-btn" onclick="calculerDeficitEau()">Calculer Déficit en Eau</button>
+        <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
         <div id="resEau" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Déficit estimé : --</div>
         <div id="interpEau" style="margin-top: 5px; font-size: 14px;"></div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
         <!-- 4. Correction de la Natrémie en cas d'Hyperglycémie (Katz) -->
-        <h4 style="color: var(--primary);">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
+        <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
-                <label for="corrNa">Na+ mesurée (mmol/L)</label>
+                <label for="corrNa" id="txtCorrNa">Na+ mesurée (mmol/L)</label>
                 <input type="number" id="corrNa" placeholder="Ex: 130">
             </div>
             <div style="flex: 1;">
-                <label for="corrGly">Glycémie (mmol/L)</label>
+                <label for="corrGly" id="txtCorrGly">Glycémie (mmol/L)</label>
                 <input type="number" id="corrGly" placeholder="Ex: 20">
             </div>
         </div>
-        <button class="calc-btn" onclick="calculerNaCorrigee()">Calculer Na+ Corrigée</button>
+        <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
         <div id="resNaCorr" style="margin-top: 10px; font-weight: bold; font-size: 14px;">Na+ corrigée : --</div>
         <div id="interpNaCorr" style="margin-top: 5px; font-size: 14px;"></div>
     </div>
 
     <!-- Convertisseur d'Unités de Masse -->
     <div class="container">
-        <h3 style="margin-top: 0;">Conversion de Masse</h3>
-        <label for="masseVal">Valeur</label>
+        <h3 style="margin-top: 0;" id="txtMasseTitle">Conversion de Masse</h3>
+        <label for="masseVal" id="txtMasseVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
             <select id="masseUnit" onchange="convertMasse()">
-                <option value="mg">mg vers µg</option>
-                <option value="ug">µg vers mg</option>
+                <option value="mg" id="optMgUg">mg vers µg</option>
+                <option value="ug" id="optUgMg">µg vers mg</option>
             </select>
         </div>
         <div id="resultatMasse" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
@@ -256,13 +266,13 @@
 
     <!-- Convertisseur d'Unités de Volume -->
     <div class="container">
-        <h3 style="margin-top: 0;">Conversion de Volume</h3>
-        <label for="volVal">Valeur</label>
+        <h3 style="margin-top: 0;" id="txtVolTitle">Conversion de Volume</h3>
+        <label for="volVal" id="txtVolVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
             <select id="volUnit" onchange="convertVolume()">
-                <option value="L_mL">L vers mL</option>
-                <option value="mL_L">mL vers L</option>
+                <option value="L_mL" id="optLMl">L vers mL</option>
+                <option value="mL_L" id="optMlL">mL vers L</option>
             </select>
         </div>
         <div id="resultatVolume" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
@@ -270,7 +280,7 @@
 
     <!-- Convertisseur de Température -->
     <div class="container">
-        <h3 style="margin-top: 0;">Conversion de Température</h3>
+        <h3 style="margin-top: 0;" id="txtTempTitle">Conversion de Température</h3>
         <label for="tempC">Celsius (°C)</label>
         <input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
 
@@ -280,14 +290,14 @@
 
     <!-- Convertisseur de Temps (Débit / Posologie) -->
     <div class="container">
-        <h3 style="margin-top: 0;">Conversion de Temps</h3>
-        <label for="tempsVal">Valeur</label>
+        <h3 style="margin-top: 0;" id="txtTempsTitle">Conversion de Temps</h3>
+        <label for="tempsVal" id="txtTempsVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
             <select id="tempsUnit" onchange="convertTemps()">
-                <option value="h_min">Heures vers Minutes</option>
-                <option value="min_sec">Minutes vers Secondes</option>
-                <option value="sec_min">Secondes vers Minutes</option>
+                <option value="h_min" id="optHMin">Heures vers Minutes</option>
+                <option value="min_sec" id="optMinSec">Minutes vers Secondes</option>
+                <option value="sec_min" id="optSecMin">Secondes vers Minutes</option>
             </select>
         </div>
         <div id="resultatTemps" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
@@ -295,6 +305,102 @@
 
     <!-- Scripts JavaScript -->
     <script>
+        // Dictionnaire de traduction simple FR / EN
+        const traductions = {
+            fr: {
+                param: "Paramètres", darkMode: "Mode Sombre", subTitle: "Outils de calculs et conversions médicales rapides",
+                imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
+                urgModule: "Module Urgences & Réanimation",
+                cockcroftTitle: "1. Fonction Rénale (Clairance Créatinine - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (années)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
+                pedTitle: "2. Posologie Pédiatrique (Dose / kg)", pedPoids: "Poids de l'enfant (kg)", pedDose: "Dose unitaire recommandée (mg/kg)", btnPed: "Calculer la Dose",
+                eauTitle: "3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)", eauPoids: "Poids (kg)", eauNa: "Natrémie mesurée (mmol/L)", btnEau: "Calculer Déficit en Eau",
+                corrTitle: "4. Correction Ionique (Natrémie Corrigée / hyperglycémie)", corrNa: "Na+ mesurée (mmol/L)", corrGly: "Glycémie (mmol/L)", btnCorr: "Calculer Na+ Corrigée",
+                masseTitle: "Conversion de Masse", masseVal: "Valeur", optMgUg: "mg vers µg", optUgMg: "µg vers mg",
+                volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
+                tempTitle: "Conversion de Température",
+                tempsTitle: "Conversion de Temps", tempsVal: "Valeur", optHMin: "Heures vers Minutes", optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes",
+                footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité"
+            },
+            en: {
+                param: "Settings", darkMode: "Dark Mode", subTitle: "Fast medical calculation and conversion tools",
+                imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
+                urgModule: "Emergency & ICU Module",
+                cockcroftTitle: "1. Renal Function (Creatinine Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
+                pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
+                eauTitle: "3. Water Deficit (Adrogué-Madias Formula / Natremia)", eauPoids: "Weight (kg)", eauNa: "Measured Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
+                corrTitle: "4. Ionic Correction (Corrected Natremia / Hyperglycemia)", corrNa: "Measured Na+ (mmol/L)", corrGly: "Glycemia (mmol/L)", btnCorr: "Calculate Corrected Na+",
+                masseTitle: "Mass Conversion", masseVal: "Value", optMgUg: "mg to µg", optUgMg: "µg to mg",
+                volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
+                tempTitle: "Temperature Conversion",
+                tempsTitle: "Time Conversion", tempsVal: "Value", optHMin: "Hours to Minutes", optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes",
+                footerText: "© 2026 MediCalcul Express — All rights reserved", legalText: "Legal Notice & Privacy"
+            }
+        };
+
+        function changerLangue() {
+            const lang = document.getElementById('langSelect').value;
+            const t = traductions[lang];
+
+            document.getElementById('txtParam').innerText = t.param;
+            document.getElementById('txtDarkMode').innerText = t.darkMode;
+            document.getElementById('txtSubTitle').innerText = t.subTitle;
+            document.getElementById('txtImcTitle').innerText = t.imcTitle;
+            document.getElementById('txtPoids').innerText = t.poids;
+            document.getElementById('txtTaille').innerText = t.taille;
+            document.getElementById('btnImc').innerText = t.btnImc;
+            document.getElementById('txtUrgModule').innerText = t.urgModule;
+            document.getElementById('txtCockcroftTitle').innerText = t.cockcroftTitle;
+            document.getElementById('txtCrPoids').innerText = t.crPoids;
+            document.getElementById('txtCrAge').innerText = t.crAge;
+            document.getElementById('txtCrCreat').innerText = t.crCreat;
+            document.getElementById('txtCrSexe').innerText = t.crSexe;
+            document.getElementById('optHomme').innerText = t.optHomme;
+            document.getElementById('optFemme').innerText = t.optFemme;
+            document.getElementById('btnCockcroft').innerText = t.btnCockcroft;
+            document.getElementById('txtPedTitle').innerText = t.pedTitle;
+            document.getElementById('txtPedPoids').innerText = t.pedPoids;
+            document.getElementById('txtPedDose').innerText = t.pedDose;
+            document.getElementById('btnPed').innerText = t.btnPed;
+            document.getElementById('txtEauTitle').innerText = t.eauTitle;
+            document.getElementById('txtEauPoids').innerText = t.eauPoids;
+            document.getElementById('txtEauNa').innerText = t.eauNa;
+            document.getElementById('btnEau').innerText = t.btnEau;
+            document.getElementById('txtCorrTitle').innerText = t.corrTitle;
+            document.getElementById('txtCorrNa').innerText = t.corrNa;
+            document.getElementById('txtCorrGly').innerText = t.corrGly;
+            document.getElementById('btnCorr').innerText = t.btnCorr;
+            document.getElementById('txtMasseTitle').innerText = t.masseTitle;
+            document.getElementById('txtMasseVal').innerText = t.masseVal;
+            document.getElementById('optMgUg').innerText = t.optMgUg;
+            document.getElementById('optUgMg').innerText = t.optUgMg;
+            document.getElementById('txtVolTitle').innerText = t.volTitle;
+            document.getElementById('txtVolVal').innerText = t.volVal;
+            document.getElementById('optLMl').innerText = t.optLMl;
+            document.getElementById('optMlL').innerText = t.optMlL;
+            document.getElementById('txtTempTitle').innerText = t.tempTitle;
+            document.getElementById('txtTempsTitle').innerText = t.tempsTitle;
+            document.getElementById('txtTempsVal').innerText = t.tempsVal;
+            document.getElementById('optHMin').innerText = t.optHMin;
+            document.getElementById('optMinSec').innerText = t.optMinSec;
+            document.getElementById('optSecMin').innerText = t.optSecMin;
+            document.getElementById('footerCopy').innerText = t.footerText;
+            document.getElementById('footerLegal').innerText = t.legalText;
+
+            localStorage.setItem('lang', lang);
+        }
+
+        // Restauration de la langue au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang) {
+                document.getElementById('langSelect').value = savedLang;
+                changerLangue();
+            }
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
         // Fonction pour ouvrir/fermer le menu latéral
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
@@ -311,24 +417,25 @@
             const tailleCm = parseFloat(document.getElementById('taille').value);
             const resultatDiv = document.getElementById('resultatIMC');
             const interpDiv = document.getElementById('interpretationIMC');
+            const lang = document.getElementById('langSelect').value;
             
             if (isNaN(poids) || isNaN(tailleCm) || tailleCm <= 0) {
-                resultatDiv.innerText = "Résultat : Veuillez entrer des valeurs valides.";
+                resultatDiv.innerText = lang === 'en' ? "Result: Please enter valid values." : "Résultat : Veuillez entrer des valeurs valides.";
                 interpDiv.innerText = "";
                 return;
             }
             const tailleM = tailleCm / 100;
             const imc = poids / (tailleM * tailleM);
-            resultatDiv.innerText = `Résultat : ${imc.toFixed(2)}`;
+            resultatDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + imc.toFixed(2);
 
             if (imc < 18.5) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance pondérale (Maigreur)</span>';
+                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-warn">Underweight</span>' : 'Évaluation : <span class="status-warn">Insuffisance pondérale (Maigreur)</span>');
             } else if (imc >= 18.5 && imc < 25) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Corpulence normale (Bon résultat)</span>';
+                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-good">Normal weight (Good)</span>' : 'Évaluation : <span class="status-good">Corpulence normale (Bon résultat)</span>');
             } else if (imc >= 25 && imc < 30) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Surpoids</span>';
+                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-warn">Overweight</span>' : 'Évaluation : <span class="status-warn">Surpoids</span>');
             } else {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Obésité (Mauvais / Risque élevé)</span>';
+                interpDiv.innerHTML = (lang === 'en' ? 'Evaluation: <span class="status-bad">Obesity (High risk / Bad)</span>' : 'Évaluation : <span class="status-bad">Obésité (Mauvais / Risque élevé)</span>');
             }
         }
 
@@ -342,9 +449,10 @@
             const sexe = document.getElementById('crSexe').value;
             const resDiv = document.getElementById('resCockcroft');
             const interpDiv = document.getElementById('interpCockcroft');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(poids) || isNaN(age) || isNaN(creat) || creat <= 0) {
-                resDiv.innerText = "Clairance : Veuillez remplir tous les champs correctement.";
+                resDiv.innerText = lang === 'en' ? "Clearance: Please fill in all fields correctly." : "Clairance : Veuillez remplir tous les champs correctement.";
                 interpDiv.innerText = "";
                 return;
             }
@@ -353,18 +461,18 @@
             if (sexe === 'femme') {
                 clairance *= 0.85;
             }
-            resDiv.innerText = `Clairance estimée : ${clairance.toFixed(2)} mL/min`;
+            resDiv.innerText = (lang === 'en' ? "Estimated clearance: " : "Clairance estimée : ") + clairance.toFixed(2) + " mL/min";
 
             if (clairance >= 90) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Fonction rénale normale (Bon)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-good">Normal renal function (Good)</span>' : 'Évaluation : <span class="status-good">Fonction rénale normale (Bon)</span>';
             } else if (clairance >= 60) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance rénale légère</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-warn">Mild renal impairment</span>' : 'Évaluation : <span class="status-warn">Insuffisance rénale légère</span>';
             } else if (clairance >= 30) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance rénale modérée</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-warn">Moderate renal impairment</span>' : 'Évaluation : <span class="status-warn">Insuffisance rénale modérée</span>';
             } else if (clairance >= 15) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Insuffisance rénale sévère (Mauvais)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Severe renal impairment (Bad)</span>' : 'Évaluation : <span class="status-bad">Insuffisance rénale sévère (Mauvais)</span>';
             } else {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Insuffisance rénale terminale / Dialyse (Critique)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">End-stage renal disease / Dialysis (Critical)</span>' : 'Évaluation : <span class="status-bad">Insuffisance rénale terminale / Dialyse (Critique)</span>';
             }
         }
 
@@ -373,14 +481,15 @@
             const poids = parseFloat(document.getElementById('pedPoids').value);
             const doseKg = parseFloat(document.getElementById('pedDoseKg').value);
             const resDiv = document.getElementById('resPediatrie');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(poids) || isNaN(doseKg)) {
-                resDiv.innerText = "Dose totale : Veuillez entrer des valeurs valides.";
+                resDiv.innerText = lang === 'en' ? "Total dose: Please enter valid values." : "Dose totale : Veuillez entrer des valeurs valides.";
                 return;
             }
 
             const doseTotale = poids * doseKg;
-            resDiv.innerText = `Dose totale par prise : ${doseTotale.toFixed(2)} mg (Vérifier la posologie maximale)`;
+            resDiv.innerText = (lang === 'en' ? "Total dose per intake: " : "Dose totale par prise : ") + doseTotale.toFixed(2) + " mg (" + (lang === 'en' ? "Check maximum dosage" : "Vérifier la posologie maximale") + ")";
         }
 
         // 3. Déficit en Eau
@@ -389,22 +498,23 @@
             const na = parseFloat(document.getElementById('eauNa').value);
             const resDiv = document.getElementById('resEau');
             const interpDiv = document.getElementById('interpEau');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(poids) || isNaN(na)) {
-                resDiv.innerText = "Déficit estimé : Veuillez entrer des valeurs valides.";
+                resDiv.innerText = lang === 'en' ? "Estimated deficit: Please enter valid values." : "Déficit estimé : Veuillez entrer des valeurs valides.";
                 interpDiv.innerText = "";
                 return;
             }
 
             const deficit = 0.6 * poids * ((na / 140) - 1);
-            resDiv.innerText = `Déficit en eau libre estimé : ${deficit.toFixed(2)} Litres`;
+            resDiv.innerText = (lang === 'en' ? "Estimated free water deficit: " : "Déficit en eau libre estimé : ") + deficit.toFixed(2) + " Liters";
 
             if (na > 145) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hypernatrémie avérée (Mauvais / Risque neurologique)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Confirmed hypernatremia (Bad / Neurological risk)</span>' : 'Évaluation : <span class="status-bad">Hypernatrémie avérée (Mauvais / Risque neurologique)</span>';
             } else if (na >= 135 && na <= 145) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Natrémie normale</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-good">Normal natremia</span>' : 'Évaluation : <span class="status-good">Natrémie normale</span>';
             } else {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Hyponatrémie (Ne correspond pas à un déficit en eau libre pur)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-warn">Hyponatremia</span>' : 'Évaluation : <span class="status-warn">Hyponatrémie (Ne correspond pas à un déficit en eau libre pur)</span>';
             }
         }
 
@@ -414,22 +524,23 @@
             const gly = parseFloat(document.getElementById('corrGly').value);
             const resDiv = document.getElementById('resNaCorr');
             const interpDiv = document.getElementById('interpNaCorr');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(na) || isNaN(gly)) {
-                resDiv.innerText = "Na+ corrigée : Veuillez entrer des valeurs valides.";
+                resDiv.innerText = lang === 'en' ? "Corrected Na+: Please enter valid values." : "Na+ corrigée : Veuillez entrer des valeurs valides.";
                 interpDiv.innerText = "";
                 return;
             }
 
             const naCorr = na + 0.3 * (gly - 5.5);
-            resDiv.innerText = `Natrémie corrigée : ${naCorr.toFixed(2)} mmol/L`;
+            resDiv.innerText = (lang === 'en' ? "Corrected natremia: " : "Natrémie corrigée : ") + naCorr.toFixed(2) + " mmol/L";
 
             if (naCorr >= 135 && naCorr <= 145) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Natrémie corrigée normale (Bon)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-good">Normal corrected natremia (Good)</span>' : 'Évaluation : <span class="status-good">Natrémie corrigée normale (Bon)</span>';
             } else if (naCorr < 135) {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hyponatrémie corrigée (Mauvais / Attention aux mouvements d’eau)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Corrected hyponatremia (Bad)</span>' : 'Évaluation : <span class="status-bad">Hyponatrémie corrigée (Mauvais / Attention aux mouvements d’eau)</span>';
             } else {
-                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hypernatrémie corrigée (Mauvais / Risque de déshydratation intracellulaire)</span>';
+                interpDiv.innerHTML = lang === 'en' ? 'Evaluation: <span class="status-bad">Corrected hypernatremia (Bad)</span>' : 'Évaluation : <span class="status-bad">Hypernatrémie corrigée (Mauvais / Risque de déshydratation intracellulaire)</span>';
             }
         }
 
@@ -440,16 +551,17 @@
             const val = parseFloat(document.getElementById('masseVal').value);
             const unit = document.getElementById('masseUnit').value;
             const resDiv = document.getElementById('resultatMasse');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(val)) {
-                resDiv.innerText = "Résultat : --";
+                resDiv.innerText = lang === 'en' ? "Result: --" : "Résultat : --";
                 return;
             }
 
             if (unit === 'mg') {
-                resDiv.innerText = `Résultat : ${val * 1000} µg`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 1000) + " µg";
             } else {
-                resDiv.innerText = `Résultat : ${val / 1000} mg`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val / 1000) + " mg";
             }
         }
 
@@ -458,16 +570,17 @@
             const val = parseFloat(document.getElementById('volVal').value);
             const unit = document.getElementById('volUnit').value;
             const resDiv = document.getElementById('resultatVolume');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(val)) {
-                resDiv.innerText = "Résultat : --";
+                resDiv.innerText = lang === 'en' ? "Result: --" : "Résultat : --";
                 return;
             }
 
             if (unit === 'L_mL') {
-                resDiv.innerText = `Résultat : ${val * 1000} mL`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 1000) + " mL";
             } else {
-                resDiv.innerText = `Résultat : ${val / 1000} L`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val / 1000) + " L";
             }
         }
 
@@ -498,23 +611,22 @@
             const val = parseFloat(document.getElementById('tempsVal').value);
             const unit = document.getElementById('tempsUnit').value;
             const resDiv = document.getElementById('resultatTemps');
+            const lang = document.getElementById('langSelect').value;
 
             if (isNaN(val)) {
-                resDiv.innerText = "Résultat : --";
+                resDiv.innerText = lang === 'en' ? "Result: --" : "Résultat : --";
                 return;
             }
 
             if (unit === 'h_min') {
-                resDiv.innerText = `Résultat : ${val * 60} minutes (${val * 3600} secondes)`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + (lang === 'en' ? " minutes (" : " minutes (") + (val * 3600) + (lang === 'en' ? " seconds)" : " secondes)");
             } else if (unit === 'min_sec') {
-                resDiv.innerText = `Résultat : ${val * 60} secondes`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + (lang === 'en' ? " seconds" : " secondes");
             } else {
-                resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val / 60).toFixed(2) + (lang === 'en' ? " minutes" : " minutes");
             }
         }
-    </script>
 
-    <script>
         // Fonction pour basculer le mode sombre
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -522,12 +634,6 @@
             localStorage.setItem('darkMode', isDark);
         }
 
-        // Restaure la préférence de l'utilisateur au chargement de la page
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-        });
         function openModal() {
             document.getElementById('legalModal').style.display = 'flex';
         }
@@ -536,21 +642,22 @@
             document.getElementById('legalModal').style.display = 'none';
         }
     </script>
-    <!-- Pied de page -->
-<footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
-  <p>© 2026 MediCalcul Express — Tous droits réservés</p>
-  <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;">Mentions Légales & Confidentialité</a></p>
-</footer>
 
-<!-- Fenêtre modale -->
-<div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-  <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
-    <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
-    <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
-    <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
-    <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
-    <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
-  </div>
-</div>
+    <!-- Pied de page -->
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
+      <p id="footerCopy">© 2026 MediCalcul Express — Tous droits réservés</p>
+      <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
+    </footer>
+
+    <!-- Fenêtre modale -->
+    <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+      <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
+        <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
+        <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
+        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
+        <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
+        <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
+      </div>
+    </div>
 </body>
 </html>
