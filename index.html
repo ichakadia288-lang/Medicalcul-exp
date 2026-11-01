@@ -318,7 +318,7 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Barre de fréquence d'enregistrement style Google */
+        /* Barre de recherche avec pill */
         .ai-input-pill {
             display: flex;
             align-items: center;
@@ -356,7 +356,7 @@
             padding: 4px;
         }
 
-        /* Style de la boîte d'ondes audio inspirée de l'image */
+        /* Bouton d'ondes audio : fixe par défaut, animé uniquement lors de l'enregistrement */
         .wave-badge-btn {
             background: #e0f2fe;
             border: none;
@@ -378,15 +378,20 @@
             width: 3px;
             background-color: var(--primary);
             border-radius: 2px;
+            height: 10px; /* Fixe par défaut (pas de mouvement) */
+        }
+
+        /* Classe active pour déclencher les mouvements des barres */
+        .wave-badge-btn.recording .wave-bar-item {
             animation: soundWave 0.6s infinite ease-in-out alternate;
         }
-        .wave-bar-item:nth-child(1) { height: 8px; }
-        .wave-bar-item:nth-child(2) { height: 16px; animation-delay: 0.2s; }
-        .wave-bar-item:nth-child(3) { height: 10px; animation-delay: 0.4s; }
+        .wave-badge-btn.recording .wave-bar-item:nth-child(1) { height: 8px; }
+        .wave-badge-btn.recording .wave-bar-item:nth-child(2) { height: 18px; animation-delay: 0.2s; }
+        .wave-badge-btn.recording .wave-bar-item:nth-child(3) { height: 12px; animation-delay: 0.4s; }
 
         @keyframes soundWave {
             0% { transform: scaleY(0.4); }
-            100% { transform: scaleY(1.2); }
+            100% { transform: scaleY(1.3); }
         }
     </style>
 </head>
@@ -397,7 +402,7 @@
         <div style="display: flex; align-items: center; gap: 10px;">
             <button id="backBtn" class="back-btn" onclick="retourAccueil()">← <span id="txtBack">Accueil</span></button>
             <img src="logo.png" alt="Logo" style="height: 32px; width: auto; border-radius: 6px;">
-            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px;">MediCalcul <span style="color: var(--primary);">Express</span>[span_4](start_span)[span_4](end_span)</h3>
+            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px;">MediCalcul <span style="color: var(--primary);">Express</span>[span_1](start_span)[span_1](end_span)</h3>
         </div>
         
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -810,7 +815,7 @@
                 <button onclick="supprimerFichierJoint()" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold;">✕</button>
             </div>
 
-            <!-- Barre de saisie inspirée du modèle avec +, micro simple et bouton d'ondes -->
+            <!-- Barre de saisie avec bouton + et bouton d'ondes interactif (sans micro statique) -->
             <div class="ai-input-pill">
                 <!-- Bouton + pour importer image ou fichier -->
                 <button class="pill-action-btn" onclick="document.getElementById('fileInputHidden').click()" title="Joindre une image ou un fichier">＋</button>
@@ -819,11 +824,8 @@
                 <!-- Champ de texte -->
                 <input type="text" id="aiUserInput" placeholder="Demandez..." onkeydown="if(event.key==='Enter') envoyerQuestionAi()">
 
-                <!-- Icône micro simple -->
-                <button class="pill-action-btn" onclick="lancerRechercheVocale()" title="Parler">🎤</button>
-
-                <!-- Bouton d'ondes d'enregistrement audio (inspiré de l'image) -->
-                <button class="wave-badge-btn" onclick="lancerRechercheVocale()" title="Enregistrement audio actif">
+                <!-- Bouton d'ondes sonores (Statique par défaut, animé au clic pour enregistrer et arrêter) -->
+                <button id="waveRecordBtn" class="wave-badge-btn" onclick="basculerEnregistrementAudio()" title="Enregistrer la voix">
                     <div class="wave-bar-item"></div>
                     <div class="wave-bar-item"></div>
                     <div class="wave-bar-item"></div>
@@ -836,11 +838,13 @@
 
     <!-- Pied de page -->
     <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
-      <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés[span_5](start_span)[span_5](end_span)</p>
+      <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés[span_2](start_span)[span_2](end_span)</p>
     </footer>
 
     <script>
         let fichierActuel = null;
+        let recognition = null;
+        let estEnCoursDEcoute = false;
 
         const traductions = {
             fr: {
@@ -865,7 +869,7 @@
                 quizTitle: "Quiz Médical : Session du Jour (15 Questions)", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
                 chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
                 addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
-                footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés[span_6](start_span)[span_6](end_span)"
+                footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés[span_3](start_span)[span_3](end_span)"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
@@ -889,7 +893,7 @@
                 quizTitle: "Medical Quiz: Today's Session (15 Questions)", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
                 chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
                 addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
-                footerCopyright: "© 2026 MediCalcul Express — All rights reserved[span_7](start_span)[span_7](end_span)"
+                footerCopyright: "© 2026 MediCalcul Express — All rights reserved[span_4](start_span)[span_4](end_span)"
             }
         };
 
@@ -1010,32 +1014,56 @@
             }, 900);
         }
 
-        function lancerRechercheVocale() {
+        /* Gestion de l'enregistrement avec activation/désactivation des mouvements au clic */
+        function basculerEnregistrementAudio() {
+            const btn = document.getElementById('waveRecordBtn');
             const respBox = document.getElementById('aiChatResponse');
 
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("La reconnaissance vocale n'est pas supportée par votre navigateur.");
-                return;
+            if (!estEnCoursDEcoute) {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    alert("La reconnaissance vocale n'est pas supportée par votre navigateur.");
+                    return;
+                }
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'fr-FR';
+                
+                recognition.onstart = function() {
+                    estEnCoursDEcoute = true;
+                    btn.classList.add('recording'); // Active les mouvements des barres
+                    respBox.innerHTML = "🎤 Enregistrement en cours (cliquez à nouveau pour arrêter)...";
+                };
+
+                recognition.onresult = function(event) {
+                    let speechToText = event.results[0][0].transcript;
+                    document.getElementById('aiUserInput').value = speechToText;
+                    arreterEnregistrementAudio();
+                    envoyerQuestionAi();
+                };
+
+                recognition.onerror = function() {
+                    arreterEnregistrementAudio();
+                    respBox.innerHTML = "Erreur de capture vocale. Veuillez réessayer.";
+                };
+
+                recognition.onend = function() {
+                    arreterEnregistrementAudio();
+                };
+
+                recognition.start();
+            } else {
+                // Second clic : arrête l'enregistrement et stoppe les mouvements
+                if (recognition) {
+                    recognition.stop();
+                }
+                arreterEnregistrementAudio();
             }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'fr-FR';
-            
-            recognition.onstart = function() {
-                respBox.innerHTML = "🎤 Fréquence d'enregistrement active... Parlez maintenant.";
-            };
+        }
 
-            recognition.onresult = function(event) {
-                let speechToText = event.results[0][0].transcript;
-                document.getElementById('aiUserInput').value = speechToText;
-                envoyerQuestionAi();
-            };
-
-            recognition.onerror = function() {
-                respBox.innerHTML = "Erreur de capture vocale. Veuillez réessayer.";
-            };
-
-            recognition.start();
+        function arreterEnregistrementAudio() {
+            estEnCoursDEcoute = false;
+            const btn = document.getElementById('waveRecordBtn');
+            btn.classList.remove('recording'); // Stoppe les mouvements des barres
         }
 
         const banqueQuestions = [
