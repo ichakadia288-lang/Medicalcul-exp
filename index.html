@@ -158,6 +158,14 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
+        <!-- Calendrier de dates -->
+        <div style="margin-bottom: 20px;">
+            <span id="txtCalTitle" style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">Calendrier & Date</span>
+            <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; padding: 8px; font-size: 13px; cursor: pointer;">
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
+
         <!-- Option Quiz Corps Humain -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -341,7 +349,7 @@
         // Dictionnaire de traduction FR / EN
         const traductions = {
             fr: {
-                param: "Paramètres", darkMode: "Mode Sombre", 
+                param: "Paramètres", darkMode: "Mode Sombre", calTitle: "Calendrier & Date",
                 quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "15 questions par jour (Vrai/Faux)", btnOpenQuiz: "Lancer",
                 subTitle: "Outils de calculs et conversions médicales rapides",
                 imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
@@ -357,7 +365,7 @@
                 footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité"
             },
             en: {
-                param: "Settings", darkMode: "Dark Mode", 
+                param: "Settings", darkMode: "Dark Mode", calTitle: "Calendar & Date",
                 quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "15 questions per day (True/False)", btnOpenQuiz: "Start",
                 subTitle: "Fast medical calculation and conversion tools",
                 imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
@@ -380,6 +388,7 @@
 
             document.getElementById('txtParam').innerText = t.param;
             document.getElementById('txtDarkMode').innerText = t.darkMode;
+            document.getElementById('txtCalTitle').innerText = t.calTitle;
             document.getElementById('txtQuizMenuTitle').innerText = t.quizMenuTitle;
             document.getElementById('txtQuizMenuDesc').innerText = t.quizMenuDesc;
             document.getElementById('btnOpenQuiz').innerText = t.btnOpenQuiz;
@@ -434,7 +443,7 @@
             fr: [
                 { q: "L'eau représente environ 60% du poids corporel chez un adulte sain.", rep: true },
                 { q: "La natrémie normale se situe généralement entre 135 et 145 mmol/L.", rep: true },
-                { q: "Le potassium (K+) est principalement un ion extracellulaire.", rep: false },
+                { q: "Le potassium (K+) est principalement un ion intracellulaire.", rep: false },
                 { q: "Une clairance de la créatinine à 120 mL/min témoigne d'une insuffisance rénale sévère.", rep: false },
                 { q: "Le corps humain contient plus de calcium dans les os que dans le sang.", rep: true },
                 { q: "Le pH sanguin normal se situe strictement entre 7,35 et 7,45.", rep: true },
@@ -467,22 +476,31 @@
             ]
         };
 
-        function getTodayDateString() {
+        function getSelectedDateString() {
+            const calInput = document.getElementById('appCalendar');
+            if (calInput && calInput.value) {
+                return calInput.value;
+            }
             const d = new Date();
             return d.toISOString().split('T')[0];
         }
 
         function verifierEtMettreAJourQuotaJour() {
-            const today = getTodayDateString();
+            const selectedDate = getSelectedDateString();
             let lastDate = localStorage.getItem('quizLastDate');
             let answeredCount = parseInt(localStorage.getItem('quizCountToday') || '0', 10);
 
-            if (lastDate !== today) {
-                localStorage.setItem('quizLastDate', today);
+            if (lastDate !== selectedDate) {
+                localStorage.setItem('quizLastDate', selectedDate);
                 localStorage.setItem('quizCountToday', '0');
                 answeredCount = 0;
             }
             return answeredCount;
+        }
+
+        function changerDateCalendrier() {
+            // Réinitialise ou charge le quota associé à la date sélectionnée
+            verifierEtMettreAJourQuotaJour();
         }
 
         let scoreSessionQuiz = 0;
@@ -510,16 +528,15 @@
 
             if (answeredToday >= 15) {
                 qEl.innerText = lang === 'en' 
-                    ? "Today's quiz is finished! You have already answered today's 15 questions. Please wait until tomorrow for new questions."
-                    : "Le quiz du jour est terminé ! Vous avez déjà répondu aux 15 questions d'aujourd'hui. Vous devez attendre demain pour répondre à de nouvelles questions.";
+                    ? "The quiz for this date is finished! You have already answered the 15 questions. Please select another date or wait."
+                    : "Le quiz de cette date est terminé ! Vous avez déjà répondu aux 15 questions. Veuillez sélectionner une autre date ou patienter.";
                 buttonsDiv.style.display = 'none';
                 scoreEl.innerText = "";
             } else {
                 buttonsDiv.style.display = 'flex';
-                // Affiche la question correspondante au nombre déjà répondu aujourd'hui
                 let qIndex = answeredToday % listeQ.length;
                 qEl.innerText = `Question ${answeredToday + 1} / 15 : ${listeQ[qIndex].q}`;
-                scoreEl.innerText = lang === 'en' ? `Answered today: ${answeredToday}/15` : `Répondues aujourd'hui : ${answeredToday}/15`;
+                scoreEl.innerText = lang === 'en' ? `Answered for this date: ${answeredToday}/15` : `Répondues pour cette date : ${answeredToday}/15`;
                 document.getElementById('btnTrue').style.display = 'block';
                 document.getElementById('btnFalse').style.display = 'block';
             }
@@ -542,7 +559,6 @@
                 feedbackEl.innerHTML = lang === 'en' ? '<span class="status-bad">Incorrect. Bad evaluation.</span>' : '<span class="status-bad">Incorrect. Mauvais résultat.</span>';
             }
 
-            // Incrémente le compteur du jour dans le stockage
             answeredToday++;
             localStorage.setItem('quizCountToday', answeredToday);
 
@@ -552,8 +568,15 @@
         }
         // --- FIN DU QUIZ ---
 
-        // Restauration de la langue et mode au chargement
+        // Restauration de la date, langue et mode au chargement
         window.addEventListener('DOMContentLoaded', () => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const calInput = document.getElementById('appCalendar');
+            if (calInput) {
+                calInput.value = todayStr;
+            }
+            localStorage.setItem('quizLastDate', todayStr);
+
             const savedLang = localStorage.getItem('lang');
             if (savedLang) {
                 document.getElementById('langSelect').value = savedLang;
