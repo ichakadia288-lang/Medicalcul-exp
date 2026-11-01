@@ -128,21 +128,19 @@
 
     <!-- Barre de menu supérieure -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
-        <!-- Bloc gauche : Logo miniature + Titre décalé à droite[span_1](start_span)[span_1](end_span) -->
+        <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite[span_1](start_span)[span_1](end_span) -->
         <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="logo.png" alt="Logo" style="height: 35px; width: auto; object-fit: contain; display: block;">
+            <img src="logo.png" alt="Icône" style="height: 35px; width: auto; object-fit: contain; display: block; border-radius: 6px;">
             <h3 id="appTitleHeader" style="margin: 0; font-size: 19px; line-height: 1;">MediCalcul Express</h3>
         </div>
         
         <!-- Bloc droit : Sélecteur de langue + Bouton menu -->
         <div style="display: flex; align-items: center; gap: 12px;">
-            <!-- Sélecteur de langue -->
             <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 5px 8px; font-size: 13px; width: auto; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
                 <option value="fr">FR</option>
                 <option value="en">EN</option>
             </select>
 
-            <!-- Bouton menu hamburger -->
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0;">☰</button>
         </div>
     </header>
@@ -154,7 +152,6 @@
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
-        <!-- Option Mode Sombre -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
             <span id="txtDarkMode">Mode Sombre</span>
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
@@ -162,7 +159,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
-        <!-- Calendrier de dates -->
         <div style="margin-bottom: 20px;">
             <span id="txtCalTitle" style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">Calendrier & Date</span>
             <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; padding: 8px; font-size: 13px; cursor: pointer;">
@@ -170,7 +166,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
-        <!-- Option Quiz Corps Humain -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 14px;">Quiz : Éléments du Corps</span>
@@ -224,7 +219,6 @@
     <div class="container" style="border-left: 4px solid #ef4444;">
         <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
-        <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
         <h4 style="color: var(--primary);" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
@@ -249,7 +243,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 2. Posologie Pédiatrique -->
         <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
         <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
         <input type="number" id="pedPoids" placeholder="Ex: 15">
@@ -260,7 +253,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 3. Déficit en Eau (Déshydratation / Hypernatrémie) -->
         <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
@@ -278,7 +270,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 4. Correction de la Natrémie en cas d'Hyperglycémie (Katz) -->
         <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
