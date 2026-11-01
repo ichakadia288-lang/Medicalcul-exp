@@ -142,7 +142,7 @@
 
     <!-- Barre de menu supérieure -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
-        <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite -->
+        <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span) -->
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="logo.png" alt="Icône" style="height: 35px; width: auto; object-fit: contain; display: block; border-radius: 6px;">
             <h3 id="appTitleHeader" style="margin: 0; font-size: 1.2rem; line-height: 1;">MediCalcul Express</h3>
@@ -270,6 +270,7 @@
     <div class="container" style="border-left: 4px solid #ef4444;">
         <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
+        <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
         <h4 style="color: var(--primary);" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
@@ -294,6 +295,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
+        <!-- 2. Posologie Pédiatrique -->
         <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
         <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
         <input type="number" id="pedPoids" placeholder="Ex: 15">
@@ -304,6 +306,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
+        <!-- 3. Déficit en Eau -->
         <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
@@ -321,6 +324,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
+        <!-- 4. Correction de la Natrémie -->
         <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
@@ -335,6 +339,111 @@
         <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
         <div id="resNaCorr" style="margin-top: 10px; font-weight: bold;">Na+ corrigée : --</div>
         <div id="interpNaCorr" style="margin-top: 5px;"></div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 5. Score de Glasgow (GCS) -->
+        <h4 style="color: var(--primary);" id="txtGcsTitle">5. Score de Glasgow (GCS - Conscience)</h4>
+        <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
+        <select id="gcsE">
+            <option value="4" id="optE4">4 - Spontanée</option>
+            <option value="3" id="optE3">3 - À la voix / demande</option>
+            <option value="2" id="optE2">2 - À la douleur</option>
+            <option value="1" id="optE1">1 - Absente</option>
+        </select>
+
+        <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
+        <select id="gcsV">
+            <option value="5" id="optV5">5 - Orientée et cohérente</option>
+            <option value="4" id="optV4">4 - Confuse / conversation décousue</option>
+            <option value="3" id="optV3">3 - Mots inappropriés</option>
+            <option value="2" id="optV2">2 - Sons incompréhensibles</option>
+            <option value="1" id="optV1">1 - Absente</option>
+        </select>
+
+        <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
+        <select id="gcsM">
+            <option value="6" id="optM6">6 - Exécute les ordres sur commande</option>
+            <option value="5" id="optM5">5 - Orientée à la douleur / localise</option>
+            <option value="4" id="optM4">4 - Retrait / évitement à la douleur</option>
+            <option value="3" id="optM3">3 - Flexion anormale (décortication)</option>
+            <option value="2" id="optM2">2 - Extension anormale (décérébration)</option>
+            <option value="1" id="optM1">1 - Absente / flaccide</option>
+        </select>
+        <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer le Score de Glasgow</button>
+        <div id="resGcs" style="margin-top: 10px; font-weight: bold;">Score total : --</div>
+        <div id="interpGcs" style="margin-top: 5px;"></div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 6. Score qSOFA (Sepsis) -->
+        <h4 style="color: var(--primary);" id="txtQsofaTitle">6. Score qSOFA (Dépistage Sepsis / Urgences)</h4>
+        <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
+        <select id="qsofaRr">
+            <option value="0" id="qsofaRrNo">Non</option>
+            <option value="1" id="qsofaRrYes">Oui (+1 point)</option>
+        </select>
+
+        <label for="qsofaPas" id="txtQsofaPas">Pression artérielle systolique (PAS) ≤ 100 mmHg</label>
+        <select id="qsofaPas">
+            <option value="0" id="qsofaPasNo">Non</option>
+            <option value="1" id="qsofaPasYes">Oui (+1 point)</option>
+        </select>
+
+        <label for="qsofaConsc" id="txtQsofaConsc">Altération de l'état de conscience (Glasgow &lt; 15)</label>
+        <select id="qsofaConsc">
+            <option value="0" id="qsofaConscNo">Non</option>
+            <option value="1" id="qsofaConscYes">Oui (+1 point)</option>
+        </select>
+        <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
+        <div id="resQsofa" style="margin-top: 10px; font-weight: bold;">Score qSOFA : --</div>
+        <div id="interpQsofa" style="margin-top: 5px;"></div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 7. Score de Wells (Embolie Pulmonaire) -->
+        <h4 style="color: var(--primary);" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire - EP)</h4>
+        <label for="wells1" id="txtWells1">Signes cliniques de thrombose veineuse profonde (phlébite)</label>
+        <select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+
+        <label for="wells2" id="txtWells2">Diagnostic d'embolie pulmonaire plus probable que tout autre</label>
+        <select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+
+        <label for="wells3" id="txtWells3">Fréquence cardiaque &gt; 100 bpm</label>
+        <select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+
+        <label for="wells4" id="txtWells4">Chirurgie récente (&lt; 4 sem.) ou immobilisation</label>
+        <select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+
+        <label for="wells5" id="txtWells5">Antécédents de TVP ou d'embolie pulmonaire</label>
+        <select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+
+        <label for="wells6" id="txtWells6">Hémoptysie</label>
+        <select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+
+        <label for="wells7" id="txtWells7">Cancer actif (traité dans les 6 derniers mois)</label>
+        <select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+
+        <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Score de Wells</button>
+        <div id="resWells" style="margin-top: 10px; font-weight: bold;">Score de Wells : --</div>
+        <div id="interpWells" style="margin-top: 5px;"></div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- 8. Surface Corporelle (BSA - Mosteller) -->
+        <h4 style="color: var(--primary);" id="txtBsaTitle">8. Surface Corporelle (BSA - Formule de Mosteller)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label for="bsaPoids" id="txtBsaPoids">Poids (kg)</label>
+                <input type="number" id="bsaPoids" placeholder="Ex: 70">
+            </div>
+            <div style="flex: 1;">
+                <label for="bsaTaille" id="txtBsaTaille">Taille (cm)</label>
+                <input type="number" id="bsaTaille" placeholder="Ex: 175">
+            </div>
+        </div>
+        <button class="calc-btn" onclick="calculerBsa()" id="btnBsa">Calculer la Surface Corporelle</button>
+        <div id="resBsa" style="margin-top: 10px; font-weight: bold;">BSA : --</div>
     </div>
 
     <!-- Convertisseur d'Unités de Masse -->
@@ -401,7 +510,7 @@
       <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
         <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
         <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
-        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
+        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effectuent localement sur votre appareil.</p>
         <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
         <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
       </div>
@@ -420,6 +529,24 @@
                 pedTitle: "2. Posologie Pédiatrique (Dose / kg)", pedPoids: "Poids de l'enfant (kg)", pedDose: "Dose unitaire recommandée (mg/kg)", btnPed: "Calculer la Dose",
                 eauTitle: "3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)", eauPoids: "Poids (kg)", eauNa: "Natrémie mesurée (mmol/L)", btnEau: "Calculer Déficit en Eau",
                 corrTitle: "4. Correction Ionique (Natrémie Corrigée / hyperglycémie)", corrNa: "Na+ mesurée (mmol/L)", corrGly: "Glycémie (mmol/L)", btnCorr: "Calculer Na+ Corrigée",
+                gcsTitle: "5. Score de Glasgow (GCS - Conscience)",
+                txtGcsE: "Ouverture des yeux (E)", txtGcsV: "Réponse verbale (V)", txtGcsM: "Réponse motrice (M)", btnGcs: "Calculer le Score de Glasgow",
+                optE4: "4 - Spontanée", optE3: "3 - À la voix / demande", optE2: "2 - À la douleur", optE1: "1 - Absente",
+                optV5: "5 - Orientée et cohérente", optV4: "4 - Confuse / conversation décousue", optV3: "3 - Mots inappropriés", optV2: "2 - Sons incompréhensibles", optV1: "1 - Absente",
+                optM6: "6 - Exécute les ordres sur commande", optM5: "5 - Orientée à la douleur / localise", optM4: "4 - Retrait / évitement à la douleur", optM3: "3 - Flexion anormale (décortication)", optM2: "2 - Extension anormale (décérébration)", optM1: "1 - Absente / flaccide",
+                qsofaTitle: "6. Score qSOFA (Dépistage Sepsis / Urgences)",
+                txtQsofaRr: "Fréquence respiratoire ≥ 22 /min", qsofaRrNo: "Non", qsofaRrYes: "Oui (+1 point)",
+                txtQsofaPas: "Pression artérielle systolique (PAS) ≤ 100 mmHg", qsofaPasNo: "Non", qsofaPasYes: "Oui (+1 point)",
+                txtQsofaConsc: "Altération de l'état de conscience (Glasgow < 15)", qsofaConscNo: "Non", qsofaConscYes: "Oui (+1 point)", btnQsofa: "Calculer qSOFA",
+                wellsTitle: "7. Score de Wells (Embolie Pulmonaire - EP)",
+                txtWells1: "Signes cliniques de thrombose veineuse profonde (phlébite)",
+                txtWells2: "Diagnostic d'embolie pulmonaire plus probable que tout autre",
+                txtWells3: "Fréquence cardiaque > 100 bpm",
+                txtWells4: "Chirurgie récente (< 4 sem.) ou immobilisation",
+                txtWells5: "Antécédents de TVP ou d'embolie pulmonaire",
+                txtWells6: "Hémoptysie",
+                txtWells7: "Cancer actif (traité dans les 6 derniers mois)", btnWells: "Calculer Score de Wells",
+                bsaTitle: "8. Surface Corporelle (BSA - Formule de Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la Surface Corporelle",
                 masseTitle: "Conversion de Masse", masseVal: "Valeur", optMgUg: "mg vers µg", optUgMg: "µg vers mg",
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
                 tempTitle: "Conversion de Température",
@@ -455,6 +582,24 @@
                 pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
                 eauTitle: "3. Water Deficit (Adrogué-Madias Formula / Natremia)", eauPoids: "Weight (kg)", eauNa: "Measured Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
                 corrTitle: "4. Ionic Correction (Corrected Natremia / Hyperglycemia)", corrNa: "Measured Na+ (mmol/L)", corrGly: "Glycemia (mmol/L)", btnCorr: "Calculate Corrected Na+",
+                gcsTitle: "5. Glasgow Coma Scale (GCS - Consciousness)",
+                txtGcsE: "Eye opening (E)", txtGcsV: "Verbal response (V)", txtGcsM: "Motor response (M)", btnGcs: "Calculate Glasgow Score",
+                optE4: "4 - Spontaneous", optE3: "3 - To voice / speech", optE2: "2 - To pain", optE1: "1 - None",
+                optV5: "5 - Oriented and coherent", optV4: "4 - Confused / disoriented speech", optV3: "3 - Inappropriate words", optV2: "2 - Incomprehensible sounds", optV1: "1 - None",
+                optM6: "6 - Obeys commands", optM5: "5 - Localizes pain", optM4: "4 - Withdrawal / flexion away from pain", optM3: "3 - Abnormal flexion (decorticate)", optM2: "2 - Abnormal extension (decerebrate)", optM1: "1 - None / flaccid",
+                qsofaTitle: "6. qSOFA Score (Sepsis Screening / ER)",
+                txtQsofaRr: "Respiratory rate ≥ 22 /min", qsofaRrNo: "No", qsofaRrYes: "Yes (+1 pt)",
+                txtQsofaPas: "Systolic blood pressure (SBP) ≤ 100 mmHg", qsofaPasNo: "No", qsofaPasYes: "Yes (+1 pt)",
+                txtQsofaConsc: "Altered mental status (Glasgow < 15)", qsofaConscNo: "No", qsofaConscYes: "Yes (+1 pt)", btnQsofa: "Calculate qSOFA",
+                wellsTitle: "7. Wells Score (Pulmonary Embolism - PE)",
+                txtWells1: "Clinical signs of deep vein thrombosis (DVT)",
+                txtWells2: "Alternative diagnosis less likely than pulmonary embolism",
+                txtWells3: "Heart rate > 100 bpm",
+                txtWells4: "Immobilization or surgery in the previous 4 weeks",
+                txtWells5: "Previous DVT or PE",
+                txtWells6: "Hemoptysis",
+                txtWells7: "Active cancer", btnWells: "Calculate Wells Score",
+                bsaTitle: "8. Body Surface Area (BSA - Mosteller Formula)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
                 masseTitle: "Mass Conversion", masseVal: "Value", optMgUg: "mg to µg", optUgMg: "µg to mg",
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
                 tempTitle: "Temperature Conversion",
@@ -504,25 +649,78 @@
             document.getElementById('btnImc').innerText = t.btnImc;
             document.getElementById('txtUrgModule').innerText = t.urgModule;
             document.getElementById('txtCockcroftTitle').innerText = t.cockcroftTitle;
-            document.getElementById('txtCrPoids').innerText = t.crPoids;
-            document.getElementById('txtCrAge').innerText = t.crAge;
-            document.getElementById('txtCrCreat').innerText = t.crCreat;
-            document.getElementById('txtCrSexe').innerText = t.crSexe;
+            document.getElementById('txtCrPoids').innerText = t.txtCrPoids ? t.txtCrPoids : document.getElementById('txtCrPoids').innerText;
+            document.getElementById('txtCrAge').innerText = t.txtCrAge ? t.txtCrAge : document.getElementById('txtCrAge').innerText;
+            document.getElementById('txtCrCreat').innerText = t.txtCrCreat ? t.txtCrCreat : document.getElementById('txtCrCreat').innerText;
+            document.getElementById('txtCrSexe').innerText = t.txtCrSexe ? t.txtCrSexe : document.getElementById('txtCrSexe').innerText;
             document.getElementById('optHomme').innerText = t.optHomme;
             document.getElementById('optFemme').innerText = t.optFemme;
             document.getElementById('btnCockcroft').innerText = t.btnCockcroft;
             document.getElementById('txtPedTitle').innerText = t.pedTitle;
-            document.getElementById('txtPedPoids').innerText = t.pedPoids;
-            document.getElementById('txtPedDose').innerText = t.pedDose;
+            document.getElementById('txtPedPoids').innerText = t.txtPedPoids ? t.txtPedPoids : document.getElementById('txtPedPoids').innerText;
+            document.getElementById('txtPedDose').innerText = t.txtPedDose ? t.txtPedDose : document.getElementById('txtPedDose').innerText;
             document.getElementById('btnPed').innerText = t.btnPed;
             document.getElementById('txtEauTitle').innerText = t.eauTitle;
-            document.getElementById('txtEauPoids').innerText = t.eauPoids;
-            document.getElementById('txtEauNa').innerText = t.eauNa;
+            document.getElementById('txtEauPoids').innerText = t.txtEauPoids ? t.txtEauPoids : document.getElementById('txtEauPoids').innerText;
+            document.getElementById('txtEauNa').innerText = t.txtEauNa ? t.txtEauNa : document.getElementById('txtEauNa').innerText;
             document.getElementById('btnEau').innerText = t.btnEau;
             document.getElementById('txtCorrTitle').innerText = t.corrTitle;
-            document.getElementById('txtCorrNa').innerText = t.corrNa;
-            document.getElementById('txtCorrGly').innerText = t.corrGly;
+            document.getElementById('txtCorrNa').innerText = t.txtCorrNa ? t.txtCorrNa : document.getElementById('txtCorrNa').innerText;
+            document.getElementById('txtCorrGly').innerText = t.txtCorrGly ? t.txtCorrGly : document.getElementById('txtCorrGly').innerText;
             document.getElementById('btnCorr').innerText = t.btnCorr;
+            
+            // Glasgow
+            document.getElementById('txtGcsTitle').innerText = t.gcsTitle;
+            document.getElementById('txtGcsE').innerText = t.txtGcsE;
+            document.getElementById('txtGcsV').innerText = t.txtGcsV;
+            document.getElementById('txtGcsM').innerText = t.txtGcsM;
+            document.getElementById('btnGcs').innerText = t.btnGcs;
+            document.getElementById('optE4').innerText = t.optE4;
+            document.getElementById('optE3').innerText = t.optE3;
+            document.getElementById('optE2').innerText = t.optE2;
+            document.getElementById('optE1').innerText = t.optE1;
+            document.getElementById('optV5').innerText = t.optV5;
+            document.getElementById('optV4').innerText = t.optV4;
+            document.getElementById('optV3').innerText = t.optV3;
+            document.getElementById('optV2').innerText = t.optV2;
+            document.getElementById('optV1').innerText = t.optV1;
+            document.getElementById('optM6').innerText = t.optM6;
+            document.getElementById('optM5').innerText = t.optM5;
+            document.getElementById('optM4').innerText = t.optM4;
+            document.getElementById('optM3').innerText = t.optM3;
+            document.getElementById('optM2').innerText = t.optM2;
+            document.getElementById('optM1').innerText = t.optM1;
+
+            // qSOFA
+            document.getElementById('txtQsofaTitle').innerText = t.qsofaTitle;
+            document.getElementById('txtQsofaRr').innerText = t.txtQsofaRr;
+            document.getElementById('qsofaRrNo').innerText = t.qsofaRrNo;
+            document.getElementById('qsofaRrYes').innerText = t.qsofaRrYes;
+            document.getElementById('txtQsofaPas').innerText = t.txtQsofaPas;
+            document.getElementById('qsofaPasNo').innerText = t.qsofaPasNo;
+            document.getElementById('qsofaPasYes').innerText = t.qsofaPasYes;
+            document.getElementById('txtQsofaConsc').innerText = t.txtQsofaConsc;
+            document.getElementById('qsofaConscNo').innerText = t.qsofaConscNo;
+            document.getElementById('qsofaConscYes').innerText = t.qsofaConscYes;
+            document.getElementById('btnQsofa').innerText = t.btnQsofa;
+
+            // Wells
+            document.getElementById('txtWellsTitle').innerText = t.wellsTitle;
+            document.getElementById('txtWells1').innerText = t.txtWells1;
+            document.getElementById('txtWells2').innerText = t.txtWells2;
+            document.getElementById('txtWells3').innerText = t.txtWells3;
+            document.getElementById('txtWells4').innerText = t.txtWells4;
+            document.getElementById('txtWells5').innerText = t.txtWells5;
+            document.getElementById('txtWells6').innerText = t.txtWells6;
+            document.getElementById('txtWells7').innerText = t.txtWells7;
+            document.getElementById('btnWells').innerText = t.btnWells;
+
+            // BSA
+            document.getElementById('txtBsaTitle').innerText = t.bsaTitle;
+            document.getElementById('txtBsaPoids').innerText = t.bsaPoids;
+            document.getElementById('txtBsaTaille').innerText = t.bsaTaille;
+            document.getElementById('btnBsa').innerText = t.btnBsa;
+
             document.getElementById('txtMasseTitle').innerText = t.masseTitle;
             document.getElementById('txtMasseVal').innerText = t.masseVal;
             document.getElementById('optMgUg').innerText = t.optMgUg;
@@ -757,6 +955,83 @@
             } else {
                 interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Anormale</span>' : 'Evaluation: <span class="status-bad">Abnormal</span>';
             }
+        }
+
+        function calculerGlasgow() {
+            const e = parseInt(document.getElementById('gcsE').value);
+            const v = parseInt(document.getElementById('gcsV').value);
+            const m = parseInt(document.getElementById('gcsM').value);
+            const resDiv = document.getElementById('resGcs');
+            const interpDiv = document.getElementById('interpGcs');
+            const lang = document.getElementById('langSelect').value;
+
+            const total = e + v + m;
+            resDiv.innerText = lang === 'fr' ? `Score de Glasgow total : ${total} / 15` : `Total Glasgow Score: ${total} / 15`;
+
+            if (total === 15) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Conscience normale (15/15)</span>' : 'Evaluation: <span class="status-good">Normal consciousness (15/15)</span>';
+            } else if (total >= 13) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Altération légère de la conscience</span>' : 'Evaluation: <span class="status-warn">Mild alteration of consciousness</span>';
+            } else if (total >= 9) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Altération modérée (coma léger/moyen)</span>' : 'Evaluation: <span class="status-warn">Moderate alteration</span>';
+            } else {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Coma profond / Urgence vitale (≤ 8)</span>' : 'Evaluation: <span class="status-bad">Deep coma / Critical emergency (≤ 8)</span>';
+            }
+        }
+
+        function calculerQsofa() {
+            const rr = parseInt(document.getElementById('qsofaRr').value);
+            const pas = parseInt(document.getElementById('qsofaPas').value);
+            const consc = parseInt(document.getElementById('qsofaConsc').value);
+            const resDiv = document.getElementById('resQsofa');
+            const interpDiv = document.getElementById('interpQsofa');
+            const lang = document.getElementById('langSelect').value;
+
+            const total = rr + pas + consc;
+            resDiv.innerText = lang === 'fr' ? `Score qSOFA : ${total} / 3` : `qSOFA Score: ${total} / 3`;
+
+            if (total >= 2) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Risque élevé de sepsis / Mortalité accrue (≥ 2)</span>' : 'Evaluation: <span class="status-bad">High risk of sepsis (≥ 2)</span>';
+            } else {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Risque faible (&lt; 2)</span>' : 'Evaluation: <span class="status-good">Low risk (&lt; 2)</span>';
+            }
+        }
+
+        function calculerWells() {
+            const w1 = parseFloat(document.getElementById('wells1').value);
+            const w2 = parseFloat(document.getElementById('wells2').value);
+            const w3 = parseFloat(document.getElementById('wells3').value);
+            const w4 = parseFloat(document.getElementById('wells4').value);
+            const w5 = parseFloat(document.getElementById('wells5').value);
+            const w6 = parseFloat(document.getElementById('wells6').value);
+            const w7 = parseFloat(document.getElementById('wells7').value);
+            const resDiv = document.getElementById('resWells');
+            const interpDiv = document.getElementById('interpWells');
+            const lang = document.getElementById('langSelect').value;
+
+            const total = w1 + w2 + w3 + w4 + w5 + w6 + w7;
+            resDiv.innerText = lang === 'fr' ? `Score de Wells : ${total}` : `Wells Score: ${total}`;
+
+            if (total > 4) {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Embolie Pulmonaire Probable (&gt; 4)</span>' : 'Evaluation: <span class="status-bad">Likely Pulmonary Embolism (&gt; 4)</span>';
+            } else {
+                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Embolie Pulmonaire Improbable (≤ 4)</span>' : 'Evaluation: <span class="status-good">Unlikely Pulmonary Embolism (≤ 4)</span>';
+            }
+        }
+
+        function calculerBsa() {
+            const poids = parseFloat(document.getElementById('bsaPoids').value);
+            const taille = parseFloat(document.getElementById('bsaTaille').value);
+            const resDiv = document.getElementById('resBsa');
+            const lang = document.getElementById('langSelect').value;
+
+            if (isNaN(poids) || isNaN(taille) || taille <= 0) {
+                resDiv.innerText = lang === 'fr' ? "BSA : Entrez des valeurs valides." : "BSA: Enter valid values.";
+                return;
+            }
+            // Formule de Mosteller : sqrt(poids * taille / 3600)
+            const bsa = Math.sqrt((poids * taille) / 3600);
+            resDiv.innerText = lang === 'fr' ? `Surface Corporelle (BSA) : ${bsa.toFixed(2)} m²` : `Body Surface Area (BSA): ${bsa.toFixed(2)} m²`;
         }
 
         function convertMasse() {
