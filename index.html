@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediCalcul Express</title>
-    <!-- Lien vers le manifeste pour l'installation PWA -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0284c7">
     <style>
         /* Variables pour les thèmes */
         :root {
@@ -313,15 +311,6 @@
                 document.body.classList.add('dark-mode');
             }
         });
-        <script>
-        // Enregistrement du Service Worker pour activer l'installation PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log("Service Worker OK"))
-                    .catch(err => console.log("Erreur Service Worker", err));
-            });
-        }
     </script>
 </body>
 </html>
