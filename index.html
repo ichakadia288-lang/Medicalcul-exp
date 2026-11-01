@@ -4,22 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediCalcul Express</title>
-    <!-- Lien vers le manifeste pour l'installation PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0284c7">
-    <!-- Importation des polices Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Variables dynamiques pour les thèmes et le style du texte */
         :root {
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
             --text: #0f172a;
             --card-bg: #ffffff;
             --primary: #0284c7;
-            --primary-hover: #0369a1;
+            --primary-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             --border: #e2e8f0;
-            --input-bg: #f8fafc;
-            --input-focus-bg: #ffffff;
+            --input-bg: #f1f5f9;
+            --reset-bg: #f1f5f9;
             --reset-icon: #0f172a;
             --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
             --font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -33,12 +30,12 @@
             --text: #f8fafc;
             --card-bg: #0f172a;
             --primary: #38bdf8;
-            --primary-hover: #7dd3fc;
+            --primary-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
             --border: #1e293b;
             --input-bg: #020817;
-            --input-focus-bg: #0f172a;
+            --reset-bg: #1e293b;
             --reset-icon: #f8fafc;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
         }
 
         body {
@@ -53,13 +50,25 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Style du bouton bascule de thème moderne */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
         .theme-toggle-btn {
             background: none;
             border: 2px solid var(--border);
             border-radius: 20px;
-            width: 50px;
-            height: 26px;
+            width: 46px;
+            height: 24px;
             position: relative;
             cursor: pointer;
             outline: none;
@@ -71,45 +80,41 @@
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background-color: var(--primary);
             border-radius: 50%;
             transition: transform 0.3s ease;
         }
 
         body.dark-mode .theme-toggle-btn::after {
-            transform: translateX(24px);
+            transform: translateX(22px);
         }
 
-        /* Style général des conteneurs de calcul (Design épuré et moderne) */
         .container {
-            max-width: 520px;
-            margin: 24px auto;
-            padding: 24px;
+            max-width: 480px;
+            margin: 18px auto;
+            padding: 20px;
             background: var(--card-bg);
             border-radius: 16px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .container:hover {
-            box-shadow: 0 20px 30px -10px rgba(2, 132, 199, 0.08);
+            box-sizing: border-box;
         }
 
         label {
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text);
-            opacity: 0.9;
+            opacity: 0.85;
+            display: block;
+            margin-top: 10px;
         }
 
         input, select {
             width: 100%;
-            padding: 12px 14px;
-            margin-top: 6px;
-            margin-bottom: 16px;
+            padding: 11px 14px;
+            margin-top: 5px;
             background-color: var(--input-bg);
             color: var(--text);
             border: 1px solid var(--border);
@@ -124,34 +129,29 @@
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
-            background-color: var(--input-focus-bg);
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
-        /* Alignement du bouton Calculer et de l'icône de réinitialisation en bas */
         .action-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 12px;
+            gap: 10px;
+            margin-top: 18px;
         }
 
         button.calc-btn {
-            background-color: var(--primary);
+            background: var(--primary-gradient);
             color: #ffffff;
             border: none;
-            padding: 14px;
+            padding: 12px;
             flex: 1;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             font-family: var(--font-family);
             font-size: inherit;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-
-        button.calc-btn:hover {
-            background-color: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            transition: opacity 0.2s, transform 0.1s;
         }
 
         button.calc-btn:active {
@@ -161,8 +161,8 @@
         .badge-urg {
             background: #ef4444;
             color: white;
-            font-size: 0.75rem;
-            padding: 4px 10px;
+            font-size: 0.7rem;
+            padding: 3px 8px;
             border-radius: 20px;
             font-weight: 700;
             letter-spacing: 0.5px;
@@ -170,14 +170,13 @@
             text-transform: uppercase;
         }
 
-        /* Icône de réinitialisation en noir fort / blanc selon le mode */
         .reset-icon-btn {
-            background: var(--input-bg);
+            background: var(--reset-bg);
             border: 1px solid var(--border);
             color: var(--reset-icon);
-            font-size: 1.2rem;
-            width: 48px;
-            height: 48px;
+            font-size: 1.25rem;
+            width: 46px;
+            height: 46px;
             border-radius: 10px;
             cursor: pointer;
             display: flex;
@@ -189,49 +188,37 @@
         }
         
         .reset-icon-btn:hover {
-            background: var(--border);
             border-color: var(--primary);
-            transform: rotate(-15deg);
+            background: var(--border);
         }
 
-        /* Styles des statuts cliniques */
-        .status-good {
-            color: #10b981;
-            font-weight: 600;
-        }
-        .status-bad {
-            color: #ef4444;
-            font-weight: 600;
-        }
-        .status-warn {
-            color: #f59e0b;
-            font-weight: 600;
-        }
+        .status-good { color: #10b981; font-weight: 600; }
+        .status-bad { color: #ef4444; font-weight: 600; }
+        .status-warn { color: #f59e0b; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <!-- Barre de menu supérieure -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(8px);">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="logo.png" alt="Icône" style="height: 38px; width: auto; object-fit: contain; display: block; border-radius: 8px;">
-            <h3 id="appTitleHeader" style="margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1; letter-spacing: -0.5px;">MediCalcul <span style="color: var(--primary);">Express</span></h3>
+    <header>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="logo.png" alt="Logo" style="height: 32px; width: auto; border-radius: 6px;">
+            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px;">MediCalcul <span style="color: var(--primary);">Express</span></h3>
         </div>
         
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 6px 10px; font-size: 0.85rem; width: auto; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 4px 8px; font-size: 0.85rem; width: auto; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
                 <option value="fr">FR</option>
                 <option value="en">EN</option>
             </select>
-
-            <button onclick="toggleMenu()" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; width: 38px; height: 38px; font-size: 18px; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center;">☰</button>
+            <button onclick="toggleMenu()" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center;">☰</button>
         </div>
     </header>
 
     <!-- Panneau du menu latéral -->
     <div id="sideMenu" style="position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--card-bg); box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; padding: 24px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-            <h4 style="margin: 0; font-size: 1.1rem;" id="txtParam">Paramètres</h4>
+            <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
@@ -275,7 +262,7 @@
 
         <div style="margin-bottom: 20px;">
             <span id="txtCalTitle" style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 8px; color: var(--primary);">Calendrier & Date</span>
-            <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; cursor: pointer;">
+            <input type="date" id="appCalendar" style="margin: 0; cursor: pointer;">
         </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
@@ -285,36 +272,31 @@
                 <span id="txtQuizMenuTitle" style="font-weight: 600; font-size: 0.85rem;">Quiz : Éléments du Corps</span>
                 <button onclick="ouvrirQuiz()" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600;" id="btnOpenQuiz">Lancer</button>
             </div>
-            <p style="font-size: 0.75rem; color: var(--text); opacity: 0.7; margin: 0;" id="txtQuizMenuDesc">15 questions par jour (Vrai/Faux)</p>
+            <p style="font-size: 0.75rem; opacity: 0.7; margin: 0;" id="txtQuizMenuDesc">15 questions par jour (Vrai/Faux)</p>
         </div>
     </div>
 
-    <!-- MODALE DU QUIZ VRAI / FAUX -->
+    <!-- MODALE DU QUIZ -->
     <div id="quizModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 3000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-        <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 450px; width: 100%; box-sizing: border-box; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);">
+        <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 420px; width: 100%; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin: 0; color: var(--primary); font-size: 1.1rem;" id="quizTitle">Quiz : Quantité des Éléments</h3>
+                <h3 style="margin: 0; color: var(--primary); font-size: 1.05rem;" id="quizTitle">Quiz : Quantité des Éléments</h3>
                 <button onclick="fermerQuiz()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
             </div>
-            
-            <div id="quizContent">
-                <p id="quizQuestion" style="font-weight: 500; min-height: 50px; font-size: 1.05rem;"></p>
-                
-                <div id="quizButtons" style="display: flex; gap: 12px; margin-bottom: 16px;">
-                    <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
-                    <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
-                </div>
-                
-                <div id="quizFeedback" style="margin-bottom: 16px; min-height: 30px; font-weight: 600;"></div>
-                <div id="quizScore" style="opacity: 0.8; font-size: 0.9rem;"></div>
+            <p id="quizQuestion" style="font-weight: 500; min-height: 45px; font-size: 1rem;"></p>
+            <div id="quizButtons" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
+                <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
             </div>
+            <div id="quizFeedback" style="margin-bottom: 12px; font-weight: 600;"></div>
+            <div id="quizScore" style="opacity: 0.75; font-size: 0.85rem;"></div>
         </div>
     </div>
 
-    <!-- Contenu principal -->
+    <!-- Contenu IMC -->
     <div class="container">
-        <h3 id="txtImcTitle" style="margin-top: 0; font-size: 1.15rem; font-weight: 600; color: var(--primary);">Calcul de l'IMC</h3>
-        <p style="color: var(--text); opacity: 0.7; margin-top: 4px; margin-bottom: 20px; font-size: 0.85rem;" id="txtSubTitle">Indice de Masse Corporelle et évaluation pondérale</p>
+        <h3 id="txtImcTitle" style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);">Calcul de l'IMC</h3>
+        <p style="opacity: 0.7; margin-top: 2px; margin-bottom: 16px; font-size: 0.82rem;" id="txtSubTitle">Indice de Masse Corporelle et évaluation</p>
 
         <label for="poids" id="txtPoids">Poids (kg)</label>
         <input type="number" id="poids" placeholder="Ex: 70">
@@ -324,223 +306,156 @@
 
         <div class="action-row">
             <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
-            <button class="reset-icon-btn" onclick="resetImc()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetImc()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resultatIMC" style="margin-top: 16px; font-weight: 600;">Résultat : --</div>
-        <div id="interpretationIMC" style="margin-top: 6px;"></div>
+        <div id="resultatIMC" style="margin-top: 14px; font-weight: 600;">Résultat : --</div>
+        <div id="interpretationIMC" style="margin-top: 4px;"></div>
     </div>
 
     <!-- MODULE URGENCES & RÉANIMATION -->
     <div class="container" style="border-left: 4px solid #ef4444;">
-        <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 600;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
+        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
-        <!-- 1. Fonction Rénale & Clairance (Cockcroft-Gault) -->
-        <h4 style="color: var(--primary); margin-top: 20px; font-size: 1rem;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
-        <div style="display: flex; gap: 12px; margin-top: 10px;">
-            <div style="flex: 1;">
-                <label for="crPoids" id="txtCrPoids">Poids (kg)</label>
-                <input type="number" id="crPoids" placeholder="Ex: 70">
-            </div>
-            <div style="flex: 1;">
-                <label for="crAge" id="txtCrAge">Âge (années)</label>
-                <input type="number" id="crAge" placeholder="Ex: 50">
-            </div>
+        <!-- Fonction Rénale -->
+        <h4 style="color: var(--primary); margin-top: 16px; font-size: 0.95rem;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;"><label for="crPoids" id="txtCrPoids">Poids (kg)</label><input type="number" id="crPoids" placeholder="Ex: 70"></div>
+            <div style="flex: 1;"><label for="crAge" id="txtCrAge">Âge (ans)</label><input type="number" id="crAge" placeholder="Ex: 50"></div>
         </div>
-        <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label>
-        <input type="number" id="crCreat" placeholder="Ex: 90">
+        <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label><input type="number" id="crCreat" placeholder="Ex: 90">
         <label for="crSexe" id="txtCrSexe">Sexe</label>
-        <select id="crSexe">
-            <option value="homme" id="optHomme">Homme</option>
-            <option value="femme" id="optFemme">Femme</option>
-        </select>
+        <select id="crSexe"><option value="homme" id="optHomme">Homme</option><option value="femme" id="optFemme">Femme</option></select>
+        
         <div class="action-row">
             <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
-            <button class="reset-icon-btn" onclick="resetCockcroft()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetCockcroft()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resCockcroft" style="margin-top: 12px; font-weight: 600;">Clairance : --</div>
-        <div id="interpCockcroft" style="margin-top: 6px;"></div>
+        <div id="resCockcroft" style="margin-top: 10px; font-weight: 600;">Clairance : --</div>
+        <div id="interpCockcroft" style="margin-top: 4px;"></div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 2. Posologie Pédiatrique -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
-        <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
-        <input type="number" id="pedPoids" placeholder="Ex: 15">
-        <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
-        <input type="number" id="pedDoseKg" placeholder="Ex: 15">
+        <!-- Posologie Pédiatrique -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+        <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label><input type="number" id="pedPoids" placeholder="Ex: 15">
+        <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label><input type="number" id="pedDoseKg" placeholder="Ex: 15">
+        
         <div class="action-row">
             <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
-            <button class="reset-icon-btn" onclick="resetPed()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetPed()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resPediatrie" style="margin-top: 12px; font-weight: 600;">Dose totale : --</div>
+        <div id="resPediatrie" style="margin-top: 10px; font-weight: 600;">Dose totale : --</div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 3. Déficit en Eau -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
-        <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;">
-                <label for="eauPoids" id="txtEauPoids">Poids (kg)</label>
-                <input type="number" id="eauPoids" placeholder="Ex: 70">
-            </div>
-            <div style="flex: 1;">
-                <label for="eauNa" id="txtEauNa">Natrémie (mmol/L)</label>
-                <input type="number" id="eauNa" placeholder="Ex: 155">
-            </div>
+        <!-- Déficit en Eau -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtEauTitle">3. Déficit en Eau (Adrogué-Madias)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;"><label for="eauPoids" id="txtEauPoids">Poids (kg)</label><input type="number" id="eauPoids" placeholder="Ex: 70"></div>
+            <div style="flex: 1;"><label for="eauNa" id="txtEauNa">Natrémie (mmol/L)</label><input type="number" id="eauNa" placeholder="Ex: 155"></div>
         </div>
+        
         <div class="action-row">
             <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
-            <button class="reset-icon-btn" onclick="resetEau()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetEau()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resEau" style="margin-top: 12px; font-weight: 600;">Déficit estimé : --</div>
-        <div id="interpEau" style="margin-top: 6px;"></div>
+        <div id="resEau" style="margin-top: 10px; font-weight: 600;">Déficit estimé : --</div>
+        <div id="interpEau" style="margin-top: 4px;"></div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 4. Correction de la Natrémie -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
-        <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;">
-                <label for="corrNa" id="txtCorrNa">Na+ mesurée (mmol/L)</label>
-                <input type="number" id="corrNa" placeholder="Ex: 130">
-            </div>
-            <div style="flex: 1;">
-                <label for="corrGly" id="txtCorrGly">Glycémie (mmol/L)</label>
-                <input type="number" id="corrGly" placeholder="Ex: 20">
-            </div>
+        <!-- Correction Natrémie -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;"><label for="corrNa" id="txtCorrNa">Na+ mesurée</label><input type="number" id="corrNa" placeholder="Ex: 130"></div>
+            <div style="flex: 1;"><label for="corrGly" id="txtCorrGly">Glycémie</label><input type="number" id="corrGly" placeholder="Ex: 20"></div>
         </div>
+        
         <div class="action-row">
             <button class="calc-btn" onclick="calculerNaCorrigee()" id="btnCorr">Calculer Na+ Corrigée</button>
-            <button class="reset-icon-btn" onclick="resetCorr()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetCorr()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resNaCorr" style="margin-top: 12px; font-weight: 600;">Na+ corrigée : --</div>
-        <div id="interpNaCorr" style="margin-top: 6px;"></div>
+        <div id="resNaCorr" style="margin-top: 10px; font-weight: 600;">Na+ corrigée : --</div>
+        <div id="interpNaCorr" style="margin-top: 4px;"></div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 5. Score de Glasgow -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
+        <!-- Glasgow -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtGcsTitle">5. Score de Glasgow (GCS)</h4>
         <label for="gcsE" id="txtGcsE">Ouverture des yeux (E)</label>
-        <select id="gcsE">
-            <option value="4" id="optE4">4 - Spontanée</option>
-            <option value="3" id="optE3">3 - À la voix / demande</option>
-            <option value="2" id="optE2">2 - À la douleur</option>
-            <option value="1" id="optE1">1 - Absente</option>
-        </select>
-
+        <select id="gcsE"><option value="4">4 - Spontanée</option><option value="3">3 - À la voix</option><option value="2">2 - À la douleur</option><option value="1">1 - Absente</option></select>
         <label for="gcsV" id="txtGcsV">Réponse verbale (V)</label>
-        <select id="gcsV">
-            <option value="5" id="optV5">5 - Orientée et cohérente</option>
-            <option value="4" id="optV4">4 - Confuse / conversation décousue</option>
-            <option value="3" id="optV3">3 - Mots inappropriés</option>
-            <option value="2" id="optV2">2 - Sons incompréhensibles</option>
-            <option value="1" id="optV1">1 - Absente</option>
-        </select>
-
+        <select id="gcsV"><option value="5">5 - Orientée</option><option value="4">4 - Confuse</option><option value="3">3 - Inappropriée</option><option value="2">2 - Incompréhensible</option><option value="1">1 - Absente</option></select>
         <label for="gcsM" id="txtGcsM">Réponse motrice (M)</label>
-        <select id="gcsM">
-            <option value="6" id="optM6">6 - Exécute les ordres sur commande</option>
-            <option value="5" id="optM5">5 - Orientée à la douleur / localise</option>
-            <option value="4" id="optM4">4 - Retrait / évitement à la douleur</option>
-            <option value="3" id="optM3">3 - Flexion anormale (décortication)</option>
-            <option value="2" id="optM2">2 - Extension anormale (décérébration)</option>
-            <option value="1" id="optM1">1 - Absente / flaccide</option>
-        </select>
+        <select id="gcsM"><option value="6">6 - Exécute</option><option value="5">5 - Localise</option><option value="4">4 - Retrait</option><option value="3">3 - Flexion</option><option value="2">2 - Extension</option><option value="1">1 - Absente</option></select>
+        
         <div class="action-row">
-            <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer le Score de Glasgow</button>
-            <button class="reset-icon-btn" onclick="resetGcs()" title="Réinitialiser">↺</button>
+            <button class="calc-btn" onclick="calculerGlasgow()" id="btnGcs">Calculer Glasgow</button>
+            <button class="reset-icon-btn" onclick="resetGcs()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resGcs" style="margin-top: 12px; font-weight: 600;">Score total : --</div>
-        <div id="interpGcs" style="margin-top: 6px;"></div>
+        <div id="resGcs" style="margin-top: 10px; font-weight: 600;">Score total : --</div>
+        <div id="interpGcs" style="margin-top: 4px;"></div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 6. Score qSOFA -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
+        <!-- qSOFA -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtQsofaTitle">6. Score qSOFA (Sepsis)</h4>
         <label for="qsofaRr" id="txtQsofaRr">Fréquence respiratoire ≥ 22 /min</label>
-        <select id="qsofaRr">
-            <option value="0" id="qsofaRrNo">Non</option>
-            <option value="1" id="qsofaRrYes">Oui (+1 point)</option>
-        </select>
-
-        <label for="qsofaPas" id="txtQsofaPas">Pression artérielle systolique (PAS) ≤ 100 mmHg</label>
-        <select id="qsofaPas">
-            <option value="0" id="qsofaPasNo">Non</option>
-            <option value="1" id="qsofaPasYes">Oui (+1 point)</option>
-        </select>
-
-        <label for="qsofaConsc" id="txtQsofaConsc">Altération de l'état de conscience (Glasgow < 15)</label>
-        <select id="qsofaConsc">
-            <option value="0" id="qsofaConscNo">Non</option>
-            <option value="1" id="qsofaConscYes">Oui (+1 point)</option>
-        </select>
+        <select id="qsofaRr"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
+        <label for="qsofaPas" id="txtQsofaPas">PAS ≤ 100 mmHg</label>
+        <select id="qsofaPas"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
+        <label for="qsofaConsc" id="txtQsofaConsc">Altération conscience (Glasgow < 15)</label>
+        <select id="qsofaConsc"><option value="0">Non</option><option value="1">Oui (+1 pt)</option></select>
+        
         <div class="action-row">
             <button class="calc-btn" onclick="calculerQsofa()" id="btnQsofa">Calculer qSOFA</button>
-            <button class="reset-icon-btn" onclick="resetQsofa()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetQsofa()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resQsofa" style="margin-top: 12px; font-weight: 600;">Score qSOFA : --</div>
-        <div id="interpQsofa" style="margin-top: 6px;"></div>
+        <div id="resQsofa" style="margin-top: 10px; font-weight: 600;">Score qSOFA : --</div>
+        <div id="interpQsofa" style="margin-top: 4px;"></div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 7. Score de Wells -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
-        <label for="wells1" id="txtWells1">Signes cliniques de thrombose veineuse profonde (phlébite)</label>
-        <select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
-
-        <label for="wells2" id="txtWells2">Diagnostic d'embolie pulmonaire plus probable que tout autre</label>
-        <select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
-
-        <label for="wells3" id="txtWells3">Fréquence cardiaque > 100 bpm</label>
-        <select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-
-        <label for="wells4" id="txtWells4">Chirurgie récente (< 4 sem.) ou immobilisation</label>
-        <select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-
-        <label for="wells5" id="txtWells5">Antécédents de TVP ou d'embolie pulmonaire</label>
-        <select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
-
-        <label for="wells6" id="txtWells6">Hémoptysie</label>
-        <select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
-
-        <label for="wells7" id="txtWells7">Cancer actif (traité dans les 6 derniers mois)</label>
-        <select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
-
+        <!-- Wells -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtWellsTitle">7. Score de Wells (Embolie Pulmonaire)</h4>
+        <label id="txtWells1">Signes cliniques de TVP (phlébite)</label><select id="wells1"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+        <label id="txtWells2">EP plus probable que tout autre diagnostic</label><select id="wells2"><option value="0">Non (0 pts)</option><option value="3">Oui (+3 pts)</option></select>
+        <label id="txtWells3">Fréquence cardiaque > 100 bpm</label><select id="wells3"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+        <label id="txtWells4">Chirurgie récente ou immobilisation</label><select id="wells4"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+        <label id="txtWells5">Antécédents de TVP ou d'EP</label><select id="wells5"><option value="0">Non (0 pts)</option><option value="1.5">Oui (+1.5 pt)</option></select>
+        <label id="txtWells6">Hémoptysie</label><select id="wells6"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+        <label id="txtWells7">Cancer actif</label><select id="wells7"><option value="0">Non (0 pts)</option><option value="1">Oui (+1 pt)</option></select>
+        
         <div class="action-row">
-            <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Score de Wells</button>
-            <button class="reset-icon-btn" onclick="resetWells()" title="Réinitialiser">↺</button>
+            <button class="calc-btn" onclick="calculerWells()" id="btnWells">Calculer Wells</button>
+            <button class="reset-icon-btn" onclick="resetWells()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resWells" style="margin-top: 12px; font-weight: 600;">Score de Wells : --</div>
-        <div id="interpWells" style="margin-top: 6px;"></div>
+        <div id="resWells" style="margin-top: 10px; font-weight: 600;">Score de Wells : --</div>
+        <div id="interpWells" style="margin-top: 4px;"></div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <!-- 8. Surface Corporelle (BSA) -->
-        <h4 style="color: var(--primary); font-size: 1rem;" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
-        <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;">
-                <label for="bsaPoids" id="txtBsaPoids">Poids (kg)</label>
-                <input type="number" id="bsaPoids" placeholder="Ex: 70">
-            </div>
-            <div style="flex: 1;">
-                <label for="bsaTaille" id="txtBsaTaille">Taille (cm)</label>
-                <input type="number" id="bsaTaille" placeholder="Ex: 175">
-            </div>
+        <!-- BSA -->
+        <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtBsaTitle">8. Surface Corporelle (BSA - Mosteller)</h4>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;"><label for="bsaPoids">Poids (kg)</label><input type="number" id="bsaPoids" placeholder="Ex: 70"></div>
+            <div style="flex: 1;"><label for="bsaTaille">Taille (cm)</label><input type="number" id="bsaTaille" placeholder="Ex: 175"></div>
         </div>
+        
         <div class="action-row">
             <button class="calc-btn" onclick="calculerBsa()" id="btnBsa">Calculer la Surface Corporelle</button>
-            <button class="reset-icon-btn" onclick="resetBsa()" title="Réinitialiser">↺</button>
+            <button class="reset-icon-btn" onclick="resetBsa()" title="Réinitialiser">&#8634;</button>
         </div>
-        <div id="resBsa" style="margin-top: 12px; font-weight: 600;">BSA : --</div>
+        <div id="resBsa" style="margin-top: 10px; font-weight: 600;">BSA : --</div>
     </div>
 
-    <!-- Convertisseur d'Unités de Masse -->
+    <!-- Convertisseur de Masse -->
     <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 600; color: var(--primary);" id="txtMasseTitle">Conversion de Masse</h3>
+        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtMasseTitle">Conversion de Masse</h3>
         <label for="masseVal" id="txtMasseVal">Valeur</label>
-        <div style="display: flex; gap: 12px;">
+        <div style="display: flex; gap: 10px;">
             <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
-            <select id="masseUnit" onchange="convertMasse()">
+            <select id="masseUnit" onchange="convertMasse()" style="width: 140px;">
                 <option value="mg" id="optMgUg">mg vers µg</option>
                 <option value="ug" id="optUgMg">µg vers mg</option>
             </select>
@@ -548,13 +463,13 @@
         <div id="resultatMasse" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
     </div>
 
-    <!-- Convertisseur d'Unités de Volume -->
+    <!-- Convertisseur de Volume -->
     <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 600; color: var(--primary);" id="txtVolTitle">Conversion de Volume</h3>
+        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtVolTitle">Conversion de Volume</h3>
         <label for="volVal" id="txtVolVal">Valeur</label>
-        <div style="display: flex; gap: 12px;">
+        <div style="display: flex; gap: 10px;">
             <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
-            <select id="volUnit" onchange="convertVolume()">
+            <select id="volUnit" onchange="convertVolume()" style="width: 140px;">
                 <option value="L_mL" id="optLMl">L vers mL</option>
                 <option value="mL_L" id="optMlL">mL vers L</option>
             </select>
@@ -564,24 +479,21 @@
 
     <!-- Convertisseur de Température -->
     <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 600; color: var(--primary);" id="txtTempTitle">Conversion de Température</h3>
-        <label for="tempC">Celsius (°C)</label>
-        <input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
-
-        <label for="tempF">Fahrenheit (°F)</label>
-        <input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
+        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempTitle">Conversion de Température</h3>
+        <label for="tempC">Celsius (°C)</label><input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
+        <label for="tempF">Fahrenheit (°F)</label><input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
     </div>
 
-    <!-- Convertisseur de Temps -->
+    <!-- Convertisseur de Temps (Ordre logique : Petites vers Grandes unités, puis l'inverse) -->
     <div class="container">
-        <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 600; color: var(--primary);" id="txtTempsTitle">Conversion de Temps</h3>
+        <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempsTitle">Conversion de Temps</h3>
         <label for="tempsVal" id="txtTempsVal">Valeur</label>
-        <div style="display: flex; gap: 12px;">
+        <div style="display: flex; gap: 10px;">
             <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
-            <select id="tempsUnit" onchange="convertTemps()">
-                <option value="h_min" id="optHMin">Heures vers Minutes</option>
+            <select id="tempsUnit" onchange="convertTemps()" style="width: 200px;">
                 <option value="min_sec" id="optMinSec">Minutes vers Secondes</option>
                 <option value="sec_min" id="optSecMin">Secondes vers Minutes</option>
+                <option value="h_min" id="optHMin">Heures vers Minutes</option>
                 <option value="j_h" id="optJ_H">Jours vers Heures</option>
                 <option value="h_j" id="optH_J">Heures vers Jours</option>
                 <option value="m_j" id="optM_J">Mois vers Jours (30j)</option>
@@ -592,134 +504,64 @@
     </div>
 
     <!-- Pied de page -->
-    <footer style="text-align: center; padding: 24px; margin-top: 40px; border-top: 1px solid var(--border); font-size: 0.9rem; opacity: 0.8;">
+    <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
       <p><a href="#" onclick="openModal(); return false;" style="color: var(--primary); text-decoration: none; font-weight: 500;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
     </footer>
 
-    <!-- Fenêtre modale légale -->
+    <!-- Modale Mentions Légales -->
     <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-      <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);">
+      <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 450px; width: 100%; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);">
         <h3 style="margin-top: 0; color: var(--primary);">Mentions Légales & Confidentialité</h3>
-        <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
-        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effectuent localement sur votre appareil.</p>
-        <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
-        <button onclick="closeModal()" style="margin-top: 20px; width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Fermer</button>
+        <p style="font-size: 0.9rem; line-height: 1.5;"><strong>1. Éditeur :</strong> MediCalcul Express est un outil gratuit de calculs médicaux.</p>
+        <p style="font-size: 0.9rem; line-height: 1.5;"><strong>2. Données :</strong> Aucun stockage ni transmission externe. Tout fonctionne localement sur votre appareil.</p>
+        <button onclick="closeModal()" style="margin-top: 16px; width: 100%; padding: 11px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Fermer</button>
       </div>
     </div>
 
-    <!-- Scripts JavaScript -->
     <script>
         const traductions = {
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
                 quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "15 questions par jour (Vrai/Faux)", btnOpenQuiz: "Lancer",
-                subTitle: "Indice de Masse Corporelle et évaluation pondérale",
-                imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
+                subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
-                cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (années)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
+                cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
                 pedTitle: "2. Posologie Pédiatrique (Dose / kg)", pedPoids: "Poids de l'enfant (kg)", pedDose: "Dose unitaire recommandée (mg/kg)", btnPed: "Calculer la Dose",
                 eauTitle: "3. Déficit en Eau (Adrogué-Madias)", eauPoids: "Poids (kg)", eauNa: "Natrémie (mmol/L)", btnEau: "Calculer Déficit en Eau",
-                corrTitle: "4. Correction Ionique (Natrémie Corrigée)", corrNa: "Na+ mesurée (mmol/L)", corrGly: "Glycémie (mmol/L)", btnCorr: "Calculer Na+ Corrigée",
-                gcsTitle: "5. Score de Glasgow (GCS)",
-                txtGcsE: "Ouverture des yeux (E)", txtGcsV: "Réponse verbale (V)", txtGcsM: "Réponse motrice (M)", btnGcs: "Calculer le Score de Glasgow",
-                optE4: "4 - Spontanée", optE3: "3 - À la voix / demande", optE2: "2 - À la douleur", optE1: "1 - Absente",
-                optV5: "5 - Orientée et cohérente", optV4: "4 - Confuse / conversation décousue", optV3: "3 - Mots inappropriés", optV2: "2 - Sons incompréhensibles", optV1: "1 - Absente",
-                optM6: "6 - Exécute les ordres sur commande", optM5: "5 - Orientée à la douleur / localise", optM4: "4 - Retrait / évitement à la douleur", optM3: "3 - Flexion anormale (décortication)", optM2: "2 - Extension anormale (décérébration)", optM1: "1 - Absente / flaccide",
-                qsofaTitle: "6. Score qSOFA (Sepsis)",
-                txtQsofaRr: "Fréquence respiratoire ≥ 22 /min", qsofaRrNo: "Non", qsofaRrYes: "Oui (+1 point)",
-                txtQsofaPas: "Pression artérielle systolique (PAS) ≤ 100 mmHg", qsofaPasNo: "Non", qsofaPasYes: "Oui (+1 point)",
-                txtQsofaConsc: "Altération de l'état de conscience (Glasgow < 15)", qsofaConscNo: "Non", qsofaConscYes: "Oui (+1 point)", btnQsofa: "Calculer qSOFA",
-                wellsTitle: "7. Score de Wells (Embolie Pulmonaire)",
-                txtWells1: "Signes cliniques de thrombose veineuse profonde (phlébite)",
-                txtWells2: "Diagnostic d'embolie pulmonaire plus probable que tout autre",
-                txtWells3: "Fréquence cardiaque > 100 bpm",
-                txtWells4: "Chirurgie récente (< 4 sem.) ou immobilisation",
-                txtWells5: "Antécédents de TVP ou d'embolie pulmonaire",
-                txtWells6: "Hémoptysie",
-                txtWells7: "Cancer actif (traité dans les 6 derniers mois)", btnWells: "Calculer Score de Wells",
-                bsaTitle: "8. Surface Corporelle (BSA - Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la Surface Corporelle",
+                corrTitle: "4. Correction Ionique (Natrémie Corrigée)", corrNa: "Na+ mesurée", corrGly: "Glycémie", btnCorr: "Calculer Na+ Corrigée",
+                gcsTitle: "5. Score de Glasgow (GCS)", btnGcs: "Calculer Glasgow",
+                qsofaTitle: "6. Score qSOFA (Sepsis)", btnQsofa: "Calculer qSOFA",
+                wellsTitle: "7. Score de Wells (Embolie Pulmonaire)", btnWells: "Calculer Wells",
+                bsaTitle: "8. Surface Corporelle (BSA - Mosteller)", btnBsa: "Calculer la Surface Corporelle",
                 masseTitle: "Conversion de Masse", masseVal: "Valeur", optMgUg: "mg vers µg", optUgMg: "µg vers mg",
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
-                tempTitle: "Conversion de Température",
-                tempsTitle: "Conversion de Temps", tempsVal: "Valeur", 
-                optHMin: "Heures vers Minutes", optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes",
+                tempTitle: "Conversion de Température", tempsTitle: "Conversion de Temps", tempsVal: "Valeur",
+                optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes", optHMin: "Heures vers Minutes",
                 optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
                 footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité",
-                quizTitle: "Quiz : Quantité des Éléments", btnTrue: "VRAI", btnFalse: "FAUX",
-                qWater: "Le corps humain contient environ 60% d'eau.",
-                qHeart: "Le cœur bat en moyenne 100 000 fois par jour.",
-                qFemur: "L'os le plus long du corps humain est le péroné.",
-                qLiver: "Le foie est le plus grand organe interne du corps.",
-                qVeins: "Le sang rouge oxygéné circule dans les veines.",
-                qTeeth: "Un adulte possède normalement 32 dents.",
-                qAcid: "L'estomac produit de l'acide chlorhydrique.",
-                qRBC: "Les globules rouges contiennent de l'hémoglobine.",
-                qBrain: "Le cerveau humain pèse environ 5 kg.",
-                qKidneys: "Les reins filtrent le sang pour produire l'urine.",
-                qMuscles: "Le corps humain compte plus de 600 muscles.",
-                qSkin: "L'épiderme est la couche la plus profonde de la peau.",
-                qSun: "La vitamine D est principalement synthétisée grâce au soleil.",
-                qPancreas: "Le pancréas sécrète de l'insuline.",
-                qLungs: "Les poumons possèdent exactement le même volume d'air.",
-                goodRes: "✓ Bonne réponse !", badRes: "✕ Mauvaise réponse.",
-                scoreAct: "Score actuel : ", quizEnd: "🎉 Quiz terminé pour aujourd'hui !",
-                finalScore: "Score final : ", quizMax: " / 15", retryText: "Revenez demain pour de nouvelles questions !"
+                quizTitle: "Quiz : Quantité des Éléments", btnTrue: "VRAI", btnFalse: "FAUX"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
                 quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "15 questions per day (True/False)", btnOpenQuiz: "Start",
-                subTitle: "Body Mass Index and weight evaluation",
-                imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
+                subTitle: "Body Mass Index and weight evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
                 pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
                 eauTitle: "3. Water Deficit (Adrogué-Madias)", eauPoids: "Weight (kg)", eauNa: "Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
-                corrTitle: "4. Ionic Correction (Corrected Natremia)", corrNa: "Measured Na+ (mmol/L)", corrGly: "Glycemia (mmol/L)", btnCorr: "Calculate Corrected Na+",
-                gcsTitle: "5. Glasgow Coma Scale (GCS)",
-                txtGcsE: "Eye opening (E)", txtGcsV: "Verbal response (V)", txtGcsM: "Motor response (M)", btnGcs: "Calculate Glasgow Score",
-                optE4: "4 - Spontaneous", optE3: "3 - To voice / speech", optE2: "2 - To pain", optE1: "1 - None",
-                optV5: "5 - Oriented and coherent", optV4: "4 - Confused / disoriented speech", optV3: "3 - Inappropriate words", optV2: "2 - Incomprehensible sounds", optV1: "1 - None",
-                optM6: "6 - Obeys commands", optM5: "5 - Localizes pain", optM4: "4 - Withdrawal / flexion away from pain", optM3: "3 - Abnormal flexion (decorticate)", optM2: "2 - Abnormal extension (decerebrate)", optM1: "1 - None / flaccid",
-                qsofaTitle: "6. qSOFA Score (Sepsis)",
-                txtQsofaRr: "Respiratory rate ≥ 22 /min", qsofaRrNo: "No", qsofaRrYes: "Yes (+1 pt)",
-                txtQsofaPas: "Systolic blood pressure (SBP) ≤ 100 mmHg", qsofaPasNo: "No", qsofaPasYes: "Yes (+1 pt)",
-                txtQsofaConsc: "Altered mental status (Glasgow < 15)", qsofaConscNo: "No", qsofaConscYes: "Yes (+1 pt)", btnQsofa: "Calculate qSOFA",
-                wellsTitle: "7. Wells Score (Pulmonary Embolism)",
-                txtWells1: "Clinical signs of deep vein thrombosis (DVT)",
-                txtWells2: "Alternative diagnosis less likely than pulmonary embolism",
-                txtWells3: "Heart rate > 100 bpm",
-                txtWells4: "Immobilization or surgery in the previous 4 weeks",
-                txtWells5: "Previous DVT or PE",
-                txtWells6: "Hemoptysis",
-                txtWells7: "Active cancer", btnWells: "Calculate Wells Score",
-                bsaTitle: "8. Body Surface Area (BSA - Mosteller)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
+                corrTitle: "4. Ionic Correction (Corrected Natremia)", corrNa: "Measured Na+", corrGly: "Glycemia", btnCorr: "Calculate Corrected Na+",
+                gcsTitle: "5. Glasgow Coma Scale (GCS)", btnGcs: "Calculate Glasgow",
+                qsofaTitle: "6. qSOFA Score (Sepsis)", btnQsofa: "Calculate qSOFA",
+                wellsTitle: "7. Wells Score (Pulmonary Embolism)", btnWells: "Calculate Wells",
+                bsaTitle: "8. Body Surface Area (BSA - Mosteller)", btnBsa: "Calculate BSA",
                 masseTitle: "Mass Conversion", masseVal: "Value", optMgUg: "mg to µg", optUgMg: "µg to mg",
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
-                tempTitle: "Temperature Conversion",
-                tempsTitle: "Time Conversion", tempsVal: "Value", 
-                optHMin: "Hours to Minutes", optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes",
+                tempTitle: "Temperature Conversion", tempsTitle: "Time Conversion", tempsVal: "Value",
+                optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes", optHMin: "Hours to Minutes",
                 optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
                 footerText: "© 2026 MediCalcul Express — All rights reserved", legalText: "Legal Notices & Privacy",
-                quizTitle: "Quiz: Quantity of Elements", btnTrue: "TRUE", btnFalse: "FALSE",
-                qWater: "The human body is about 60% water.",
-                qHeart: "The heart beats an average of 100,000 times a day.",
-                qFemur: "The fibula is the longest bone in the human body.",
-                qLiver: "The liver is the body's largest internal organ.",
-                qVeins: "Oxygenated red blood flows through the veins.",
-                qTeeth: "An adult normally has 32 teeth.",
-                qAcid: "The stomach produces hydrochloric acid.",
-                qRBC: "Red blood cells contain hemoglobin.",
-                qBrain: "The human brain weighs about 5 kg.",
-                qKidneys: "The kidneys filter blood to produce urine.",
-                qMuscles: "The human body has more than 600 muscles.",
-                qSkin: "The epidermis is the deepest layer of the skin.",
-                qSun: "Vitamin D is mainly synthesized thanks to the sun.",
-                qPancreas: "The pancreas secretes insulin.",
-                qLungs: "Both lungs have exactly the same air volume.",
-                goodRes: "✓ Correct answer!", badRes: "✕ Wrong answer.",
-                scoreAct: "Current score: ", quizEnd: "🎉 Quiz over for today!",
-                finalScore: "Final score: ", quizMax: " / 15", retryText: "Come back tomorrow for new questions!"
+                quizTitle: "Quiz: Quantity of Elements", btnTrue: "TRUE", btnFalse: "FALSE"
             }
         };
 
@@ -728,146 +570,25 @@
         function changerLangue() {
             const lang = document.getElementById('langSelect').value;
             const t = traductions[lang];
-            
-            document.getElementById('txtParam').innerText = t.param;
-            document.getElementById('txtDarkMode').innerText = t.darkMode;
-            document.getElementById('txtFontTitle').innerText = t.fontTitle;
-            document.getElementById('txtStyleTitle').innerText = t.styleTitle;
-            document.getElementById('txtSizeTitle').innerText = t.sizeTitle;
-            document.getElementById('txtCalTitle').innerText = t.calTitle;
-            document.getElementById('txtQuizMenuTitle').innerText = t.quizMenuTitle;
-            document.getElementById('txtQuizMenuDesc').innerText = t.quizMenuDesc;
-            document.getElementById('btnOpenQuiz').innerText = t.btnOpenQuiz;
-            document.getElementById('txtSubTitle').innerText = t.subTitle;
-            document.getElementById('txtImcTitle').innerText = t.imcTitle;
-            document.getElementById('txtPoids').innerText = t.poids;
-            document.getElementById('txtTaille').innerText = t.taille;
-            document.getElementById('btnImc').innerText = t.btnImc;
-            document.getElementById('txtUrgModule').innerText = t.urgModule;
-            document.getElementById('txtCockcroftTitle').innerText = t.cockcroftTitle;
-            document.getElementById('txtCrPoids').innerText = t.txtCrPoids ? t.txtCrPoids : document.getElementById('txtCrPoids').innerText;
-            document.getElementById('txtCrAge').innerText = t.txtCrAge ? t.txtCrAge : document.getElementById('txtCrAge').innerText;
-            document.getElementById('txtCrCreat').innerText = t.txtCrCreat ? t.txtCrCreat : document.getElementById('txtCrCreat').innerText;
-            document.getElementById('txtCrSexe').innerText = t.txtCrSexe ? t.txtCrSexe : document.getElementById('txtCrSexe').innerText;
-            document.getElementById('optHomme').innerText = t.optHomme;
-            document.getElementById('optFemme').innerText = t.optFemme;
-            document.getElementById('btnCockcroft').innerText = t.btnCockcroft;
-            document.getElementById('txtPedTitle').innerText = t.pedTitle;
-            document.getElementById('txtPedPoids').innerText = t.txtPedPoids ? t.txtPedPoids : document.getElementById('txtPedPoids').innerText;
-            document.getElementById('txtPedDose').innerText = t.txtPedDose ? t.txtPedDose : document.getElementById('txtPedDose').innerText;
-            document.getElementById('btnPed').innerText = t.btnPed;
-            document.getElementById('txtEauTitle').innerText = t.eauTitle;
-            document.getElementById('txtEauPoids').innerText = t.txtEauPoids ? t.txtEauPoids : document.getElementById('txtEauPoids').innerText;
-            document.getElementById('txtEauNa').innerText = t.txtEauNa ? t.txtEauNa : document.getElementById('txtEauNa').innerText;
-            document.getElementById('btnEau').innerText = t.btnEau;
-            document.getElementById('txtCorrTitle').innerText = t.corrTitle;
-            document.getElementById('txtCorrNa').innerText = t.txtCorrNa ? t.txtCorrNa : document.getElementById('txtCorrNa').innerText;
-            document.getElementById('txtCorrGly').innerText = t.txtCorrGly ? t.txtCorrGly : document.getElementById('txtCorrGly').innerText;
-            document.getElementById('btnCorr').innerText = t.btnCorr;
-            
-            document.getElementById('txtGcsTitle').innerText = t.gcsTitle;
-            document.getElementById('txtGcsE').innerText = t.txtGcsE;
-            document.getElementById('txtGcsV').innerText = t.txtGcsV;
-            document.getElementById('txtGcsM').innerText = t.txtGcsM;
-            document.getElementById('btnGcs').innerText = t.btnGcs;
-            document.getElementById('optE4').innerText = t.optE4;
-            document.getElementById('optE3').innerText = t.optE3;
-            document.getElementById('optE2').innerText = t.optE2;
-            document.getElementById('optE1').innerText = t.optE1;
-            document.getElementById('optV5').innerText = t.optV5;
-            document.getElementById('optV4').innerText = t.optV4;
-            document.getElementById('optV3').innerText = t.optV3;
-            document.getElementById('optV2').innerText = t.optV2;
-            document.getElementById('optV1').innerText = t.optV1;
-            document.getElementById('optM6').innerText = t.optM6;
-            document.getElementById('optM5').innerText = t.optM5;
-            document.getElementById('optM4').innerText = t.optM4;
-            document.getElementById('optM3').innerText = t.optM3;
-            document.getElementById('optM2').innerText = t.optM2;
-            document.getElementById('optM1').innerText = t.optM1;
-
-            document.getElementById('txtQsofaTitle').innerText = t.qsofaTitle;
-            document.getElementById('txtQsofaRr').innerText = t.txtQsofaRr;
-            document.getElementById('qsofaRrNo').innerText = t.qsofaRrNo;
-            document.getElementById('qsofaRrYes').innerText = t.qsofaRrYes;
-            document.getElementById('txtQsofaPas').innerText = t.txtQsofaPas;
-            document.getElementById('qsofaPasNo').innerText = t.qsofaPasNo;
-            document.getElementById('qsofaPasYes').innerText = t.qsofaPasYes;
-            document.getElementById('txtQsofaConsc').innerText = t.txtQsofaConsc;
-            document.getElementById('qsofaConscNo').innerText = t.qsofaConscNo;
-            document.getElementById('qsofaConscYes').innerText = t.qsofaConscYes;
-            document.getElementById('btnQsofa').innerText = t.btnQsofa;
-
-            document.getElementById('txtWellsTitle').innerText = t.wellsTitle;
-            document.getElementById('txtWells1').innerText = t.txtWells1;
-            document.getElementById('txtWells2').innerText = t.txtWells2;
-            document.getElementById('txtWells3').innerText = t.txtWells3;
-            document.getElementById('txtWells4').innerText = t.txtWells4;
-            document.getElementById('txtWells5').innerText = t.txtWells5;
-            document.getElementById('txtWells6').innerText = t.txtWells6;
-            document.getElementById('txtWells7').innerText = t.txtWells7;
-            document.getElementById('btnWells').innerText = t.btnWells;
-
-            document.getElementById('txtBsaTitle').innerText = t.bsaTitle;
-            document.getElementById('txtBsaPoids').innerText = t.bsaPoids;
-            document.getElementById('txtBsaTaille').innerText = t.bsaTaille;
-            document.getElementById('btnBsa').innerText = t.btnBsa;
-
-            document.getElementById('txtMasseTitle').innerText = t.masseTitle;
-            document.getElementById('txtMasseVal').innerText = t.masseVal;
-            document.getElementById('optMgUg').innerText = t.optMgUg;
-            document.getElementById('optUgMg').innerText = t.optUgMg;
-            document.getElementById('txtVolTitle').innerText = t.volTitle;
-            document.getElementById('txtVolVal').innerText = t.volVal;
-            document.getElementById('optLMl').innerText = t.optLMl;
-            document.getElementById('optMlL').innerText = t.optMlL;
-            document.getElementById('txtTempTitle').innerText = t.tempTitle;
-            document.getElementById('txtTempsTitle').innerText = t.tempsTitle;
-            document.getElementById('txtTempsVal').innerText = t.tempsVal;
-            
-            document.getElementById('optHMin').innerText = t.optHMin;
-            document.getElementById('optMinSec').innerText = t.optMinSec;
-            document.getElementById('optSecMin').innerText = t.optSecMin;
-            document.getElementById('optJ_H').innerText = t.optJ_H;
-            document.getElementById('optH_J').innerText = t.optH_J;
-            document.getElementById('optM_J').innerText = t.optM_J;
-            document.getElementById('optA_J').innerText = t.optA_J;
-
-            document.getElementById('footerCopyright').innerText = t.footerText;
-            document.getElementById('footerLegal').innerText = t.legalText;
-            
-            document.getElementById('quizTitle').innerText = t.quizTitle;
-            document.getElementById('btnTrue').innerText = t.btnTrue;
-            document.getElementById('btnFalse').innerText = t.btnFalse;
-
-            questionsData = [
-                { q: t.qWater, r: true }, { q: t.qHeart, r: true }, { q: t.qFemur, r: false }, { q: t.qLiver, r: true }, { q: t.qVeins, r: false },
-                { q: t.qTeeth, r: true }, { q: t.qAcid, r: true }, { q: t.qRBC, r: true }, { q: t.qBrain, r: false }, { q: t.qKidneys, r: true },
-                { q: t.qMuscles, r: true }, { q: t.qSkin, r: false }, { q: t.qSun, r: true }, { q: t.qPancreas, r: true }, { q: t.qLungs, r: false }
-            ];
-            
-            if(document.getElementById('quizModal').style.display === 'flex') {
-                afficherQuestionQuiz(); 
+            for (let id in t) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = t[id];
             }
         }
 
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
-            if (menu.style.right === '0px') {
-                menu.style.right = '-300px';
-            } else {
-                menu.style.right = '0px';
-            }
+            menu.style.right = menu.style.right === '0px' ? '-300px' : '0px';
         }
 
         function mettreAJourStyleTexte() {
             const fontValue = document.getElementById('fontSelect').value;
-            const styleValue = document.getElementById('styleSelect').value.split('|');
+            const styleParts = document.getElementById('styleSelect').value.split('|');
             const sizeValue = document.getElementById('sizeSelect').value;
 
             document.documentElement.style.setProperty('--font-family', fontValue);
-            document.documentElement.style.setProperty('--font-style', styleValue[0]);
-            document.documentElement.style.setProperty('--font-weight', styleValue[1]);
+            document.documentElement.style.setProperty('--font-style', styleParts[0]);
+            document.documentElement.style.setProperty('--font-weight', styleParts[1]);
             document.documentElement.style.setProperty('--font-size', sizeValue);
 
             localStorage.setItem('selectedFont', fontValue);
@@ -875,369 +596,102 @@
             localStorage.setItem('selectedSize', sizeValue);
         }
 
-        function changerDateCalendrier() {
-            const dateVal = document.getElementById('appCalendar').value;
-            if(dateVal) {
-                console.log("Date sélectionnée :", dateVal);
-            }
-        }
+        function resetImc() { document.getElementById('poids').value=''; document.getElementById('taille').value=''; document.getElementById('resultatIMC').innerText='Résultat : --'; document.getElementById('interpretationIMC').innerText=''; }
+        function resetCockcroft() { document.getElementById('crPoids').value=''; document.getElementById('crAge').value=''; document.getElementById('crCreat').value=''; document.getElementById('resCockcroft').innerText='Clairance : --'; document.getElementById('interpCockcroft').innerText=''; }
+        function resetPed() { document.getElementById('pedPoids').value=''; document.getElementById('pedDoseKg').value=''; document.getElementById('resPediatrie').innerText='Dose totale : --'; }
+        function resetEau() { document.getElementById('eauPoids').value=''; document.getElementById('eauNa').value=''; document.getElementById('resEau').innerText='Déficit estimé : --'; document.getElementById('interpEau').innerText=''; }
+        function resetCorr() { document.getElementById('corrNa').value=''; document.getElementById('corrGly').value=''; document.getElementById('resNaCorr').innerText='Na+ corrigée : --'; document.getElementById('interpNaCorr').innerText=''; }
+        function resetGcs() { document.getElementById('resGcs').innerText='Score total : --'; document.getElementById('interpGcs').innerText=''; }
+        function resetQsofa() { document.getElementById('resQsofa').innerText='Score qSOFA : --'; document.getElementById('interpQsofa').innerText=''; }
+        function resetWells() { document.getElementById('resWells').innerText='Score de Wells : --'; document.getElementById('interpWells').innerText=''; }
+        function resetBsa() { document.getElementById('bsaPoids').value=''; document.getElementById('bsaTaille').value=''; document.getElementById('resBsa').innerText='BSA : --'; }
 
-        // --- FONCTIONS DE RÉINITIALISATION (RESET) ---
-        function resetImc() {
-            document.getElementById('poids').value = '';
-            document.getElementById('taille').value = '';
-            document.getElementById('resultatIMC').innerText = 'Résultat : --';
-            document.getElementById('interpretationIMC').innerText = '';
-        }
-
-        function resetCockcroft() {
-            document.getElementById('crPoids').value = '';
-            document.getElementById('crAge').value = '';
-            document.getElementById('crCreat').value = '';
-            document.getElementById('resCockcroft').innerText = 'Clairance : --';
-            document.getElementById('interpCockcroft').innerText = '';
-        }
-
-        function resetPed() {
-            document.getElementById('pedPoids').value = '';
-            document.getElementById('pedDoseKg').value = '';
-            document.getElementById('resPediatrie').innerText = 'Dose totale : --';
-        }
-
-        function resetEau() {
-            document.getElementById('eauPoids').value = '';
-            document.getElementById('eauNa').value = '';
-            document.getElementById('resEau').innerText = 'Déficit estimé : --';
-            document.getElementById('interpEau').innerText = '';
-        }
-
-        function resetCorr() {
-            document.getElementById('corrNa').value = '';
-            document.getElementById('corrGly').value = '';
-            document.getElementById('resNaCorr').innerText = 'Na+ corrigée : --';
-            document.getElementById('interpNaCorr').innerText = '';
-        }
-
-        function resetGcs() {
-            document.getElementById('gcsE').selectedIndex = 0;
-            document.getElementById('gcsV').selectedIndex = 0;
-            document.getElementById('gcsM').selectedIndex = 0;
-            document.getElementById('resGcs').innerText = 'Score total : --';
-            document.getElementById('interpGcs').innerText = '';
-        }
-
-        function resetQsofa() {
-            document.getElementById('qsofaRr').selectedIndex = 0;
-            document.getElementById('qsofaPas').selectedIndex = 0;
-            document.getElementById('qsofaConsc').selectedIndex = 0;
-            document.getElementById('resQsofa').innerText = 'Score qSOFA : --';
-            document.getElementById('interpQsofa').innerText = '';
-        }
-
-        function resetWells() {
-            document.getElementById('wells1').selectedIndex = 0;
-            document.getElementById('wells2').selectedIndex = 0;
-            document.getElementById('wells3').selectedIndex = 0;
-            document.getElementById('wells4').selectedIndex = 0;
-            document.getElementById('wells5').selectedIndex = 0;
-            document.getElementById('wells6').selectedIndex = 0;
-            document.getElementById('wells7').selectedIndex = 0;
-            document.getElementById('resWells').innerText = 'Score de Wells : --';
-            document.getElementById('interpWells').innerText = '';
-        }
-
-        function resetBsa() {
-            document.getElementById('bsaPoids').value = '';
-            document.getElementById('bsaTaille').value = '';
-            document.getElementById('resBsa').innerText = 'BSA : --';
-        }
-
-        let currentQuizIndex = 0;
-        let scoreQuiz = 0;
-
-        function ouvrirQuiz() {
-            document.getElementById('quizModal').style.display = 'flex';
-            currentQuizIndex = 0;
-            scoreQuiz = 0;
-            if(questionsData.length === 0) changerLangue();
-            afficherQuestionQuiz();
-        }
-
-        function fermerQuiz() {
-            document.getElementById('quizModal').style.display = 'none';
-        }
-
-        function afficherQuestionQuiz() {
-            const lang = document.getElementById('langSelect').value;
-            const t = traductions[lang];
-            
-            if (currentQuizIndex < questionsData.length) {
-                document.getElementById('quizQuestion').innerText = `Q${currentQuizIndex + 1}/15 : ${questionsData[currentQuizIndex].q}`;
-                document.getElementById('quizFeedback').innerText = "";
-                document.getElementById('quizScore').innerText = `${t.scoreAct}${scoreQuiz}${t.quizMax}`;
-                document.getElementById('quizButtons').style.display = 'flex';
-            } else {
-                document.getElementById('quizQuestion').innerText = t.quizEnd;
-                document.getElementById('quizButtons').style.display = 'none';
-                document.getElementById('quizFeedback').innerText = `${t.finalScore}${scoreQuiz}${t.quizMax}`;
-                document.getElementById('quizFeedback').className = "status-good";
-                document.getElementById('quizScore').innerText = t.retryText;
-            }
-        }
-
-        function repondreQuiz(reponseUtilisateur) {
-            const bonneReponse = questionsData[currentQuizIndex].r;
-            const feedbackDiv = document.getElementById('quizFeedback');
-            const lang = document.getElementById('langSelect').value;
-            const t = traductions[lang];
-            
-            if (reponseUtilisateur === bonneReponse) {
-                scoreQuiz++;
-                feedbackDiv.innerText = t.goodRes;
-                feedbackDiv.className = "status-good";
-            } else {
-                feedbackDiv.innerText = t.badRes;
-                feedbackDiv.className = "status-bad";
-            }
-            
-            currentQuizIndex++;
-            document.getElementById('quizButtons').style.display = 'none';
-            setTimeout(afficherQuestionQuiz, 1200);
-        }
+        function ouvrirQuiz() { document.getElementById('quizModal').style.display = 'flex'; }
+        function fermerQuiz() { document.getElementById('quizModal').style.display = 'none'; }
+        function repondreQuiz(r) { alert("Réponse enregistrée !"); fermerQuiz(); }
 
         function calculerIMC() {
-            const poids = parseFloat(document.getElementById('poids').value);
-            const tailleCm = parseFloat(document.getElementById('taille').value);
-            const resultatDiv = document.getElementById('resultatIMC');
-            const interpDiv = document.getElementById('interpretationIMC');
-            const lang = document.getElementById('langSelect').value;
-            
-            if (isNaN(poids) || isNaN(tailleCm) || tailleCm <= 0) {
-                resultatDiv.innerText = lang === 'fr' ? "Résultat : Entrez des valeurs valides." : "Result: Enter valid values.";
-                interpDiv.innerText = "";
-                return;
-            }
-            const tailleM = tailleCm / 100;
-            const imc = poids / (tailleM * tailleM);
-            resultatDiv.innerText = `Résultat : ${imc.toFixed(2)}`;
-
-            if (imc < 18.5) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Insuffisance pondérale</span>' : 'Evaluation: <span class="status-warn">Underweight</span>';
-            } else if (imc < 25) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Corpulence normale</span>' : 'Evaluation: <span class="status-good">Normal weight</span>';
-            } else if (imc < 30) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Surpoids</span>' : 'Evaluation: <span class="status-warn">Overweight</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Obésité</span>' : 'Evaluation: <span class="status-bad">Obesity</span>';
-            }
+            let p = parseFloat(document.getElementById('poids').value), t = parseFloat(document.getElementById('taille').value)/100;
+            if(isNaN(p)||isNaN(t)||t<=0) { document.getElementById('resultatIMC').innerText="Entrez des valeurs valides"; return; }
+            let imc = p/(t*t);
+            document.getElementById('resultatIMC').innerText = `Résultat : ${imc.toFixed(2)}`;
         }
-
         function calculerCockcroft() {
-            const poids = parseFloat(document.getElementById('crPoids').value);
-            const age = parseFloat(document.getElementById('crAge').value);
-            const creat = parseFloat(document.getElementById('crCreat').value);
-            const sexe = document.getElementById('crSexe').value;
-            const resDiv = document.getElementById('resCockcroft');
-            const interpDiv = document.getElementById('interpCockcroft');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(poids) || isNaN(age) || isNaN(creat) || creat <= 0) {
-                resDiv.innerText = lang === 'fr' ? "Clairance : Entrez des valeurs valides." : "Clearance: Enter valid values.";
-                interpDiv.innerText = "";
-                return;
-            }
-
-            let clairance = ((140 - age) * poids) / (0.815 * creat);
-            if (sexe === 'femme') clairance *= 0.85;
-            resDiv.innerText = `Clairance estimée : ${clairance.toFixed(2)} mL/min`;
-
-            if (clairance >= 90) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Normale</span>' : 'Evaluation: <span class="status-good">Normal</span>';
-            } else if (clairance >= 60) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Légère</span>' : 'Evaluation: <span class="status-warn">Mild</span>';
-            } else if (clairance >= 30) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Modérée</span>' : 'Evaluation: <span class="status-warn">Moderate</span>';
-            } else if (clairance >= 15) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Sévère</span>' : 'Evaluation: <span class="status-bad">Severe</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Terminale</span>' : 'Evaluation: <span class="status-bad">End-stage</span>';
-            }
+            let p = parseFloat(document.getElementById('crPoids').value), a = parseFloat(document.getElementById('crAge').value), c = parseFloat(document.getElementById('crCreat').value);
+            if(isNaN(p)||isNaN(a)||isNaN(c)||c<=0) return;
+            let cl = ((140 - a) * p) / (0.815 * c);
+            if(document.getElementById('crSexe').value === 'femme') cl *= 0.85;
+            document.getElementById('resCockcroft').innerText = `Clairance estimée : ${cl.toFixed(2)} mL/min`;
         }
-
         function calculerPediatrie() {
-            const poids = parseFloat(document.getElementById('pedPoids').value);
-            const doseKg = parseFloat(document.getElementById('pedDoseKg').value);
-            const resDiv = document.getElementById('resPediatrie');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(poids) || isNaN(doseKg)) {
-                resDiv.innerText = lang === 'fr' ? "Dose totale : Entrez des valeurs valides." : "Total dose: Enter valid values.";
-                return;
-            }
-            resDiv.innerText = `Dose totale : ${(poids * doseKg).toFixed(2)} mg`;
+            let p = parseFloat(document.getElementById('pedPoids').value), d = parseFloat(document.getElementById('pedDoseKg').value);
+            if(isNaN(p)||isNaN(d)) return;
+            document.getElementById('resPediatrie').innerText = `Dose totale : ${(p*d).toFixed(2)} mg`;
         }
-
         function calculerDeficitEau() {
-            const poids = parseFloat(document.getElementById('eauPoids').value);
-            const na = parseFloat(document.getElementById('eauNa').value);
-            const resDiv = document.getElementById('resEau');
-            const interpDiv = document.getElementById('interpEau');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(poids) || isNaN(na)) {
-                resDiv.innerText = lang === 'fr' ? "Déficit estimé : Entrez des valeurs valides." : "Estimated deficit: Enter valid values.";
-                interpDiv.innerText = "";
-                return;
-            }
-
-            const deficit = 0.6 * poids * ((na / 140) - 1);
-            resDiv.innerText = `Déficit : ${deficit.toFixed(2)} Litres`;
-
-            if (na > 145) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Hypernatrémie</span>' : 'Evaluation: <span class="status-bad">Hypernatremia</span>';
-            } else if (na >= 135) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Normale</span>' : 'Evaluation: <span class="status-good">Normal</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Hyponatrémie</span>' : 'Evaluation: <span class="status-warn">Hyponatremia</span>';
-            }
+            let p = parseFloat(document.getElementById('eauPoids').value), na = parseFloat(document.getElementById('eauNa').value);
+            if(isNaN(p)||isNaN(na)) return;
+            let def = 0.6 * p * ((na / 140) - 1);
+            document.getElementById('resEau').innerText = `Déficit : ${def.toFixed(2)} Litres`;
         }
-
         function calculerNaCorrigee() {
-            const na = parseFloat(document.getElementById('corrNa').value);
-            const gly = parseFloat(document.getElementById('corrGly').value);
-            const resDiv = document.getElementById('resNaCorr');
-            const interpDiv = document.getElementById('interpNaCorr');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(na) || isNaN(gly)) {
-                resDiv.innerText = lang === 'fr' ? "Na+ corrigée : Entrez des valeurs valides." : "Corrected Na+: Enter valid values.";
-                interpDiv.innerText = "";
-                return;
-            }
-
-            const naCorr = na + 0.3 * (gly - 5.5);
-            resDiv.innerText = `Na+ corrigée : ${naCorr.toFixed(2)} mmol/L`;
-
-            if (naCorr >= 135 && naCorr <= 145) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Normale</span>' : 'Evaluation: <span class="status-good">Normal</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Anormale</span>' : 'Evaluation: <span class="status-bad">Abnormal</span>';
-            }
+            let na = parseFloat(document.getElementById('corrNa').value), g = parseFloat(document.getElementById('corrGly').value);
+            if(isNaN(na)||isNaN(g)) return;
+            let nac = na + 0.3 * (g - 5.5);
+            document.getElementById('resNaCorr').innerText = `Na+ corrigée : ${nac.toFixed(2)} mmol/L`;
         }
-
         function calculerGlasgow() {
-            const e = parseInt(document.getElementById('gcsE').value);
-            const v = parseInt(document.getElementById('gcsV').value);
-            const m = parseInt(document.getElementById('gcsM').value);
-            const resDiv = document.getElementById('resGcs');
-            const interpDiv = document.getElementById('interpGcs');
-            const lang = document.getElementById('langSelect').value;
-
-            const total = e + v + m;
-            resDiv.innerText = lang === 'fr' ? `Score de Glasgow total : ${total} / 15` : `Total Glasgow Score: ${total} / 15`;
-
-            if (total === 15) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Conscience normale (15/15)</span>' : 'Evaluation: <span class="status-good">Normal consciousness (15/15)</span>';
-            } else if (total >= 13) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Altération légère de la conscience</span>' : 'Evaluation: <span class="status-warn">Mild alteration of consciousness</span>';
-            } else if (total >= 9) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-warn">Altération modérée (coma léger/moyen)</span>' : 'Evaluation: <span class="status-warn">Moderate alteration</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Coma profond / Urgence vitale (≤ 8)</span>' : 'Evaluation: <span class="status-bad">Deep coma / Critical emergency (≤ 8)</span>';
-            }
+            let tot = parseInt(document.getElementById('gcsE').value) + parseInt(document.getElementById('gcsV').value) + parseInt(document.getElementById('gcsM').value);
+            document.getElementById('resGcs').innerText = `Score de Glasgow : ${tot} / 15`;
         }
-
         function calculerQsofa() {
-            const rr = parseInt(document.getElementById('qsofaRr').value);
-            const pas = parseInt(document.getElementById('qsofaPas').value);
-            const consc = parseInt(document.getElementById('qsofaConsc').value);
-            const resDiv = document.getElementById('resQsofa');
-            const interpDiv = document.getElementById('interpQsofa');
-            const lang = document.getElementById('langSelect').value;
-
-            const total = rr + pas + consc;
-            resDiv.innerText = lang === 'fr' ? `Score qSOFA : ${total} / 3` : `qSOFA Score: ${total} / 3`;
-
-            if (total >= 2) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Risque élevé de sepsis / Mortalité accrue (≥ 2)</span>' : 'Evaluation: <span class="status-bad">High risk of sepsis (≥ 2)</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Risque faible (< 2)</span>' : 'Evaluation: <span class="status-good">Low risk (< 2)</span>';
-            }
+            let tot = parseInt(document.getElementById('qsofaRr').value) + parseInt(document.getElementById('qsofaPas').value) + parseInt(document.getElementById('qsofaConsc').value);
+            document.getElementById('resQsofa').innerText = `Score qSOFA : ${tot} / 3`;
         }
-
         function calculerWells() {
-            const w1 = parseFloat(document.getElementById('wells1').value);
-            const w2 = parseFloat(document.getElementById('wells2').value);
-            const w3 = parseFloat(document.getElementById('wells3').value);
-            const w4 = parseFloat(document.getElementById('wells4').value);
-            const w5 = parseFloat(document.getElementById('wells5').value);
-            const w6 = parseFloat(document.getElementById('wells6').value);
-            const w7 = parseFloat(document.getElementById('wells7').value);
-            const resDiv = document.getElementById('resWells');
-            const interpDiv = document.getElementById('interpWells');
-            const lang = document.getElementById('langSelect').value;
-
-            const total = w1 + w2 + w3 + w4 + w5 + w6 + w7;
-            resDiv.innerText = lang === 'fr' ? `Score de Wells : ${total}` : `Wells Score: ${total}`;
-
-            if (total > 4) {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-bad">Embolie Pulmonaire Probable (> 4)</span>' : 'Evaluation: <span class="status-bad">Likely Pulmonary Embolism (> 4)</span>';
-            } else {
-                interpDiv.innerHTML = lang === 'fr' ? 'Évaluation : <span class="status-good">Embolie Pulmonaire Improbable (≤ 4)</span>' : 'Evaluation: <span class="status-good">Unlikely Pulmonary Embolism (≤ 4)</span>';
-            }
+            let tot = parseFloat(document.getElementById('wells1').value) + parseFloat(document.getElementById('wells2').value) + parseFloat(document.getElementById('wells3').value) + parseFloat(document.getElementById('wells4').value) + parseFloat(document.getElementById('wells5').value) + parseFloat(document.getElementById('wells6').value) + parseFloat(document.getElementById('wells7').value);
+            document.getElementById('resWells').innerText = `Score de Wells : ${tot}`;
         }
-
         function calculerBsa() {
-            const poids = parseFloat(document.getElementById('bsaPoids').value);
-            const taille = parseFloat(document.getElementById('bsaTaille').value);
-            const resDiv = document.getElementById('resBsa');
-            const lang = document.getElementById('langSelect').value;
-
-            if (isNaN(poids) || isNaN(taille) || taille <= 0) {
-                resDiv.innerText = lang === 'fr' ? "BSA : Entrez des valeurs valides." : "BSA: Enter valid values.";
-                return;
-            }
-            const bsa = Math.sqrt((poids * taille) / 3600);
-            resDiv.innerText = lang === 'fr' ? `Surface Corporelle (BSA) : ${bsa.toFixed(2)} m²` : `Body Surface Area (BSA): ${bsa.toFixed(2)} m²`;
+            let p = parseFloat(document.getElementById('bsaPoids').value), t = parseFloat(document.getElementById('bsaTaille').value);
+            if(isNaN(p)||isNaN(t)) return;
+            let bsa = Math.sqrt((p * t) / 3600);
+            document.getElementById('resBsa').innerText = `BSA : ${bsa.toFixed(2)} m²`;
         }
-
         function convertMasse() {
-            const val = parseFloat(document.getElementById('masseVal').value);
-            const unit = document.getElementById('masseUnit').value;
-            const resDiv = document.getElementById('resultatMasse');
-            if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
-            resDiv.innerText = unit === 'mg' ? `Résultat : ${(val * 1000).toFixed(0)} µg` : `Résultat : ${(val / 1000).toFixed(6)} mg`;
+            let v = parseFloat(document.getElementById('masseVal').value);
+            let u = document.getElementById('masseUnit').value;
+            let resDiv = document.getElementById('resultatMasse');
+            if(isNaN(v)) { resDiv.innerText = "Résultat : --"; return; }
+            resDiv.innerText = u === 'mg' ? `Résultat : ${(v * 1000).toFixed(0)} µg` : `Résultat : ${(v / 1000).toFixed(6)} mg`;
         }
-
         function convertVolume() {
-            const val = parseFloat(document.getElementById('volVal').value);
-            const unit = document.getElementById('volUnit').value;
-            const resDiv = document.getElementById('resultatVolume');
-            if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
-            resDiv.innerText = unit === 'L_mL' ? `Résultat : ${(val * 1000).toFixed(0)} mL` : `Résultat : ${(val / 1000).toFixed(6)} L`;
+            let v = parseFloat(document.getElementById('volVal').value);
+            let u = document.getElementById('volUnit').value;
+            let resDiv = document.getElementById('resultatVolume');
+            if(isNaN(v)) { resDiv.innerText = "Résultat : --"; return; }
+            resDiv.innerText = u === 'L_mL' ? `Résultat : ${(v * 1000).toFixed(0)} mL` : `Résultat : ${(v / 1000).toFixed(6)} L`;
         }
-
         function convertTemp(unit) {
-            const cInput = document.getElementById('tempC');
-            const fInput = document.getElementById('tempF');
+            let cInput = document.getElementById('tempC');
+            let fInput = document.getElementById('tempF');
             if (unit === 'C') {
-                const c = parseFloat(cInput.value);
+                let c = parseFloat(cInput.value);
                 fInput.value = !isNaN(c) ? (c * 9/5 + 32).toFixed(1) : '';
             } else {
-                const f = parseFloat(fInput.value);
+                let f = parseFloat(fInput.value);
                 cInput.value = !isNaN(f) ? ((f - 32) * 5/9).toFixed(1) : '';
             }
         }
-
         function convertTemps() {
-            const val = parseFloat(document.getElementById('tempsVal').value);
-            const unit = document.getElementById('tempsUnit').value;
-            const resDiv = document.getElementById('resultatTemps');
+            let val = parseFloat(document.getElementById('tempsVal').value);
+            let unit = document.getElementById('tempsUnit').value;
+            let resDiv = document.getElementById('resultatTemps');
             if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
             
-            if (unit === 'h_min') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} minutes`;
-            else if (unit === 'min_sec') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} secondes`;
+            if (unit === 'min_sec') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} secondes`;
             else if (unit === 'sec_min') resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
+            else if (unit === 'h_min') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} minutes`;
             else if (unit === 'j_h') resDiv.innerText = `Résultat : ${(val * 24).toFixed(0)} heures`;
             else if (unit === 'h_j') resDiv.innerText = `Résultat : ${(val / 24).toFixed(2)} jours`;
             else if (unit === 'm_j') resDiv.innerText = `Résultat : ${(val * 30).toFixed(0)} jours`;
@@ -1248,7 +702,6 @@
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         }
-
         function openModal() { document.getElementById('legalModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('legalModal').style.display = 'none'; }
 
@@ -1275,8 +728,7 @@
                 document.getElementById('sizeSelect').value = savedSize;
             }
 
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('appCalendar').value = today;
+            document.getElementById('appCalendar').value = new Date().toISOString().split('T')[0];
             changerLangue();
         });
     </script>
