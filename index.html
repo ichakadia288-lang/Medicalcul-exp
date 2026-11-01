@@ -270,7 +270,7 @@
             background: var(--border);
         }
 
-        /* Conteneur du bouton flottant (60% : ~41px) avec animation lumineuse pulsante */
+        /* Bouton flottant (60% taille : ~41px, fixe sans animations) */
         .floating-ai-wrapper {
             position: fixed;
             bottom: 24px;
@@ -285,16 +285,9 @@
             border-radius: 50%;
             overflow: hidden;
             cursor: pointer;
-            border: 2px solid #38bdf8;
+            border: 2px solid var(--primary);
             background: var(--card-bg);
-            position: relative;
-            box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
-            animation: pulseGlow 2s infinite cubic-bezier(0.66, 0, 0, 1);
-            transition: transform 0.2s ease;
-        }
-
-        .floating-ai-btn:hover {
-            transform: scale(1.12);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
         }
 
         .floating-ai-btn img {
@@ -303,30 +296,7 @@
             object-fit: cover;
         }
 
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8); }
-            70% { box-shadow: 0 0 0 14px rgba(56, 189, 248, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
-        }
-
-        /* Petite étoile bleu ciel scintillante en haut */
-        .ai-star-badge {
-            position: absolute;
-            top: -7px;
-            right: -3px;
-            color: #38bdf8;
-            font-size: 1.2rem;
-            text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
-            pointer-events: none;
-            animation: pulseStar 1.2s infinite ease-in-out;
-        }
-
-        @keyframes pulseStar {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
-            50% { transform: scale(1.3) rotate(15deg); opacity: 1; }
-        }
-
-        /* Fenêtre modale de l'Assistant IA avec champ et vocal */
+        /* Modale interactive de l'assistant IA */
         #aiModal {
             position: fixed;
             bottom: 80px;
@@ -346,6 +316,32 @@
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Style des barres de fréquence d'enregistrement vocal */
+        .audio-wave {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 24px;
+            margin-top: 6px;
+        }
+        .audio-bar {
+            width: 4px;
+            height: 100%;
+            background-color: #ef4444;
+            border-radius: 2px;
+            animation: soundWave 0.6s infinite ease-in-out alternate;
+        }
+        .audio-bar:nth-child(2) { animation-delay: 0.2s; }
+        .audio-bar:nth-child(3) { animation-delay: 0.4s; }
+        .audio-bar:nth-child(4) { animation-delay: 0.1s; }
+        .audio-bar:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes soundWave {
+            0% { height: 6px; }
+            100% { height: 22px; }
         }
     </style>
 </head>
@@ -742,33 +738,42 @@
         </div>
     </div>
 
-    <!-- BOUTON FLOTTANT ASSISTANCE IA (60% + Animation Lumineuse Pulsante + Étoile) -->
+    <!-- BOUTON FLOTTANT ASSISTANCE IA (60% taille, fixe sans animation) -->
     <div id="floatingAiBtn" class="floating-ai-wrapper">
         <div class="floating-ai-btn" onclick="toggleAiModal()">
             <img src="assistant-icon.png" alt="Assistance IA">
         </div>
-        <div class="ai-star-badge">★</div>
     </div>
 
-    <!-- MODALE INTERACTIVE DE L'ASSISTANT IA AVEC CHAMP ET VOCAL -->
+    <!-- MODALE INTERACTIVE DE L'ASSISTANT IA AVEC CHAMP ET FRÉQUENCE VOCALE -->
     <div id="aiModal">
         <div style="background: var(--primary-gradient); color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
             <span>Assistant Médical IA</span>
             <button onclick="toggleAiModal()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">✕</button>
         </div>
         <div style="padding: 16px; font-size: 0.88rem; line-height: 1.4; display: flex; flex-direction: column; gap: 10px;">
-            <p style="margin: 0;">Bonjour Issaka ! 👋 Posez votre question ou utilisez le micro pour m'interroger.</p>
+            <p style="margin: 0;">Bonjour Issaka ! 👋 Je suis là pour discuter et répondre à toutes vos questions médicales de vive voix ou par écrit.</p>
             
-            <!-- Historique / Zone de réponse -->
+            <!-- Historique / Zone de conversation -->
             <div id="aiChatResponse" style="background: var(--input-bg); padding: 10px; border-radius: 8px; font-size: 0.82rem; min-height: 40px; max-height: 120px; overflow-y: auto;">
-                En attente de votre question...
+                Comment puis-je vous aider aujourd'hui ?
             </div>
 
-            <!-- Champ de saisie et bouton vocal -->
+            <!-- Indicateur de fréquence d'enregistrement vocal -->
+            <div id="audioWaveContainer" class="audio-wave">
+                <span style="font-size: 0.75rem; color: #ef4444; font-weight: 600; margin-right: 6px;">Enregistrement en cours...</span>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+            </div>
+
+            <!-- Champ de saisie et bouton micro droit simple -->
             <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px;">
                 <input type="text" id="aiUserInput" placeholder="Posez votre question..." style="margin: 0; flex: 1; font-size: 0.85rem; padding: 8px 10px;">
                 <button onclick="envoyerQuestionAi()" class="calc-btn" style="padding: 8px 12px; flex: unset; font-size: 0.85rem;">Envoyer</button>
-                <button onclick="lancerRechercheVocale()" title="Recherche vocale" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">🎤</button>
+                <button onclick="lancerRechercheVocale()" title="Enregistrement vocal" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">🎤</button>
             </div>
         </div>
     </div>
@@ -920,15 +925,18 @@
             let val = input.value.trim();
             if(!val) return;
 
-            respBox.innerHTML = `<strong>Vous :</strong> ${val}<br><br><em>Recherche en cours...</em>`;
+            respBox.innerHTML = `<strong>Vous :</strong> ${val}<br><br><em>Réflexion en cours...</em>`;
             
             setTimeout(() => {
-                respBox.innerHTML = `<strong>Vous :</strong> ${val}<br><br><strong>Assistant IA :</strong> J'ai bien reçu votre question concernant "${val}". En tant qu'assistant de MediCalcul Express, je vous conseille de vérifier les formules de clairance ou de consulter vos réactions personnalisées enregistrées !`;
+                respBox.innerHTML = `<strong>Vous :</strong> ${val}<br><br><strong>Assistant IA :</strong> Je comprends parfaitement votre préoccupation. En tant qu'assistant de MediCalcul Express, je suis là pour échanger avec vous de manière naturelle. Que souhaitez-vous approfondir d'autre ?`;
                 input.value = '';
-            }, 600);
+            }, 700);
         }
 
         function lancerRechercheVocale() {
+            const wave = document.getElementById('audioWaveContainer');
+            const respBox = document.getElementById('aiChatResponse');
+
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
                 alert("La reconnaissance vocale n'est pas supportée par votre navigateur.");
                 return;
@@ -938,17 +946,24 @@
             recognition.lang = 'fr-FR';
             
             recognition.onstart = function() {
-                document.getElementById('aiChatResponse').innerHTML = "🎤 Écoute en cours... Parlez maintenant.";
+                wave.style.display = 'flex';
+                respBox.innerHTML = "🎤 Enregistrement en cours... Fréquence audio active.";
             };
 
             recognition.onresult = function(event) {
                 let speechToText = event.results[0][0].transcript;
                 document.getElementById('aiUserInput').value = speechToText;
+                wave.style.display = 'none';
                 envoyerQuestionAi();
             };
 
             recognition.onerror = function() {
-                document.getElementById('aiChatResponse').innerHTML = "Erreur lors de la capture vocale. Réessayez.";
+                wave.style.display = 'none';
+                respBox.innerHTML = "Erreur de capture vocale. Veuillez réessayer.";
+            };
+
+            recognition.onend = function() {
+                wave.style.display = 'none';
             };
 
             recognition.start();
