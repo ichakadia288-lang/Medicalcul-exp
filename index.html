@@ -164,7 +164,7 @@
                 <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 14px;">Quiz : Éléments du Corps</span>
                 <button onclick="ouvrirQuiz()" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;" id="btnOpenQuiz">Lancer</button>
             </div>
-            <p style="font-size: 12px; color: var(--border); margin: 0;" id="txtQuizMenuDesc">Évaluez vos connaissances (Vrai/Faux)</p>
+            <p style="font-size: 12px; color: var(--border); margin: 0;" id="txtQuizMenuDesc">15 questions par jour (Vrai/Faux)</p>
         </div>
     </div>
 
@@ -179,7 +179,7 @@
             <div id="quizContent">
                 <p id="quizQuestion" style="font-size: 15px; font-weight: 500; min-height: 50px;"></p>
                 
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div id="quizButtons" style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
                     <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
                 </div>
@@ -321,8 +321,8 @@
         <input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
     </div>
 
-    <!-- Convertisseur de Temps (Débit / Posologie) -->
-        <div class="container">
+    <!-- Convertisseur de Temps -->
+    <div class="container">
         <h3 style="margin-top: 0;" id="txtTempsTitle">Conversion de Temps</h3>
         <label for="tempsVal" id="txtTempsVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
@@ -342,7 +342,7 @@
         const traductions = {
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", 
-                quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "Évaluez vos connaissances (Vrai/Faux)", btnOpenQuiz: "Lancer",
+                quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "15 questions par jour (Vrai/Faux)", btnOpenQuiz: "Lancer",
                 subTitle: "Outils de calculs et conversions médicales rapides",
                 imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
@@ -358,7 +358,7 @@
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", 
-                quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "Test your knowledge (True/False)", btnOpenQuiz: "Start",
+                quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "15 questions per day (True/False)", btnOpenQuiz: "Start",
                 subTitle: "Fast medical calculation and conversion tools",
                 imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
@@ -427,34 +427,69 @@
             document.getElementById('footerLegal').innerText = t.legalText;
 
             localStorage.setItem('lang', lang);
-            chargerQuestionQuiz();
         }
 
-        // --- LOGIQUE DU QUIZ VRAI / FAUX ---
+        // --- BANQUE DE 15 QUESTIONS QUOTIDIENNES VRAI / FAUX ---
         const questionsQuiz = {
             fr: [
                 { q: "L'eau représente environ 60% du poids corporel chez un adulte sain.", rep: true },
-                { q: "La natrémie normale se situe généralement entre 180 et 200 mmol/L.", rep: false },
-                { q: "Le potassium (K+) est principalement un ion intracellulaire.", rep: true },
+                { q: "La natrémie normale se situe généralement entre 135 et 145 mmol/L.", rep: true },
+                { q: "Le potassium (K+) est principalement un ion extracellulaire.", rep: false },
                 { q: "Une clairance de la créatinine à 120 mL/min témoigne d'une insuffisance rénale sévère.", rep: false },
-                { q: "Le corps humain contient plus de calcium dans les os que dans le sang.", rep: true }
+                { q: "Le corps humain contient plus de calcium dans les os que dans le sang.", rep: true },
+                { q: "Le pH sanguin normal se situe strictement entre 7,35 et 7,45.", rep: true },
+                { q: "La volémie totale chez l'adulte est d'environ 10 à 12 litres.", rep: false },
+                { q: "Le sodium (Na+) est le principal cation du secteur extracellulaire.", rep: true },
+                { q: "Une glycémie à jeun supérieure à 7,0 mmol/L évoque un diabète.", rep: true },
+                { q: "Le bicarbonate (HCO3-) joue un rôle clé dans la régulation du pH sanguin.", rep: true },
+                { q: "La température corporelle normale mesurée au tympan est de l'ordre de 35°C.", rep: false },
+                { q: "Le magnésium est un oligo-élément principalement intracellulaire.", rep: true },
+                { q: "La posologie des médicaments chez l'enfant se calcule généralement en fonction de sa taille.", rep: false },
+                { q: "Une hyperkaliémie grave peut entraîner des troubles du rythme cardiaque menaçant le pronostic vital.", rep: true },
+                { q: "Le volume globulaire normal représente environ 80% du volume sanguin total.", rep: false }
             ],
             en: [
                 { q: "Water accounts for about 60% of body weight in a healthy adult.", rep: true },
-                { q: "Normal natremia is generally between 180 and 200 mmol/L.", rep: false },
-                { q: "Potassium (K+) is primarily an intracellular ion.", rep: true },
+                { q: "Normal natremia is generally between 135 and 145 mmol/L.", rep: true },
+                { q: "Potassium (K+) is primarily an extracellular ion.", rep: false },
                 { q: "A creatinine clearance of 120 mL/min indicates severe renal failure.", rep: false },
-                { q: "The human body contains more calcium in the bones than in the blood.", rep: true }
+                { q: "The human body contains more calcium in the bones than in the blood.", rep: true },
+                { q: "Normal blood pH strictly ranges between 7.35 and 7.45.", rep: true },
+                { q: "Total blood volume in adults is approximately 10 to 12 liters.", rep: false },
+                { q: "Sodium (Na+) is the main cation of the extracellular compartment.", rep: true },
+                { q: "Fasting blood glucose above 7.0 mmol/L suggests diabetes.", rep: true },
+                { q: "Bicarbonate (HCO3-) plays a key role in blood pH regulation.", rep: true },
+                { q: "Normal body temperature measured at the tympanic membrane is around 35°C.", rep: false },
+                { q: "Magnesium is a predominantly intracellular mineral.", rep: true },
+                { q: "Pediatric drug dosage is generally calculated based on the child's height.", rep: false },
+                { q: "Severe hyperkalemia can cause life-threatening cardiac arrhythmias.", rep: true },
+                { q: "Normal red blood cell volume accounts for about 80% of total blood volume.", rep: false }
             ]
         };
 
-        let indexQuiz = 0;
-        let scoreQuiz = 0;
+        function getTodayDateString() {
+            const d = new Date();
+            return d.toISOString().split('T')[0];
+        }
+
+        function verifierEtMettreAJourQuotaJour() {
+            const today = getTodayDateString();
+            let lastDate = localStorage.getItem('quizLastDate');
+            let answeredCount = parseInt(localStorage.getItem('quizCountToday') || '0', 10);
+
+            if (lastDate !== today) {
+                localStorage.setItem('quizLastDate', today);
+                localStorage.setItem('quizCountToday', '0');
+                answeredCount = 0;
+            }
+            return answeredCount;
+        }
+
+        let scoreSessionQuiz = 0;
 
         function ouvrirQuiz() {
             document.getElementById('quizModal').style.display = 'flex';
-            indexQuiz = 0;
-            scoreQuiz = 0;
+            scoreSessionQuiz = 0;
             chargerQuestionQuiz();
         }
 
@@ -468,35 +503,49 @@
             const qEl = document.getElementById('quizQuestion');
             const feedbackEl = document.getElementById('quizFeedback');
             const scoreEl = document.getElementById('quizScore');
+            const buttonsDiv = document.getElementById('quizButtons');
 
             feedbackEl.innerText = "";
-            if (indexQuiz < listeQ.length) {
-                qEl.innerText = `Question ${indexQuiz + 1} / ${listeQ.length} : ${listeQ[indexQuiz].q}`;
+            let answeredToday = verifierEtMettreAJourQuotaJour();
+
+            if (answeredToday >= 15) {
+                qEl.innerText = lang === 'en' 
+                    ? "Today's quiz is finished! You have already answered today's 15 questions. Please wait until tomorrow for new questions."
+                    : "Le quiz du jour est terminé ! Vous avez déjà répondu aux 15 questions d'aujourd'hui. Vous devez attendre demain pour répondre à de nouvelles questions.";
+                buttonsDiv.style.display = 'none';
                 scoreEl.innerText = "";
+            } else {
+                buttonsDiv.style.display = 'flex';
+                // Affiche la question correspondante au nombre déjà répondu aujourd'hui
+                let qIndex = answeredToday % listeQ.length;
+                qEl.innerText = `Question ${answeredToday + 1} / 15 : ${listeQ[qIndex].q}`;
+                scoreEl.innerText = lang === 'en' ? `Answered today: ${answeredToday}/15` : `Répondues aujourd'hui : ${answeredToday}/15`;
                 document.getElementById('btnTrue').style.display = 'block';
                 document.getElementById('btnFalse').style.display = 'block';
-            } else {
-                qEl.innerText = lang === 'en' ? `Quiz finished! Final Score: ${scoreQuiz} / ${listeQ.length}` : `Quiz terminé ! Score final : ${scoreQuiz} / ${listeQ.length}`;
-                document.getElementById('btnTrue').style.display = 'none';
-                document.getElementById('btnFalse').style.display = 'none';
-                scoreEl.innerText = lang === 'en' ? "Click 'Start' in the menu to restart." : "Cliquez sur 'Lancer' dans le menu pour recommencer.";
             }
         }
 
         function repondreQuiz(choixUser) {
             const lang = document.getElementById('langSelect').value;
             const listeQ = questionsQuiz[lang];
-            const bonneReponse = listeQ[indexQuiz].rep;
+            let answeredToday = verifierEtMettreAJourQuotaJour();
+            if (answeredToday >= 15) return;
+
+            let qIndex = answeredToday % listeQ.length;
+            const bonneReponse = listeQ[qIndex].rep;
             const feedbackEl = document.getElementById('quizFeedback');
 
             if (choixUser === bonneReponse) {
                 feedbackEl.innerHTML = lang === 'en' ? '<span class="status-good">Correct! Good evaluation.</span>' : '<span class="status-good">Correct ! C’est une bonne évaluation.</span>';
-                scoreQuiz++;
+                scoreSessionQuiz++;
             } else {
                 feedbackEl.innerHTML = lang === 'en' ? '<span class="status-bad">Incorrect. Bad evaluation.</span>' : '<span class="status-bad">Incorrect. Mauvais résultat.</span>';
             }
 
-            indexQuiz++;
+            // Incrémente le compteur du jour dans le stockage
+            answeredToday++;
+            localStorage.setItem('quizCountToday', answeredToday);
+
             setTimeout(() => {
                 chargerQuestionQuiz();
             }, 1500);
