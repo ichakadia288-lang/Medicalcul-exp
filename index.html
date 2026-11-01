@@ -98,18 +98,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
-        button.reset-global-btn {
-            background-color: #64748b;
-            color: #ffffff;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 30px;
-        }
         
         .badge-urg {
             background: #ef4444;
@@ -140,48 +128,29 @@
 
     <!-- Barre de menu supérieure -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
-        <h3 id="appTitleHeader" style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
-        
-        <!-- Commandes en haut à droite : Sélecteur de langue + Bouton menu -->
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 6px 10px; font-size: 13px; width: auto; background-color: var(--card-bg); color: var(--text);">
-                <option value="fr">🇫🇷 FR</option>
-                <option value="en">🇬🇧 EN</option>
-            </select>
-            <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);">☰</button>
-        </div>
+        <h3 style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
+        <!-- Bouton menu hamburger -->
+        <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);">☰</button>
     </header>
 
-    <!-- Panneau du menu latéral -->
-    <div id="sideMenu" style="position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h4 style="margin: 0;" id="menuTitle">Paramètres & Infos</h4>
+    <!-- Panneau du menu latéral (caché par défaut) -->
+    <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h4 style="margin: 0;">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
-        <!-- Mode Sombre -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-            <span id="labelDarkMode">Mode Sombre</span>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span>Mode Sombre</span>
+            <!-- Interrupteur du mode sombre -->
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-        <!-- Section À propos, Liens & Contact -->
-        <div>
-            <h4 style="margin-bottom: 10px; color: var(--primary);" id="aboutHeading">À propos & Contact</h4>
-            <p id="aboutText" style="font-size: 13px; color: var(--border); line-height: 1.4; margin-bottom: 15px;">
-                MediCalcul Express est un outil d'aide aux calculs cliniques et d'urgences destiné aux professionnels et étudiants en santé.
-            </p>
-            <p style="font-size: 13px; margin: 5px 0;"><strong>📧 Contact :</strong> <a href="mailto:contact@calcul-express.com" style="color: var(--primary);">contact@calcul-express.com</a></p>
-            <p style="font-size: 13px; margin: 5px 0;"><strong>🌐 Site :</strong> <a href="https://calcul-express.com" target="_blank" style="color: var(--primary);">calcul-express.com</a></p>
         </div>
     </div>
 
     <!-- Contenu principal -->
     <div class="container">
         <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
-        <p style="text-align: center; color: var(--border);" id="appSubtitle">Outils de calculs et conversions médicales rapides</p>
+        <p style="text-align: center; color: var(--border);">Outils de calculs et conversions médicales rapides</p>
 
         <!-- Calculatrice IMC -->
         <h3>Calcul de l'IMC (Indice de Masse Corporelle)</h3>
@@ -322,9 +291,6 @@
             </select>
         </div>
         <div id="resultatTemps" style="margin-top: 5px; font-size: 14px; color: var(--primary);">Résultat : --</div>
-
-        <!-- Bouton global de réinitialisation de tous les champs -->
-        <button class="reset-global-btn" onclick="reinitialiserTout()">Réinitialiser tous les champs</button>
     </div>
 
     <!-- Scripts JavaScript -->
@@ -333,59 +299,9 @@
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             if (menu.style.right === '0px') {
-                menu.style.right = '-280px';
+                menu.style.right = '-250px';
             } else {
                 menu.style.right = '0px';
-            }
-        }
-
-        // Fonction globale pour réinitialiser tous les champs et résultats
-        function reinitialiserTout() {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
-
-            document.getElementById('resultatIMC').innerText = "Résultat : --";
-            document.getElementById('interpretationIMC').innerText = "";
-
-            document.getElementById('resCockcroft').innerText = "Clairance : --";
-            document.getElementById('interpCockcroft').innerText = "";
-
-            document.getElementById('resPediatrie').innerText = "Dose totale : --";
-
-            document.getElementById('resEau').innerText = "Déficit estimé : --";
-            document.getElementById('interpEau').innerText = "";
-
-            document.getElementById('resNaCorr').innerText = "Na+ corrigée : --";
-            document.getElementById('interpNaCorr').innerText = "";
-
-            document.getElementById('resultatMasse').innerText = "Résultat : --";
-            document.getElementById('resultatVolume').innerText = "Résultat : --";
-            document.getElementById('resultatTemps').innerText = "Résultat : --";
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Sélecteur de langue (Français / Anglais)
-        function changerLangue() {
-            const lang = document.getElementById('langSelect').value;
-            const menuTitle = document.getElementById('menuTitle');
-            const labelDarkMode = document.getElementById('labelDarkMode');
-            const aboutHeading = document.getElementById('aboutHeading');
-            const aboutText = document.getElementById('aboutText');
-            const appSubtitle = document.getElementById('appSubtitle');
-
-            if (lang === 'en') {
-                menuTitle.innerText = "Settings & Info";
-                labelDarkMode.innerText = "Dark Mode";
-                aboutHeading.innerText = "About & Contact";
-                aboutText.innerText = "MediCalcul Express is a clinical and emergency calculation tool designed for healthcare professionals and students.";
-                appSubtitle.innerText = "Quick medical calculations and unit conversions";
-            } else {
-                menuTitle.innerText = "Paramètres & Infos";
-                labelDarkMode.innerText = "Mode Sombre";
-                aboutHeading.innerText = "À propos & Contact";
-                aboutText.innerText = "MediCalcul Express est un outil d'aide aux calculs cliniques et d'urgences destiné aux professionnels et étudiants en santé.";
-                appSubtitle.innerText = "Outils de calculs et conversions médicales rapides";
             }
         }
 
@@ -436,3 +352,205 @@
             let clairance = ((140 - age) * poids) / (0.815 * creat);
             if (sexe === 'femme') {
                 clairance *= 0.85;
+            }
+            resDiv.innerText = `Clairance estimée : ${clairance.toFixed(2)} mL/min`;
+
+            if (clairance >= 90) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Fonction rénale normale (Bon)</span>';
+            } else if (clairance >= 60) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance rénale légère</span>';
+            } else if (clairance >= 30) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Insuffisance rénale modérée</span>';
+            } else if (clairance >= 15) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Insuffisance rénale sévère (Mauvais)</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Insuffisance rénale terminale / Dialyse (Critique)</span>';
+            }
+        }
+
+        // 2. Posologie Pédiatrique
+        function calculerPediatrie() {
+            const poids = parseFloat(document.getElementById('pedPoids').value);
+            const doseKg = parseFloat(document.getElementById('pedDoseKg').value);
+            const resDiv = document.getElementById('resPediatrie');
+
+            if (isNaN(poids) || isNaN(doseKg)) {
+                resDiv.innerText = "Dose totale : Veuillez entrer des valeurs valides.";
+                return;
+            }
+
+            const doseTotale = poids * doseKg;
+            resDiv.innerText = `Dose totale par prise : ${doseTotale.toFixed(2)} mg (Vérifier la posologie maximale)`;
+        }
+
+        // 3. Déficit en Eau
+        function calculerDeficitEau() {
+            const poids = parseFloat(document.getElementById('eauPoids').value);
+            const na = parseFloat(document.getElementById('eauNa').value);
+            const resDiv = document.getElementById('resEau');
+            const interpDiv = document.getElementById('interpEau');
+
+            if (isNaN(poids) || isNaN(na)) {
+                resDiv.innerText = "Déficit estimé : Veuillez entrer des valeurs valides.";
+                interpDiv.innerText = "";
+                return;
+            }
+
+            const deficit = 0.6 * poids * ((na / 140) - 1);
+            resDiv.innerText = `Déficit en eau libre estimé : ${deficit.toFixed(2)} Litres`;
+
+            if (na > 145) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hypernatrémie avérée (Mauvais / Risque neurologique)</span>';
+            } else if (na >= 135 && na <= 145) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Natrémie normale</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-warn">Hyponatrémie (Ne correspond pas à un déficit en eau libre pur)</span>';
+            }
+        }
+
+        // 4. Natrémie Corrigée
+        function calculerNaCorrigee() {
+            const na = parseFloat(document.getElementById('corrNa').value);
+            const gly = parseFloat(document.getElementById('corrGly').value);
+            const resDiv = document.getElementById('resNaCorr');
+            const interpDiv = document.getElementById('interpNaCorr');
+
+            if (isNaN(na) || isNaN(gly)) {
+                resDiv.innerText = "Na+ corrigée : Veuillez entrer des valeurs valides.";
+                interpDiv.innerText = "";
+                return;
+            }
+
+            const naCorr = na + 0.3 * (gly - 5.5);
+            resDiv.innerText = `Natrémie corrigée : ${naCorr.toFixed(2)} mmol/L`;
+
+            if (naCorr >= 135 && naCorr <= 145) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-good">Natrémie corrigée normale (Bon)</span>';
+            } else if (naCorr < 135) {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hyponatrémie corrigée (Mauvais / Attention aux mouvements d’eau)</span>';
+            } else {
+                interpDiv.innerHTML = 'Évaluation : <span class="status-bad">Hypernatrémie corrigée (Mauvais / Risque de déshydratation intracellulaire)</span>';
+            }
+        }
+
+        // --- FIN MODULE URGENCES ---
+
+        // Conversion de masse (mg <-> µg)
+        function convertMasse() {
+            const val = parseFloat(document.getElementById('masseVal').value);
+            const unit = document.getElementById('masseUnit').value;
+            const resDiv = document.getElementById('resultatMasse');
+
+            if (isNaN(val)) {
+                resDiv.innerText = "Résultat : --";
+                return;
+            }
+
+            if (unit === 'mg') {
+                resDiv.innerText = `Résultat : ${val * 1000} µg`;
+            } else {
+                resDiv.innerText = `Résultat : ${val / 1000} mg`;
+            }
+        }
+
+        // Conversion de volume (L <-> mL)
+        function convertVolume() {
+            const val = parseFloat(document.getElementById('volVal').value);
+            const unit = document.getElementById('volUnit').value;
+            const resDiv = document.getElementById('resultatVolume');
+
+            if (isNaN(val)) {
+                resDiv.innerText = "Résultat : --";
+                return;
+            }
+
+            if (unit === 'L_mL') {
+                resDiv.innerText = `Résultat : ${val * 1000} mL`;
+            } else {
+                resDiv.innerText = `Résultat : ${val / 1000} L`;
+            }
+        }
+
+        // Fonction de conversion de température instantanée
+        function convertTemp(unit) {
+            const cInput = document.getElementById('tempC');
+            const fInput = document.getElementById('tempF');
+            
+            if (unit === 'C') {
+                const c = parseFloat(cInput.value);
+                if (!isNaN(c)) {
+                    fInput.value = (c * 9/5 + 32).toFixed(1);
+                } else {
+                    fInput.value = '';
+                }
+            } else {
+                const f = parseFloat(fInput.value);
+                if (!isNaN(f)) {
+                    cInput.value = ((f - 32) * 5/9).toFixed(1);
+                } else {
+                    cInput.value = '';
+                }
+            }
+        }
+
+        // Conversion de temps
+        function convertTemps() {
+            const val = parseFloat(document.getElementById('tempsVal').value);
+            const unit = document.getElementById('tempsUnit').value;
+            const resDiv = document.getElementById('resultatTemps');
+
+            if (isNaN(val)) {
+                resDiv.innerText = "Résultat : --";
+                return;
+            }
+
+            if (unit === 'h_min') {
+                resDiv.innerText = `Résultat : ${val * 60} minutes (${val * 3600} secondes)`;
+            } else if (unit === 'min_sec') {
+                resDiv.innerText = `Résultat : ${val * 60} secondes`;
+            } else {
+                resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
+            }
+        }
+    </script>
+
+    <script>
+        // Fonction pour basculer le mode sombre
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        // Restaure la préférence de l'utilisateur au chargement de la page
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+        function openModal() {
+            document.getElementById('legalModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('legalModal').style.display = 'none';
+        }
+    </script>
+    <!-- Pied de page -->
+<footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
+  <p>© 2026 MediCalcul Express — Tous droits réservés</p>
+  <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;">Mentions Légales & Confidentialité</a></p>
+</footer>
+
+<!-- Fenêtre modale -->
+<div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+  <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
+    <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
+    <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
+    <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
+    <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
+    <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
+  </div>
+</div>
+</body>
+</html>
