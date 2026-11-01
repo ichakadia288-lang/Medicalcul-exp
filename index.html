@@ -144,16 +144,49 @@
     </header>
 
     <!-- Panneau du menu latéral (caché par défaut) -->
-    <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div id="sideMenu" style="position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
-        <div style="display: flex; align-items: center; justify-content: space-between;">
+        <!-- Option Mode Sombre -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
             <span id="txtDarkMode">Mode Sombre</span>
-            <!-- Interrupteur du mode sombre -->
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
+
+        <!-- Option Quiz Corps Humain -->
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 14px;">Quiz : Éléments du Corps</span>
+                <button onclick="ouvrirQuiz()" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;" id="btnOpenQuiz">Lancer</button>
+            </div>
+            <p style="font-size: 12px; color: var(--border); margin: 0;" id="txtQuizMenuDesc">Évaluez vos connaissances (Vrai/Faux)</p>
+        </div>
+    </div>
+
+    <!-- MODALE DU QUIZ VRAI / FAUX -->
+    <div id="quizModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+        <div style="background: var(--card-bg); padding: 25px; border-radius: 12px; max-width: 450px; width: 100%; box-sizing: border-box; color: var(--text); border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: var(--primary);" id="quizTitle">Quiz : Quantité des Éléments</h3>
+                <button onclick="fermerQuiz()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
+            </div>
+            
+            <div id="quizContent">
+                <p id="quizQuestion" style="font-size: 15px; font-weight: 500; min-height: 50px;"></p>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
+                    <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
+                </div>
+                
+                <div id="quizFeedback" style="font-size: 14px; margin-bottom: 15px; min-height: 40px; font-weight: bold;"></div>
+                <div id="quizScore" style="font-size: 13px; color: var(--border);"></div>
+            </div>
         </div>
     </div>
 
@@ -289,7 +322,7 @@
     </div>
 
     <!-- Convertisseur de Temps (Débit / Posologie) -->
-    <div class="container">
+        <div class="container">
         <h3 style="margin-top: 0;" id="txtTempsTitle">Conversion de Temps</h3>
         <label for="tempsVal" id="txtTempsVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
@@ -305,10 +338,12 @@
 
     <!-- Scripts JavaScript -->
     <script>
-        // Dictionnaire de traduction simple FR / EN
+        // Dictionnaire de traduction FR / EN
         const traductions = {
             fr: {
-                param: "Paramètres", darkMode: "Mode Sombre", subTitle: "Outils de calculs et conversions médicales rapides",
+                param: "Paramètres", darkMode: "Mode Sombre", 
+                quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "Évaluez vos connaissances (Vrai/Faux)", btnOpenQuiz: "Lancer",
+                subTitle: "Outils de calculs et conversions médicales rapides",
                 imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance Créatinine - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (années)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -322,7 +357,9 @@
                 footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité"
             },
             en: {
-                param: "Settings", darkMode: "Dark Mode", subTitle: "Fast medical calculation and conversion tools",
+                param: "Settings", darkMode: "Dark Mode", 
+                quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "Test your knowledge (True/False)", btnOpenQuiz: "Start",
+                subTitle: "Fast medical calculation and conversion tools",
                 imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Creatinine Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
@@ -343,6 +380,9 @@
 
             document.getElementById('txtParam').innerText = t.param;
             document.getElementById('txtDarkMode').innerText = t.darkMode;
+            document.getElementById('txtQuizMenuTitle').innerText = t.quizMenuTitle;
+            document.getElementById('txtQuizMenuDesc').innerText = t.quizMenuDesc;
+            document.getElementById('btnOpenQuiz').innerText = t.btnOpenQuiz;
             document.getElementById('txtSubTitle').innerText = t.subTitle;
             document.getElementById('txtImcTitle').innerText = t.imcTitle;
             document.getElementById('txtPoids').innerText = t.poids;
@@ -387,9 +427,83 @@
             document.getElementById('footerLegal').innerText = t.legalText;
 
             localStorage.setItem('lang', lang);
+            chargerQuestionQuiz();
         }
 
-        // Restauration de la langue au chargement
+        // --- LOGIQUE DU QUIZ VRAI / FAUX ---
+        const questionsQuiz = {
+            fr: [
+                { q: "L'eau représente environ 60% du poids corporel chez un adulte sain.", rep: true },
+                { q: "La natrémie normale se situe généralement entre 180 et 200 mmol/L.", rep: false },
+                { q: "Le potassium (K+) est principalement un ion intracellulaire.", rep: true },
+                { q: "Une clairance de la créatinine à 120 mL/min témoigne d'une insuffisance rénale sévère.", rep: false },
+                { q: "Le corps humain contient plus de calcium dans les os que dans le sang.", rep: true }
+            ],
+            en: [
+                { q: "Water accounts for about 60% of body weight in a healthy adult.", rep: true },
+                { q: "Normal natremia is generally between 180 and 200 mmol/L.", rep: false },
+                { q: "Potassium (K+) is primarily an intracellular ion.", rep: true },
+                { q: "A creatinine clearance of 120 mL/min indicates severe renal failure.", rep: false },
+                { q: "The human body contains more calcium in the bones than in the blood.", rep: true }
+            ]
+        };
+
+        let indexQuiz = 0;
+        let scoreQuiz = 0;
+
+        function ouvrirQuiz() {
+            document.getElementById('quizModal').style.display = 'flex';
+            indexQuiz = 0;
+            scoreQuiz = 0;
+            chargerQuestionQuiz();
+        }
+
+        function fermerQuiz() {
+            document.getElementById('quizModal').style.display = 'none';
+        }
+
+        function chargerQuestionQuiz() {
+            const lang = document.getElementById('langSelect').value;
+            const listeQ = questionsQuiz[lang];
+            const qEl = document.getElementById('quizQuestion');
+            const feedbackEl = document.getElementById('quizFeedback');
+            const scoreEl = document.getElementById('quizScore');
+
+            feedbackEl.innerText = "";
+            if (indexQuiz < listeQ.length) {
+                qEl.innerText = `Question ${indexQuiz + 1} / ${listeQ.length} : ${listeQ[indexQuiz].q}`;
+                scoreEl.innerText = "";
+                document.getElementById('btnTrue').style.display = 'block';
+                document.getElementById('btnFalse').style.display = 'block';
+            } else {
+                qEl.innerText = lang === 'en' ? `Quiz finished! Final Score: ${scoreQuiz} / ${listeQ.length}` : `Quiz terminé ! Score final : ${scoreQuiz} / ${listeQ.length}`;
+                document.getElementById('btnTrue').style.display = 'none';
+                document.getElementById('btnFalse').style.display = 'none';
+                scoreEl.innerText = lang === 'en' ? "Click 'Start' in the menu to restart." : "Cliquez sur 'Lancer' dans le menu pour recommencer.";
+            }
+        }
+
+        function repondreQuiz(choixUser) {
+            const lang = document.getElementById('langSelect').value;
+            const listeQ = questionsQuiz[lang];
+            const bonneReponse = listeQ[indexQuiz].rep;
+            const feedbackEl = document.getElementById('quizFeedback');
+
+            if (choixUser === bonneReponse) {
+                feedbackEl.innerHTML = lang === 'en' ? '<span class="status-good">Correct! Good evaluation.</span>' : '<span class="status-good">Correct ! C’est une bonne évaluation.</span>';
+                scoreQuiz++;
+            } else {
+                feedbackEl.innerHTML = lang === 'en' ? '<span class="status-bad">Incorrect. Bad evaluation.</span>' : '<span class="status-bad">Incorrect. Mauvais résultat.</span>';
+            }
+
+            indexQuiz++;
+            setTimeout(() => {
+                chargerQuestionQuiz();
+            }, 1500);
+        }
+        // --- FIN DU QUIZ ---
+
+        // Restauration de la langue et mode au chargement
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('lang');
             if (savedLang) {
@@ -405,7 +519,7 @@
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             if (menu.style.right === '0px') {
-                menu.style.right = '-250px';
+                menu.style.right = '-280px';
             } else {
                 menu.style.right = '0px';
             }
@@ -439,9 +553,7 @@
             }
         }
 
-        // --- MODULE URGENCES & RÉANIMATION : LOGIQUE JS & ÉVALUATION ---
-
-        // 1. Clairance de la créatinine (Cockcroft et Gault)
+        // --- MODULE URGENCES & RÉANIMATION ---
         function calculerCockcroft() {
             const poids = parseFloat(document.getElementById('crPoids').value);
             const age = parseFloat(document.getElementById('crAge').value);
@@ -476,7 +588,6 @@
             }
         }
 
-        // 2. Posologie Pédiatrique
         function calculerPediatrie() {
             const poids = parseFloat(document.getElementById('pedPoids').value);
             const doseKg = parseFloat(document.getElementById('pedDoseKg').value);
@@ -492,7 +603,6 @@
             resDiv.innerText = (lang === 'en' ? "Total dose per intake: " : "Dose totale par prise : ") + doseTotale.toFixed(2) + " mg (" + (lang === 'en' ? "Check maximum dosage" : "Vérifier la posologie maximale") + ")";
         }
 
-        // 3. Déficit en Eau
         function calculerDeficitEau() {
             const poids = parseFloat(document.getElementById('eauPoids').value);
             const na = parseFloat(document.getElementById('eauNa').value);
@@ -518,7 +628,6 @@
             }
         }
 
-        // 4. Natrémie Corrigée
         function calculerNaCorrigee() {
             const na = parseFloat(document.getElementById('corrNa').value);
             const gly = parseFloat(document.getElementById('corrGly').value);
@@ -544,9 +653,7 @@
             }
         }
 
-        // --- FIN MODULE URGENCES ---
-
-        // Conversion de masse (mg <-> µg)
+        // Conversions diverses
         function convertMasse() {
             const val = parseFloat(document.getElementById('masseVal').value);
             const unit = document.getElementById('masseUnit').value;
@@ -565,7 +672,6 @@
             }
         }
 
-        // Conversion de volume (L <-> mL)
         function convertVolume() {
             const val = parseFloat(document.getElementById('volVal').value);
             const unit = document.getElementById('volUnit').value;
@@ -584,7 +690,6 @@
             }
         }
 
-        // Fonction de conversion de température instantanée
         function convertTemp(unit) {
             const cInput = document.getElementById('tempC');
             const fInput = document.getElementById('tempF');
@@ -606,7 +711,6 @@
             }
         }
 
-        // Conversion de temps
         function convertTemps() {
             const val = parseFloat(document.getElementById('tempsVal').value);
             const unit = document.getElementById('tempsUnit').value;
@@ -619,7 +723,7 @@
             }
 
             if (unit === 'h_min') {
-                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + (lang === 'en' ? " minutes (" : " minutes (") + (val * 3600) + (lang === 'en' ? " seconds)" : " secondes)");
+                resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + " min (" + (val * 3600) + " sec)";
             } else if (unit === 'min_sec') {
                 resDiv.innerText = (lang === 'en' ? "Result: " : "Résultat : ") + (val * 60) + (lang === 'en' ? " seconds" : " secondes");
             } else {
@@ -627,13 +731,14 @@
             }
         }
 
-        // Fonction pour basculer le mode sombre
+        // Mode Sombre
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDark);
         }
 
+        // Modale Mentions Légales
         function openModal() {
             document.getElementById('legalModal').style.display = 'flex';
         }
@@ -649,9 +754,9 @@
       <p><a href="#" onclick="openModal(); return false;" style="color: #0284c7; text-decoration: underline;" id="footerLegal">Mentions Légales & Confidentialité</a></p>
     </footer>
 
-    <!-- Fenêtre modale -->
+    <!-- Fenêtre modale des mentions légales -->
     <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-      <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
+      <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: var(--text);">
         <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
         <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
         <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
