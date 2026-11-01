@@ -369,9 +369,14 @@
                 <h4 class="category-title" id="catCardio">Fréquence Cardiaque</h4>
             </div>
 
-            <div class="category-card" onclick="ouvrirSection('quizView')" style="grid-column: span 2;">
+            <div class="category-card" onclick="ouvrirSection('quizView')">
                 <div class="category-icon">🧠</div>
-                <h4 class="category-title" id="catQuiz">Quiz Médical (15 Questions / Jour)</h4>
+                <h4 class="category-title" id="catQuiz">Quiz Médical (15 Q / Jour)</h4>
+            </div>
+
+            <div class="category-card" onclick="ouvrirSection('chimieView')">
+                <div class="category-icon">🧪</div>
+                <h4 class="category-title" id="catChimie">Réactions Chimiques & Utilité</h4>
             </div>
         </div>
     </div>
@@ -604,7 +609,7 @@
         </div>
     </div>
 
-    <!-- VUE 5 : QUIZ MÉDICAL (15 QUESTIONS / JOUR) -->
+    <!-- VUE 5 : QUIZ MÉDICAL -->
     <div id="quizView" class="section-view">
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="quizTitle">Quiz Médical : Session du Jour (15 Questions)</h3>
@@ -622,6 +627,30 @@
         </div>
     </div>
 
+    <!-- VUE 6 : RÉACTIONS CHIMIQUES & UTILITÉ -->
+    <div id="chimieView" class="section-view">
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="chimieTitle">Réactions Chimiques & Utilité Médicale</h3>
+            <p style="opacity: 0.7; font-size: 0.82rem;" id="chimieDesc">Sélectionnez une réaction biochimique pour analyser son équation et son efficacité</p>
+
+            <label for="selectReaction" id="lblSelectReaction">Choisir une réaction biochimique</label>
+            <select id="selectReaction" onchange="afficherReactionChimique()">
+                <option value="tampon">1. Système Tampon Bicarbonate (CO2 + H2O)</option>
+                <option value="atp">2. Hydrolyse de l'ATP</option>
+                <option value="glycolyse">3. Phosphorylation du Glucose (Glycolyse)</option>
+                <option value="hemoglobine">4. Fixation de l'Oxygène sur l'Hémoglobine</option>
+            </select>
+
+            <div id="reactionResultBox" style="margin-top: 16px; background: var(--input-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--border);">
+                <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;" id="eqTitle">Équation :</div>
+                <div id="eqEquation" style="font-family: monospace; font-size: 0.95rem; margin-bottom: 12px;"></div>
+                
+                <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;" id="utilTitle">Efficacité & Utilité Clinique :</div>
+                <div id="eqUtility" style="font-size: 0.88rem; line-height: 1.4;"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Pied de page -->
     <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
@@ -632,7 +661,7 @@
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
                 txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "Accédez rapidement à vos outils de calculs médicaux",
-                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (15 Questions / Jour)",
+                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (15 Q / Jour)", catChimie: "Réactions Chimiques & Utilité",
                 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -649,12 +678,13 @@
                 optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes", optHMin: "Heures vers Minutes",
                 optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
                 quizTitle: "Quiz Médical : Session du Jour (15 Questions)", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
+                chimieTitle: "Réactions Chimiques & Utilité Médicale", chimieDesc: "Sélectionnez une réaction biochimique pour analyser son équation et son efficacité", lblSelectReaction: "Choisir une réaction biochimique",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
                 txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access your medical calculation tools",
-                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (15 Questions / Day)",
+                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (15 Q / Day)", catChimie: "Chemical Reactions & Utility",
                 subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
@@ -670,12 +700,42 @@
                 tempTitle: "Temperature Conversion", tempsTitle: "Time Conversion", tempsVal: "Value",
                 optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes", optHMin: "Hours to Minutes",
                 optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
-                quizTitle: "Medical Quiz: Today's Session (15 Questions)", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FAUX",
+                quizTitle: "Medical Quiz: Today's Session (15 Questions)", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
+                chimieTitle: "Chemical Reactions & Medical Utility", chimieDesc: "Select a biochemical reaction to analyze its equation and efficiency", lblSelectReaction: "Choose a biochemical reaction",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
 
-        // Banque complète de questions médicales et anatomiques pour alimenter les sessions de 15 questions
+        // Données des réactions biochimiques et cliniques
+        const reactionsChimiques = {
+            tampon: {
+                eq: "CO₂ + H₂O ⇌ H₂CO₃ ⇌ HCO₃⁻ + H⁺",
+                util: "<strong>Utilité & Efficacité :</strong> C'est le principal système tampon du plasma sanguin. Il régule le pH sanguin (norme : 7,35 - 7,45). En cas d'acidose, l'excès de H⁺ est éliminé sous forme de CO₂ par les poumons (hyperventilation) et par les reins via les ions bicarbonate (HCO₃⁻)."
+            },
+            atp: {
+                eq: "ATP + H₂O → ADP + Pi + Énergie (30.5 kJ/mol)",
+                util: "<strong>Utilité & Efficacité :</strong> L'hydrolyse de l'ATP fournit l'énergie nécessaire à la quasi-totalité des réactions cellulaires endergoniques, à la contraction musculaire et au fonctionnement des pompes ioniques membranaires (ex: pompe Na⁺/K⁺)."
+            },
+            glycolyse: {
+                eq: "Glucose + 2 ADP + 2 Pi → 2 Pyruvate + 2 ATP + 2 H₂O",
+                util: "<strong>Utilité & Efficacité :</strong> Première étape majeure du métabolisme du glucose dans le cytoplasme. Elle permet de produire rapidement de l'énergie (ATP) en condition aérobie ou anaérobie (essentiel pour les globules rouges et les muscles en effort intense)."
+            },
+            hemoglobine: {
+                eq: "Hb + 4 O₂ ⇌ Hb(O₂)",
+                util: "<strong>Utilité & Efficacité :</strong> Permet le transport réversible de l'oxygène des alvéoles pulmonaires vers les tissus périphériques. L'affinité de l'hémoglobine s'adapte précisément selon la pression partielle en oxygène et le pH (effet Bohr)."
+            }
+        };
+
+        function afficherReactionChimique() {
+            const choix = document.getElementById('selectReaction').value;
+            const reaction = reactionsChimiques[choix];
+            if (reaction) {
+                document.getElementById('eqEquation').innerText = reaction.eq;
+                document.getElementById('eqUtility').innerHTML = reaction.util;
+            }
+        }
+
+        // Banque de questions du quiz (15 questions / jour)
         const banqueQuestions = [
             { q: "Le corps humain compte normalement 2 reins.", r: true },
             { q: "Il y a 206 os chez l'adulte humain standard.", r: true },
@@ -703,9 +763,8 @@
         let currentQuizIndex = 0;
         let scoreQuiz = 0;
 
-        // Fonction pour sélectionner 15 questions par jour en se basant sur la date du jour
         function preparerQuestionsDuJour() {
-            const todayStr = new Date().toISOString().split('T')[0]; // ex: "2026-06-06"
+            const todayStr = new Date().toISOString().split('T')[0];
             const dernierJourJoue = localStorage.getItem('quizDate');
             let savedIndices = localStorage.getItem('quizIndices');
 
@@ -715,7 +774,6 @@
                 currentQuizIndex = parseInt(localStorage.getItem('quizIndex') || '0');
                 scoreQuiz = parseInt(localStorage.getItem('quizScore') || '0');
             } else {
-                // Nouveau jour : générer une nouvelle sélection de 15 questions (ou max de la banque)
                 let indicesMelanges = [...Array(banqueQuestions.length).keys()].sort(() => 0.5 - Math.random());
                 let nbQuestions = Math.min(15, banqueQuestions.length);
                 let indicesSelectionnes = indicesMelanges.slice(0, nbQuestions);
@@ -786,6 +844,8 @@
             document.getElementById('backBtn').style.display = 'flex';
             if (viewId === 'quizView') {
                 chargerQuestionQuiz();
+            } else if (viewId === 'chimieView') {
+                afficherReactionChimique();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
