@@ -189,7 +189,7 @@
             margin-top: 10px;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 11px 14px;
             margin-top: 5px;
@@ -204,7 +204,7 @@
             transition: all 0.2s ease;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
@@ -376,7 +376,7 @@
 
             <div class="category-card" onclick="ouvrirSection('chimieView')">
                 <div class="category-icon">🧪</div>
-                <h4 class="category-title" id="catChimie">Réactions Chimiques & Utilité</h4>
+                <h4 class="category-title" id="catChimie">Réactions Chimiques & Infinités</h4>
             </div>
         </div>
     </div>
@@ -627,18 +627,15 @@
         </div>
     </div>
 
-    <!-- VUE 6 : RÉACTIONS CHIMIQUES & UTILITÉ -->
+    <!-- VUE 6 : RÉACTIONS CHIMIQUES (PRÉRÉGLÉES + AJOUT INFINI) -->
     <div id="chimieView" class="section-view">
         <div class="container">
-            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="chimieTitle">Réactions Chimiques & Utilité Médicale</h3>
-            <p style="opacity: 0.7; font-size: 0.82rem;" id="chimieDesc">Sélectionnez une réaction biochimique pour analyser son équation et son efficacité</p>
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="chimieTitle">Réactions Chimiques & Infinités</h3>
+            <p style="opacity: 0.7; font-size: 0.82rem;" id="chimieDesc">Consultez les réactions ou ajoutez vos propres réactions personnalisées à l'infini</p>
 
-            <label for="selectReaction" id="lblSelectReaction">Choisir une réaction biochimique</label>
+            <label for="selectReaction" id="lblSelectReaction">Sélectionner une réaction</label>
             <select id="selectReaction" onchange="afficherReactionChimique()">
-                <option value="tampon">1. Système Tampon Bicarbonate (CO2 + H2O)</option>
-                <option value="atp">2. Hydrolyse de l'ATP</option>
-                <option value="glycolyse">3. Phosphorylation du Glucose (Glycolyse)</option>
-                <option value="hemoglobine">4. Fixation de l'Oxygène sur l'Hémoglobine</option>
+                <!-- Rempli dynamiquement par JS (préréglées + personnalisées) -->
             </select>
 
             <div id="reactionResultBox" style="margin-top: 16px; background: var(--input-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--border);">
@@ -647,6 +644,23 @@
                 
                 <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;" id="utilTitle">Efficacité & Utilité Clinique :</div>
                 <div id="eqUtility" style="font-size: 0.88rem; line-height: 1.4;"></div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <h4 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;" id="addCustomTitle">➕ Ajouter une nouvelle réaction personnalisée</h4>
+            
+            <label for="customNom" id="lblCustomNom">Nom de la réaction / métabolisme</label>
+            <input type="text" id="customNom" placeholder="Ex: Cycle de Krebs, Synthèse...">
+
+            <label for="customEq" id="lblCustomEq">Équation chimique</label>
+            <input type="text" id="customEq" placeholder="Ex: Acétyl-CoA + 3 NAD+ + ...">
+
+            <label for="customUtil" id="lblCustomUtil">Utilité, Efficacité & Rôle biologique</label>
+            <textarea id="customUtil" rows="3" placeholder="Expliquez l'utilité clinique ou cellulaire..."></textarea>
+
+            <div class="action-row">
+                <button class="calc-btn" onclick="ajouterReactionPersonnalisee()" id="btnAddReaction">Enregistrer dans ma base</button>
             </div>
         </div>
     </div>
@@ -661,7 +675,7 @@
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
                 txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "Accédez rapidement à vos outils de calculs médicaux",
-                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (15 Q / Jour)", catChimie: "Réactions Chimiques & Utilité",
+                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (15 Q / Jour)", catChimie: "Réactions Chimiques & Infinités",
                 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -678,13 +692,14 @@
                 optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes", optHMin: "Heures vers Minutes",
                 optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
                 quizTitle: "Quiz Médical : Session du Jour (15 Questions)", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
-                chimieTitle: "Réactions Chimiques & Utilité Médicale", chimieDesc: "Sélectionnez une réaction biochimique pour analyser son équation et son efficacité", lblSelectReaction: "Choisir une réaction biochimique",
+                chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
+                addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
                 txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access your medical calculation tools",
-                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (15 Q / Day)", catChimie: "Chemical Reactions & Utility",
+                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (15 Q / Day)", catChimie: "Chemical Reactions & Infinite",
                 subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
@@ -701,38 +716,98 @@
                 optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes", optHMin: "Hours to Minutes",
                 optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
                 quizTitle: "Medical Quiz: Today's Session (15 Questions)", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
-                chimieTitle: "Chemical Reactions & Medical Utility", chimieDesc: "Select a biochemical reaction to analyze its equation and efficiency", lblSelectReaction: "Choose a biochemical reaction",
+                chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
+                addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
 
-        // Données des réactions biochimiques et cliniques
-        const reactionsChimiques = {
+        // Base initiale de réactions (préréglées)
+        const reactionsDeBase = {
             tampon: {
+                nom: "1. Système Tampon Bicarbonate",
                 eq: "CO₂ + H₂O ⇌ H₂CO₃ ⇌ HCO₃⁻ + H⁺",
-                util: "<strong>Utilité & Efficacité :</strong> C'est le principal système tampon du plasma sanguin. Il régule le pH sanguin (norme : 7,35 - 7,45). En cas d'acidose, l'excès de H⁺ est éliminé sous forme de CO₂ par les poumons (hyperventilation) et par les reins via les ions bicarbonate (HCO₃⁻)."
+                util: "Principal système tampon du plasma sanguin. Régule le pH (7,35 - 7,45). En cas d'acidose, élimination de CO₂ par les poumons."
             },
             atp: {
+                nom: "2. Hydrolyse de l'ATP",
                 eq: "ATP + H₂O → ADP + Pi + Énergie (30.5 kJ/mol)",
-                util: "<strong>Utilité & Efficacité :</strong> L'hydrolyse de l'ATP fournit l'énergie nécessaire à la quasi-totalité des réactions cellulaires endergoniques, à la contraction musculaire et au fonctionnement des pompes ioniques membranaires (ex: pompe Na⁺/K⁺)."
+                util: "Fournit l'énergie nécessaire aux réactions cellulaires, à la contraction musculaire et au transport membranaire."
             },
             glycolyse: {
+                nom: "3. Phosphorylation du Glucose (Glycolyse)",
                 eq: "Glucose + 2 ADP + 2 Pi → 2 Pyruvate + 2 ATP + 2 H₂O",
-                util: "<strong>Utilité & Efficacité :</strong> Première étape majeure du métabolisme du glucose dans le cytoplasme. Elle permet de produire rapidement de l'énergie (ATP) en condition aérobie ou anaérobie (essentiel pour les globules rouges et les muscles en effort intense)."
+                util: "Production rapide d'énergie (ATP) dans le cytoplasme cellulaire, indispensable en conditions aérobies et anaérobies."
             },
             hemoglobine: {
+                nom: "4. Fixation de l'Oxygène sur l'Hémoglobine",
                 eq: "Hb + 4 O₂ ⇌ Hb(O₂)",
-                util: "<strong>Utilité & Efficacité :</strong> Permet le transport réversible de l'oxygène des alvéoles pulmonaires vers les tissus périphériques. L'affinité de l'hémoglobine s'adapte précisément selon la pression partielle en oxygène et le pH (effet Bohr)."
+                util: "Transport réversible de l'oxygène des poumons vers les tissus périphériques selon la pression partielle et le pH."
             }
         };
 
+        // Chargement des réactions (base + personnalisées stockées localement)
+        function obtenirToutesLesReactions() {
+            let custom = JSON.parse(localStorage.getItem('customReactions') || '{}');
+            return { ...reactionsDeBase, ...custom };
+        }
+
+        function chargerSelectReactions() {
+            const select = document.getElementById('selectReaction');
+            select.innerHTML = '';
+            const toutes = obtenirToutesLesReactions();
+            
+            for (let id in toutes) {
+                let opt = document.createElement('option');
+                opt.value = id;
+                opt.innerText = toutes[id].nom;
+                select.appendChild(opt);
+            }
+            afficherReactionChimique();
+        }
+
         function afficherReactionChimique() {
             const choix = document.getElementById('selectReaction').value;
-            const reaction = reactionsChimiques[choix];
+            const toutes = obtenirToutesLesReactions();
+            const reaction = toutes[choix];
             if (reaction) {
                 document.getElementById('eqEquation').innerText = reaction.eq;
-                document.getElementById('eqUtility').innerHTML = reaction.util;
+                document.getElementById('eqUtility').innerHTML = `<strong>Utilité & Efficacité :</strong> ${reaction.util}`;
             }
+        }
+
+        function ajouterReactionPersonnalisee() {
+            let nom = document.getElementById('customNom').value.trim();
+            let eq = document.getElementById('customEq').value.trim();
+            let util = document.getElementById('customUtil').value.trim();
+
+            if (!nom || !eq || !util) {
+                alert("Veuillez remplir tous les champs de la nouvelle réaction.");
+                return;
+            }
+
+            let customId = 'custom_' + Date.now();
+            let customObj = JSON.parse(localStorage.getItem('customReactions') || '{}');
+            
+            customObj[customId] = {
+                nom: "★ " + nom,
+                eq: eq,
+                util: util
+            };
+
+            localStorage.setItem('customReactions', JSON.stringify(customObj));
+
+            // Réinitialiser les champs
+            document.getElementById('customNom').value = '';
+            document.getElementById('customEq').value = '';
+            document.getElementById('customUtil').value = '';
+
+            // Recharger le select et sélectionner la nouvelle
+            chargerSelectReactions();
+            document.getElementById('selectReaction').value = customId;
+            afficherReactionChimique();
+
+            alert("Réaction ajoutée avec succès à votre base infinie !");
         }
 
         // Banque de questions du quiz (15 questions / jour)
@@ -845,7 +920,7 @@
             if (viewId === 'quizView') {
                 chargerQuestionQuiz();
             } else if (viewId === 'chimieView') {
-                afficherReactionChimique();
+                chargerSelectReactions();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
