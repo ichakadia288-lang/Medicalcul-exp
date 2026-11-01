@@ -371,7 +371,7 @@
 
             <div class="category-card" onclick="ouvrirSection('quizView')" style="grid-column: span 2;">
                 <div class="category-icon">🧠</div>
-                <h4 class="category-title" id="catQuiz">Quiz Médical (Éléments du Corps)</h4>
+                <h4 class="category-title" id="catQuiz">Quiz Médical (15 Questions / Jour)</h4>
             </div>
         </div>
     </div>
@@ -604,11 +604,11 @@
         </div>
     </div>
 
-    <!-- VUE 5 : QUIZ MÉDICAL -->
+    <!-- VUE 5 : QUIZ MÉDICAL (15 QUESTIONS / JOUR) -->
     <div id="quizView" class="section-view">
         <div class="container">
-            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="quizTitle">Quiz : Quantité des Éléments du Corps</h3>
-            <p style="opacity: 0.7; font-size: 0.82rem;" id="quizDesc">Testez vos connaissances en anatomie (Vrai / Faux)</p>
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="quizTitle">Quiz Médical : Session du Jour (15 Questions)</h3>
+            <p style="opacity: 0.7; font-size: 0.82rem;" id="quizDesc">Testez vos connaissances en médecine et anatomie (Vrai / Faux)</p>
             
             <div id="quizCard" style="margin-top: 16px;">
                 <p id="quizQuestion" style="font-weight: 500; min-height: 50px; font-size: 1rem;"></p>
@@ -632,7 +632,7 @@
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
                 txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "Accédez rapidement à vos outils de calculs médicaux",
-                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (Éléments du Corps)",
+                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (15 Questions / Jour)",
                 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -648,13 +648,13 @@
                 tempTitle: "Conversion de Température", tempsTitle: "Conversion de Temps", tempsVal: "Valeur",
                 optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes", optHMin: "Heures vers Minutes",
                 optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
-                quizTitle: "Quiz : Quantité des Éléments du Corps", quizDesc: "Testez vos connaissances en anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
+                quizTitle: "Quiz Médical : Session du Jour (15 Questions)", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
                 txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access your medical calculation tools",
-                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (Body Elements)",
+                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (15 Questions / Day)",
                 subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
@@ -670,35 +670,88 @@
                 tempTitle: "Temperature Conversion", tempsTitle: "Time Conversion", tempsVal: "Value",
                 optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes", optHMin: "Hours to Minutes",
                 optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
-                quizTitle: "Quiz: Quantity of Body Elements", quizDesc: "Test your anatomy knowledge (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
+                quizTitle: "Medical Quiz: Today's Session (15 Questions)", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FAUX",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
 
-        // Données du Quiz
-        const questionsQuiz = [
+        // Banque complète de questions médicales et anatomiques pour alimenter les sessions de 15 questions
+        const banqueQuestions = [
             { q: "Le corps humain compte normalement 2 reins.", r: true },
             { q: "Il y a 206 os chez l'adulte humain standard.", r: true },
             { q: "Le cœur possède 3 ventricules.", r: false },
             { q: "Le corps humain contient 4 poumons.", r: false },
-            { q: "L'organisme humain compte 32 dents définitives normales.", r: true }
+            { q: "L'organisme humain compte 32 dents définitives normales.", r: true },
+            { q: "L'artère aorte transporte du sang pauvre en oxygène.", r: false },
+            { q: "Le foie est la plus grande glande du corps humain.", r: true },
+            { q: "Le sang veineux est transporté par les veines vers le cœur.", r: true },
+            { q: "L'insuline est produite par le pancréas.", r: true },
+            { q: "L'estomac sécrète de l'acide chlorhydrique pour la digestion.", r: true },
+            { q: "Le système nerveux central comprend le cerveau et la moelle épinière.", r: true },
+            { q: "Les globules rouges contiennent de l'hémoglobine.", r: true },
+            { q: "La durée moyenne d'un cycle cardiaque complet est d'environ 0,8 seconde.", r: true },
+            { q: "Le taux normal de glycémie à jeun chez l'adulte est généralement entre 0,70 et 1,10 g/L.", r: true },
+            { q: "Le fémur est l'os le plus court du corps humain.", r: false },
+            { q: "La rate joue un rôle majeur dans le système immunitaire et le filtrage du sang.", r: true },
+            { q: "Le plasma représente environ 55% du volume total du sang.", r: true },
+            { q: "Les reins filtrent le sang pour produire l'urine.", r: true },
+            { q: "Le cervelet est principalement responsable de l'équilibre et de la coordination motrice.", r: true },
+            { q: "La valve tricuspide est située entre l'oreillette gauche et le ventricule gauche.", r: false }
         ];
+
+        let questionsJour = [];
         let currentQuizIndex = 0;
         let scoreQuiz = 0;
 
+        // Fonction pour sélectionner 15 questions par jour en se basant sur la date du jour
+        function preparerQuestionsDuJour() {
+            const todayStr = new Date().toISOString().split('T')[0]; // ex: "2026-06-06"
+            const dernierJourJoue = localStorage.getItem('quizDate');
+            let savedIndices = localStorage.getItem('quizIndices');
+
+            if (dernierJourJoue === todayStr && savedIndices) {
+                const indices = JSON.parse(savedIndices);
+                questionsJour = indices.map(i => banqueQuestions[i]);
+                currentQuizIndex = parseInt(localStorage.getItem('quizIndex') || '0');
+                scoreQuiz = parseInt(localStorage.getItem('quizScore') || '0');
+            } else {
+                // Nouveau jour : générer une nouvelle sélection de 15 questions (ou max de la banque)
+                let indicesMelanges = [...Array(banqueQuestions.length).keys()].sort(() => 0.5 - Math.random());
+                let nbQuestions = Math.min(15, banqueQuestions.length);
+                let indicesSelectionnes = indicesMelanges.slice(0, nbQuestions);
+
+                questionsJour = indicesSelectionnes.map(i => banqueQuestions[i]);
+                currentQuizIndex = 0;
+                scoreQuiz = 0;
+
+                localStorage.setItem('quizDate', todayStr);
+                localStorage.setItem('quizIndices', JSON.stringify(indicesSelectionnes));
+                localStorage.setItem('quizIndex', '0');
+                localStorage.setItem('quizScore', '0');
+            }
+        }
+
         function chargerQuestionQuiz() {
-            if (currentQuizIndex >= questionsQuiz.length) {
-                document.getElementById('quizQuestion').innerText = `Quiz terminé ! Score final : ${scoreQuiz} / ${questionsQuiz.length}`;
-                document.getElementById('quizButtons').style.display = 'none';
+            preparerQuestionsDuJour();
+            const btnBox = document.getElementById('quizButtons');
+
+            if (currentQuizIndex >= questionsJour.length) {
+                document.getElementById('quizQuestion').innerText = `Session du jour terminée !\nVotre score : ${scoreQuiz} / ${questionsJour.length}\n\nRevenez demain pour une nouvelle série de 15 questions !`;
+                btnBox.style.display = 'none';
+                document.getElementById('quizScore').innerText = "Quota quotidien atteint ✓";
                 return;
             }
-            document.getElementById('quizQuestion').innerText = questionsQuiz[currentQuizIndex].q;
+
+            btnBox.style.display = 'flex';
+            document.getElementById('quizQuestion').innerText = questionsJour[currentQuizIndex].q;
             document.getElementById('quizFeedback').innerText = '';
-            document.getElementById('quizScore').innerText = `Question ${currentQuizIndex + 1} / ${questionsQuiz.length}`;
+            document.getElementById('quizScore').innerText = `Question ${currentQuizIndex + 1} / ${questionsJour.length}`;
         }
 
         function repondreQuiz(userAns) {
-            const correct = questionsQuiz[currentQuizIndex].r;
+            if (currentQuizIndex >= questionsJour.length) return;
+
+            const correct = questionsJour[currentQuizIndex].r;
             const feedback = document.getElementById('quizFeedback');
             if (userAns === correct) {
                 feedback.innerText = "Bonne réponse ! ✓";
@@ -708,7 +761,11 @@
                 feedback.innerText = "Mauvaise réponse. ✗";
                 feedback.style.color = "#ef4444";
             }
+
             currentQuizIndex++;
+            localStorage.setItem('quizIndex', currentQuizIndex);
+            localStorage.setItem('quizScore', scoreQuiz);
+
             setTimeout(() => {
                 chargerQuestionQuiz();
             }, 1200);
@@ -728,9 +785,6 @@
             document.getElementById(viewId).classList.add('active');
             document.getElementById('backBtn').style.display = 'flex';
             if (viewId === 'quizView') {
-                currentQuizIndex = 0;
-                scoreQuiz = 0;
-                document.getElementById('quizButtons').style.display = 'flex';
                 chargerQuestionQuiz();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
