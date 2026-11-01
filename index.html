@@ -116,7 +116,7 @@
             box-sizing: border-box;
         }
 
-        /* Grille des catégories (style inspiré de l'image) */
+        /* Grille des catégories */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -368,6 +368,11 @@
                 <div class="category-icon">❤️</div>
                 <h4 class="category-title" id="catCardio">Fréquence Cardiaque</h4>
             </div>
+
+            <div class="category-card" onclick="ouvrirSection('quizView')" style="grid-column: span 2;">
+                <div class="category-icon">🧠</div>
+                <h4 class="category-title" id="catQuiz">Quiz Médical (Éléments du Corps)</h4>
+            </div>
         </div>
     </div>
 
@@ -533,7 +538,6 @@
 
     <!-- VUE 3 : CALCULS & CONVERTISSEURS EXPRESS -->
     <div id="convertisseursView" class="section-view">
-        <!-- Convertisseur de Masse -->
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtMasseTitle">Conversion de Masse</h3>
             <label for="masseVal" id="txtMasseVal">Valeur</label>
@@ -547,7 +551,6 @@
             <div id="resultatMasse" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
         </div>
 
-        <!-- Convertisseur de Volume -->
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtVolTitle">Conversion de Volume</h3>
             <label for="volVal" id="txtVolVal">Valeur</label>
@@ -561,14 +564,12 @@
             <div id="resultatVolume" style="margin-top: 8px; color: var(--primary); font-weight: 600;">Résultat : --</div>
         </div>
 
-        <!-- Convertisseur de Température -->
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempTitle">Conversion de Température</h3>
             <label for="tempC">Celsius (°C)</label><input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
             <label for="tempF">Fahrenheit (°F)</label><input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
         </div>
 
-        <!-- Convertisseur de Temps -->
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtTempsTitle">Conversion de Temps</h3>
             <label for="tempsVal" id="txtTempsVal">Valeur</label>
@@ -603,6 +604,24 @@
         </div>
     </div>
 
+    <!-- VUE 5 : QUIZ MÉDICAL -->
+    <div id="quizView" class="section-view">
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="quizTitle">Quiz : Quantité des Éléments du Corps</h3>
+            <p style="opacity: 0.7; font-size: 0.82rem;" id="quizDesc">Testez vos connaissances en anatomie (Vrai / Faux)</p>
+            
+            <div id="quizCard" style="margin-top: 16px;">
+                <p id="quizQuestion" style="font-weight: 500; min-height: 50px; font-size: 1rem;"></p>
+                <div id="quizButtons" style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button onclick="repondreQuiz(true)" class="calc-btn" style="background: #10b981;" id="btnTrue">VRAI</button>
+                    <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
+                </div>
+                <div id="quizFeedback" style="margin-top: 14px; font-weight: 600;"></div>
+                <div id="quizScore" style="margin-top: 8px; opacity: 0.8; font-size: 0.85rem;"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Pied de page -->
     <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
@@ -613,7 +632,7 @@
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
                 txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "Accédez rapidement à vos outils de calculs médicaux",
-                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque",
+                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz Médical (Éléments du Corps)",
                 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -629,12 +648,13 @@
                 tempTitle: "Conversion de Température", tempsTitle: "Conversion de Temps", tempsVal: "Valeur",
                 optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes", optHMin: "Heures vers Minutes",
                 optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
+                quizTitle: "Quiz : Quantité des Éléments du Corps", quizDesc: "Testez vos connaissances en anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
                 txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access your medical calculation tools",
-                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate",
+                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz (Body Elements)",
                 subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
@@ -650,9 +670,49 @@
                 tempTitle: "Temperature Conversion", tempsTitle: "Time Conversion", tempsVal: "Value",
                 optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes", optHMin: "Hours to Minutes",
                 optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
+                quizTitle: "Quiz: Quantity of Body Elements", quizDesc: "Test your anatomy knowledge (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
+
+        // Données du Quiz
+        const questionsQuiz = [
+            { q: "Le corps humain compte normalement 2 reins.", r: true },
+            { q: "Il y a 206 os chez l'adulte humain standard.", r: true },
+            { q: "Le cœur possède 3 ventricules.", r: false },
+            { q: "Le corps humain contient 4 poumons.", r: false },
+            { q: "L'organisme humain compte 32 dents définitives normales.", r: true }
+        ];
+        let currentQuizIndex = 0;
+        let scoreQuiz = 0;
+
+        function chargerQuestionQuiz() {
+            if (currentQuizIndex >= questionsQuiz.length) {
+                document.getElementById('quizQuestion').innerText = `Quiz terminé ! Score final : ${scoreQuiz} / ${questionsQuiz.length}`;
+                document.getElementById('quizButtons').style.display = 'none';
+                return;
+            }
+            document.getElementById('quizQuestion').innerText = questionsQuiz[currentQuizIndex].q;
+            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('quizScore').innerText = `Question ${currentQuizIndex + 1} / ${questionsQuiz.length}`;
+        }
+
+        function repondreQuiz(userAns) {
+            const correct = questionsQuiz[currentQuizIndex].r;
+            const feedback = document.getElementById('quizFeedback');
+            if (userAns === correct) {
+                feedback.innerText = "Bonne réponse ! ✓";
+                feedback.style.color = "#10b981";
+                scoreQuiz++;
+            } else {
+                feedback.innerText = "Mauvaise réponse. ✗";
+                feedback.style.color = "#ef4444";
+            }
+            currentQuizIndex++;
+            setTimeout(() => {
+                chargerQuestionQuiz();
+            }, 1200);
+        }
 
         function changerLangue() {
             const lang = document.getElementById('langSelect').value;
@@ -667,6 +727,12 @@
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             document.getElementById('backBtn').style.display = 'flex';
+            if (viewId === 'quizView') {
+                currentQuizIndex = 0;
+                scoreQuiz = 0;
+                document.getElementById('quizButtons').style.display = 'flex';
+                chargerQuestionQuiz();
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
