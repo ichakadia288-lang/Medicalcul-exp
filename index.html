@@ -313,29 +313,29 @@
             animation: slideUp 0.3s ease;
         }
 
-        /* MODALE AUTHENTIFICATION RÉDUITE (Miniaturisée à 45%) */
+        /* NOUVEAU DESIGN : Modale d'authentification miniaturisée (40-45%) avec le même fond que l'application */
         #authModal {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 270px;
+            width: 280px;
             max-width: 45%;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             z-index: 10000;
             display: none;
             flex-direction: column;
             overflow: hidden;
-            animation: fadeIn 0.2s ease;
+            animation: fadeIn 0.25s ease;
         }
 
         @media (max-width: 480px) {
             #authModal {
-                width: 260px;
-                max-width: 85%;
+                width: 270px;
+                max-width: 88%;
             }
         }
 
@@ -345,20 +345,26 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -48%); }
+            from { opacity: 0; transform: translate(-50%, -46%); }
             to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
-        /* Barre de recherche avec pill */
+        /* NOUVEAU DESIGN DE LA BARRE DE RECHERCHE DE L'ASSISTANT (Identique à l'image)[span_1](start_span)[span_1](end_span) */
         .ai-input-pill {
             display: flex;
             align-items: center;
-            background: var(--input-bg);
+            background: #ffffff;
             border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 6px 12px;
-            gap: 8px;
-            margin-top: 6px;
+            border-radius: 35px;
+            padding: 6px 8px 6px 14px;
+            gap: 10px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        body.dark-mode .ai-input-pill {
+            background: var(--input-bg);
+            border-color: var(--border);
         }
 
         .ai-input-pill input {
@@ -368,8 +374,13 @@
             padding: 4px;
             font-size: 0.85rem;
             flex: 1;
-            color: var(--text);
+            color: #0f172a;
         }
+
+        body.dark-mode .ai-input-pill input {
+            color: #f8fafc;
+        }
+
         .ai-input-pill input:focus {
             box-shadow: none;
             border: none;
@@ -379,35 +390,36 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1.1rem;
-            color: var(--text);
+            font-size: 1.2rem;
+            color: #0f172a;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 4px;
         }
 
-        /* Bouton d'ondes audio */
+        body.dark-mode .pill-action-btn {
+            color: #f8fafc;
+        }
+
+        /* Bouton d'ondes audio circulaire bleu vif (identique à l'image)[span_2](start_span)[span_2](end_span) */
         .wave-badge-btn {
-            background: #e0f2fe;
+            background: #2563eb;
             border: none;
-            border-radius: 20px;
-            width: 36px;
-            height: 36px;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             gap: 2px;
-        }
-
-        body.dark-mode .wave-badge-btn {
-            background: #0369a1;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .wave-bar-item {
             width: 3px;
-            background-color: var(--primary);
+            background-color: #ffffff;
             border-radius: 2px;
             height: 10px;
         }
@@ -502,13 +514,13 @@
         </div>
     </div>
 
-    <!-- MODALE D'AUTHENTIFICATION RÉDUITE & MINIATURISÉE (40-50%) -->
+    <!-- MODALE D'AUTHENTIFICATION MINIATURISÉE (Design épuré avec disparition automatique) -->
     <div id="authModal">
-        <div style="background: var(--primary-gradient); color: white; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.82rem;">
+        <div style="background: var(--primary-gradient); color: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.85rem;">
             <span id="authModalTitle">Connexion</span>
             <button onclick="toggleAuthModal()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer;">✕</button>
         </div>
-        <div style="padding: 12px; font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px;">
+        <div style="padding: 14px; font-size: 0.82rem; display: flex; flex-direction: column; gap: 8px;">
             <div id="formLoginView">
                 <label for="loginEmail" style="margin-top: 4px; font-size: 0.78rem;">E-mail</label>
                 <input type="email" id="loginEmail" placeholder="nom@exemple.com">
@@ -516,8 +528,8 @@
                 <label for="loginPass" style="margin-top: 6px; font-size: 0.78rem;">Mot de Passe</label>
                 <input type="password" id="loginPass" placeholder="••••••••">
 
-                <button onclick="executerConnexion()" class="calc-btn" style="width: 100%; margin-top: 10px; padding: 7px; font-size: 0.8rem;">Se Connecter</button>
-                <p style="text-align: center; margin: 8px 0 0 0; font-size: 0.73rem;">Pas de compte ? <a href="#" onclick="basculerFormulaireAuth('register')" style="color: var(--primary); font-weight: 600;">Créer</a></p>
+                <button onclick="executerConnexion()" class="calc-btn" style="width: 100%; margin-top: 12px; padding: 8px; font-size: 0.82rem;">Se Connecter</button>
+                <p style="text-align: center; margin: 10px 0 0 0; font-size: 0.75rem;">Pas de compte ? <a href="#" onclick="basculerFormulaireAuth('register')" style="color: var(--primary); font-weight: 600;">Créer un compte</a></p>
             </div>
 
             <div id="formRegisterView" style="display: none;">
@@ -530,8 +542,8 @@
                 <label for="regPass" style="margin-top: 6px; font-size: 0.78rem;">Mot de Passe</label>
                 <input type="password" id="regPass" placeholder="••••••••">
 
-                <button onclick="executerInscription()" class="calc-btn" style="width: 100%; margin-top: 10px; padding: 7px; font-size: 0.8rem; background: #10b981;">Créer Compte</button>
-                <p style="text-align: center; margin: 8px 0 0 0; font-size: 0.73rem;">Déjà inscrit ? <a href="#" onclick="basculerFormulaireAuth('login')" style="color: var(--primary); font-weight: 600;">Connexion</a></p>
+                <button onclick="executerInscription()" class="calc-btn" style="width: 100%; margin-top: 12px; padding: 8px; font-size: 0.82rem; background: #10b981;">Créer mon Compte</button>
+                <p style="text-align: center; margin: 10px 0 0 0; font-size: 0.75rem;">Déjà inscrit ? <a href="#" onclick="basculerFormulaireAuth('login')" style="color: var(--primary); font-weight: 600;">Connexion</a></p>
             </div>
         </div>
     </div>
@@ -794,7 +806,7 @@
         </div>
     </div>
 
-    <!-- MODALE INTERACTIVE DE L'ASSISTANT IA -->
+    <!-- MODALE INTERACTIVE DE L'ASSISTANT IA AVEC LE NOUVEAU DESIGN DE BARRE -->
     <div id="aiModal">
         <div style="background: var(--primary-gradient); color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
             <span>Assistant Médical IA</span>
@@ -814,14 +826,16 @@
                 <button onclick="supprimerFichierJoint()" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold;">✕</button>
             </div>
 
-            <!-- Barre de saisie -->
+            <!-- Nouvelle Barre de saisie (style identique à l'image fournie)[span_3](start_span)[span_3](end_span) -->
             <div class="ai-input-pill">
                 <button class="pill-action-btn" onclick="document.getElementById('fileInputHidden').click()" title="Joindre une image ou un fichier (Radio, Bilan)">＋</button>
                 <input type="file" id="fileInputHidden" style="display: none;" accept="image/*,.pdf,.doc,.docx" onchange="gererFichierJoint(this)">
 
-                <input type="text" id="aiUserInput" placeholder="Demandez au médecin IA..." onkeydown="if(event.key==='Enter') envoyerQuestionAi()">
+                <input type="text" id="aiUserInput" placeholder="Demander à l'assistant..." onkeydown="if(event.key==='Enter') envoyerQuestionAi()">
 
-                <button id="waveRecordBtn" class="wave-badge-btn" onclick="basculerEnregistrementAudio()" title="Enregistrer la voix">
+                <button class="pill-action-btn" onclick="basculerEnregistrementAudio()" title="Parler">🎤</button>
+
+                <button id="waveRecordBtn" class="wave-badge-btn" onclick="basculerEnregistrementAudio()" title="Enregistrement audio actif">
                     <div class="wave-bar-item"></div>
                     <div class="wave-bar-item"></div>
                     <div class="wave-bar-item"></div>
@@ -883,8 +897,10 @@
             const profil = { nom: nom, email: email };
             localStorage.setItem('userAccount', JSON.stringify({ profil: profil, pass: pass }));
             connecterUtilisateur(profil);
+            
+            // Fait disparaître la modale automatiquement après création du compte
+            document.getElementById('authModal').style.display = 'none';
             alert(`Compte créé avec succès ! Bienvenue ${nom}.`);
-            toggleAuthModal();
         }
 
         function executerConnexion() {
@@ -899,7 +915,9 @@
 
             if (localData && localData.profil.email === email && localData.pass === pass) {
                 connecterUtilisateur(localData.profil);
-                toggleAuthModal();
+                
+                // Fait disparaître la modale automatiquement après la connexion réussie
+                document.getElementById('authModal').style.display = 'none';
             } else {
                 alert("Identifiants incorrects. Veuillez réessayer.");
             }
@@ -1106,7 +1124,7 @@
                 recognition.onstart = function() {
                     estEnCoursDEcoute = true;
                     btn.classList.add('recording');
-                    respBox.innerHTML = "🎤 Écoute vocale active... Parlez (cliquez sur les ondes pour valider).";
+                    respBox.innerHTML = "🎤 Écoute vocale active... Parlez.";
                 };
 
                 recognition.onresult = function(event) {
