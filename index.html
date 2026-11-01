@@ -7,8 +7,8 @@
     <!-- Lien vers le manifeste pour l'installation PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0284c7">
-    <!-- Importation de la police moderne Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Importation des polices Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Variables pour les thèmes */
         :root {
@@ -18,6 +18,7 @@
             --primary: #0284c7;
             --border: #cbd5e1;
             --input-bg: #ffffff;
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body.dark-mode {
@@ -30,7 +31,7 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-family);
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
@@ -88,7 +89,7 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-family);
         }
 
         button.calc-btn {
@@ -100,7 +101,7 @@
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-family);
         }
         
         .badge-urg {
@@ -149,13 +150,14 @@
         </div>
     </header>
 
-    <!-- Panneau du menu latéral (caché par défaut) -->
+    <!-- Panneau du menu latéral -->
     <div id="sideMenu" style="position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
         
+        <!-- Option Mode Sombre -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
             <span id="txtDarkMode">Mode Sombre</span>
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
@@ -163,6 +165,20 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
+        <!-- Option Choix de la police d'écriture -->
+        <div style="margin-bottom: 20px;">
+            <span id="txtFontTitle" style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">Police d'écriture</span>
+            <select id="fontSelect" onchange="changerPolice()" style="margin: 0; padding: 8px; font-size: 13px; cursor: pointer; width: 100%;">
+                <option value="'Inter', sans-serif">Inter (Moderne)</option>
+                <option value="'Poppins', sans-serif">Poppins (Chaleureuse)</option>
+                <option value="'Roboto', sans-serif">Roboto (Clean)</option>
+                <option value="system-ui, -apple-system, sans-serif">Système (Par défaut)</option>
+            </select>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
+
+        <!-- Calendrier de dates -->
         <div style="margin-bottom: 20px;">
             <span id="txtCalTitle" style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px;">Calendrier & Date</span>
             <input type="date" id="appCalendar" onchange="changerDateCalendrier()" style="margin: 0; padding: 8px; font-size: 13px; cursor: pointer;">
@@ -170,6 +186,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
 
+        <!-- Option Quiz Corps Humain -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span id="txtQuizMenuTitle" style="font-weight: bold; font-size: 14px;">Quiz : Éléments du Corps</span>
@@ -364,7 +381,7 @@
     <script>
         const traductions = {
             fr: {
-                param: "Paramètres", darkMode: "Mode Sombre", calTitle: "Calendrier & Date",
+                param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", calTitle: "Calendrier & Date",
                 quizMenuTitle: "Quiz : Éléments du Corps", quizMenuDesc: "15 questions par jour (Vrai/Faux)", btnOpenQuiz: "Lancer",
                 subTitle: "Outils de calculs et conversions médicales rapides",
                 imcTitle: "Calcul de l'IMC (Indice de Masse Corporelle)", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
@@ -399,7 +416,7 @@
                 finalScore: "Score final : ", quizMax: " / 15", retryText: "Revenez demain pour de nouvelles questions !"
             },
             en: {
-                param: "Settings", darkMode: "Dark Mode", calTitle: "Calendar & Date",
+                param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", calTitle: "Calendar & Date",
                 quizMenuTitle: "Quiz: Body Elements", quizMenuDesc: "15 questions per day (True/False)", btnOpenQuiz: "Start",
                 subTitle: "Fast medical calculation and conversion tools",
                 imcTitle: "BMI Calculation (Body Mass Index)", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
@@ -443,6 +460,7 @@
             
             document.getElementById('txtParam').innerText = t.param;
             document.getElementById('txtDarkMode').innerText = t.darkMode;
+            document.getElementById('txtFontTitle').innerText = t.fontTitle;
             document.getElementById('txtCalTitle').innerText = t.calTitle;
             document.getElementById('txtQuizMenuTitle').innerText = t.quizMenuTitle;
             document.getElementById('txtQuizMenuDesc').innerText = t.quizMenuDesc;
@@ -512,6 +530,12 @@
             } else {
                 menu.style.right = '0px';
             }
+        }
+
+        function changerPolice() {
+            const fontValue = document.getElementById('fontSelect').value;
+            document.documentElement.style.setProperty('--font-family', fontValue);
+            localStorage.setItem('selectedFont', fontValue);
         }
 
         function changerDateCalendrier() {
@@ -742,6 +766,13 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+            
+            const savedFont = localStorage.getItem('selectedFont');
+            if (savedFont) {
+                document.documentElement.style.setProperty('--font-family', savedFont);
+                document.getElementById('fontSelect').value = savedFont;
+            }
+
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('appCalendar').value = today;
             changerLangue();
