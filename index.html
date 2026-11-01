@@ -4,176 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediCalcul Express</title>
-    <link rel="icon" type="image/png" href="icone-512.png">
+    <link rel="manifest" href="manifest.json">
     <style>
+        /* Variables pour les thèmes */
         :root {
-            --primary: #0284c7;
-            --primary-dark: #0369a1;
             --bg: #f8fafc;
-            --card-bg: #ffffff;
             --text: #1e293b;
-            --text-light: #64748b;
+            --card-bg: #ffffff;
+            --primary: #0284c7;
             --border: #cbd5e1;
+            --input-bg: #ffffff;
         }
-/* Styles pour le mode sombre */
-body.dark-mode {
-    background-color: #0f172a;
-    color: #f8fafc;
-}
 
-body.dark-mode .card, 
-body.dark-mode header, 
-body.dark-mode footer {
-    background-color: #1e293b;
-    color: #f8fafc;
-    border-color: #334155;
-}
-
-
-.theme-toggle-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #cbd5e1;
-    border: none;
-    width: 50px;
-    height: 26px;
-    border-radius: 13px;
-    cursor: pointer;
-    position: relative;
-    transition: background 0.3s;
-    z-index: 1000;
-}
-
-.theme-toggle-btn::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 50%;
-    transition: transform 0.3s;
-}
-
-body.dark-mode .theme-toggle-btn {
-    background: var(--primary);
-}
-
-body.dark-mode .theme-toggle-btn::after {
-    transform: translateX(24px);
-}
-
-}
-
-}
+        body.dark-mode {
+            --bg: #0f172a;
+            --text: #f1f5f9;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --border: #334155;
+            --input-bg: #0f172a;
+        }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 16px;
+            padding: 0;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 24px;
+        /* Style du bouton bascule de thème moderne */
+        .theme-toggle-btn {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            width: 50px;
+            height: 26px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
         }
 
-        header h1 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 4px;
+        .theme-toggle-btn::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
         }
 
-        header p {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin: 0;
+        body.dark-mode .theme-toggle-btn::after {
+            transform: translateX(24px);
         }
 
+        /* Style général des conteneurs de calcul */
         .container {
             max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .card {
+            margin: 20px auto;
+            padding: 20px;
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .card h2 {
-            font-size: 1.1rem;
-            margin-top: 0;
-            margin-bottom: 12px;
-            color: var(--primary-dark);
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         input, select {
             width: 100%;
             padding: 10px;
-            box-sizing: border-box;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            background-color: var(--input-bg);
+            color: var(--text);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 6px;
+            box-sizing: border-box;
         }
 
-        button {
+        button.calc-btn {
             background-color: var(--primary);
-            color: white;
+            color: #ffffff;
             border: none;
-            padding: 10px 16px;
+            padding: 12px;
             width: 100%;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        button:active {
-            background-color: var(--primary-dark);
-        }
-
-        .result {
-            margin-top: 12px;
-            padding: 10px;
-            background: #f1f5f9;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            border-radius: 6px;
             font-weight: bold;
-            text-align: center;
+            cursor: pointer;
         }
     </style>
-<link rel="manifest" href="manifest.json">
 </head>
 <body>
-        <!-- Barre de menu supérieure -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--bg); border-bottom: 1px solid #cbd5e1;">
+
+    <!-- Barre de menu supérieure -->
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
         <h3 style="margin: 0; font-size: 18px;">MediCalcul Express</h3>
         <!-- Bouton menu hamburger -->
         <button onclick="toggleMenu()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);">☰</button>
     </header>
 
     <!-- Panneau du menu latéral (caché par défaut) -->
-    <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid #cbd5e1;">
+    <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--card-bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid var(--border); box-sizing: border-box;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <h4 style="margin: 0;">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
@@ -181,159 +116,55 @@ body.dark-mode .theme-toggle-btn::after {
         
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <span>Mode Sombre</span>
-            <!-- Ton interrupteur moderne -->
+            <!-- Interrupteur du mode sombre -->
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
         </div>
     </div>
 
+    <!-- Contenu principal -->
+    <div class="container">
+        <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
+        <p style="text-align: center; color: var(--border);">Outils de calculs médicaux rapides</p>
 
+        <!-- Exemple de calculatrice IMC -->
+        <h3>Calcul de l'IMC (Indice de Masse Corporelle)</h3>
+        <label for="poids">Poids (kg)</label>
+        <input type="number" id="poids" placeholder="Ex: 70">
 
-    <!-- Panneau du menu latéral (caché par défaut) -->
-    <div id="sideMenu" style="position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--bg); box-shadow: -4px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 2000; padding: 20px; border-left: 1px solid #cbd5e1;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h4 style="margin: 0;">Paramètres</h4>
-            <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <span>Mode Sombre</span>
-            <!-- Ton interrupteur moderne -->
-            <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
-        </div>
+        <label for="taille">Taille (cm)</label>
+        <input type="number" id="taille" placeholder="Ex: 175">
+
+        <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
+        <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
     </div>
 
+    <!-- Scripts JavaScript -->
+    <script>
+        // Fonction pour ouvrir/fermer le menu latéral
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            if (menu.style.right === '0px') {
+                menu.style.right = '-250px';
+            } else {
+                menu.style.right = '0px';
+            }
+        }
+    </script>
 
-
-<script>
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    // Sauvegarde la préférence de l'utilisateur
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-}
-
-// Recharge la préférence au démarrage
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-    }
-});
-</script>
-
-<div class="container">
-    <header>
-        <h1>MediCalcul Express</h1>
-        <p>Outils de calculs médicaux rapides</p>
-    </header>
-
-    <!-- Calculateur IMC -->
-    <div class="card">
-        <h2>Calcul de l'IMC (Indice de Masse Corporelle)</h2>
-        <div class="form-group">
-            <label for="poids">Poids (kg)</label>
-            <input type="number" id="poids" placeholder="Ex: 70" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="taille">Taille (cm)</label>
-            <input type="number" id="taille" placeholder="Ex: 175" step="1">
-        </div>
-        <button onclick="calculerIMC()">Calculer l'IMC</button>
-        <div id="resultat-imc" class="result">Résultat : --</div>
-    </div>
-
-    <!-- Calculateur Clairance de la Créatinine (Cockcroft & Gault) -->
-    <div class="card">
-        <h2>Clairance de la Créatinine (Cockcroft & Gault)</h2>
-        <div class="form-group">
-            <label for="creat-age">Âge (années)</label>
-            <input type="number" id="creat-age" placeholder="Ex: 50">
-        </div>
-        <div class="form-group">
-            <label for="creat-poids">Poids (kg)</label>
-            <input type="number" id="creat-poids" placeholder="Ex: 70" step="0.1">
-        </div>
-        <div class="form-group">
-            <label for="creat-taux">Créatininémie (µmol/L)</label>
-            <input type="number" id="creat-taux" placeholder="Ex: 90" step="1">
-        </div>
-        <div class="form-group">
-            <label for="creat-sexe">Sexe</label>
-            <select id="creat-sexe">
-                <option value="homme">Homme</option>
-                <option value="femme">Femme</option>
-            </select>
-        </div>
-        <button onclick="calculerCockcroft()">Calculer la Clairance</button>
-        <div id="resultat-creat" class="result">Résultat : --</div>
-    </div>
-</div>
-
-<script>
-    function calculerIMC() {
-        const poids = parseFloat(document.getElementById('poids').value);
-        const tailleCm = parseFloat(document.getElementById('taille').value);
-        const resDiv = document.getElementById('resultat-imc');
-
-        if (!poids || !tailleCm || poids <= 0 || tailleCm <= 0) {
-            resDiv.innerHTML = "Veuillez entrer des valeurs valides.";
-            return;
+    <script>
+        // Fonction pour basculer le mode sombre
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
         }
 
-        const tailleM = tailleCm / 100;
-        const imc = poids / (tailleM * tailleM);
-        let interpretation = "";
-
-        if (imc < 18.5) interpretation = "Insuffisance pondérale (maigreur)";
-        else if (imc < 25) interpretation = "Corpulence normale";
-        else if (imc < 30) interpretation = "Surpoids";
-        else interpretation = "Obésité";
-
-        resDiv.innerHTML = `IMC : ${imc.toFixed(2)} kg/m² (${interpretation})`;
-    }
-
-    function calculerCockcroft() {
-        const age = parseFloat(document.getElementById('creat-age').value);
-        const poids = parseFloat(document.getElementById('creat-poids').value);
-        const creat = parseFloat(document.getElementById('creat-taux').value);
-        const sexe = document.getElementById('creat-sexe').value;
-        const resDiv = document.getElementById('resultat-creat');
-
-        if (!age || !poids || !creat || age <= 0 || poids <= 0 || creat <= 0) {
-            resDiv.innerHTML = "Veuillez entrer des valeurs valides.";
-            return;
-        }
-
-        // Formule de Cockcroft et Gault
-        let clairance = ((140 - age) * poids) / (0.814 * creat);
-        if (sexe === 'femme') {
-            clairance *= 0.85;
-        }
-
-        resDiv.innerHTML = `Clairance : ${clairance.toFixed(2)} mL/min`;
-    }
-<script>
-function toggleMenu() {
-    const menu = document.getElementById('sideMenu');
-    if (menu.style.right === '0px') {
-        menu.style.right = '-250px';
-    } else {
-        menu.style.right = '0px';
-    }
-
-</script>
-
-<script>
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-    }
-});
-</script>
+        // Restaure la préférence de l'utilisateur au chargement de la page
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
 </body>
 </html>
