@@ -296,8 +296,8 @@
             object-fit: cover;
         }
 
-        /* Modale interactive de l'assistant IA */
-        #aiModal {
+        /* Modale interactive de l'assistant IA et Authentification */
+        #aiModal, #authModal {
             position: fixed;
             bottom: 80px;
             right: 20px;
@@ -311,6 +311,15 @@
             flex-direction: column;
             overflow: hidden;
             animation: slideUp 0.3s ease;
+        }
+
+        #authModal {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            bottom: auto;
+            right: auto;
+            max-width: 90%;
         }
 
         @keyframes slideUp {
@@ -405,6 +414,8 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="userAuthBtn" onclick="toggleAuthModal()" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--primary); display: flex; align-items: center; gap: 4px;">👤 Connexion</button>
+            
             <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 4px 8px; font-size: 0.85rem; width: auto; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
                 <option value="fr">FR</option>
                 <option value="en">EN</option>
@@ -418,6 +429,11 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
+        </div>
+
+        <div id="userProfileSection" style="margin-bottom: 20px; padding: 12px; background: var(--input-bg); border-radius: 10px; font-size: 0.85rem;">
+            <div style="font-weight: 600; color: var(--primary);" id="profileStatus">Non connecté</div>
+            <div style="opacity: 0.7; font-size: 0.8rem; margin-top: 4px;" id="profileSubText">Connectez-vous pour enregistrer votre profil.</div>
         </div>
         
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
@@ -461,6 +477,40 @@
         <div style="margin-bottom: 20px;">
             <span id="txtCalTitle" style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 8px; color: var(--primary);">Calendrier & Date</span>
             <input type="date" id="appCalendar" style="margin: 0; cursor: pointer;">
+        </div>
+    </div>
+
+    <!-- MODALE D'AUTHENTIFICATION (CONNEXION / INSCRIPTION) -->
+    <div id="authModal">
+        <div style="background: var(--primary-gradient); color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
+            <span id="authModalTitle">Connexion à votre Compte</span>
+            <button onclick="toggleAuthModal()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">✕</button>
+        </div>
+        <div style="padding: 20px; font-size: 0.88rem; display: flex; flex-direction: column; gap: 12px;">
+            <div id="formLoginView">
+                <label for="loginEmail">Adresse E-mail</label>
+                <input type="email" id="loginEmail" placeholder="nom@exemple.com">
+
+                <label for="loginPass">Mot de Passe</label>
+                <input type="password" id="loginPass" placeholder="••••••••">
+
+                <button onclick="executerConnexion()" class="calc-btn" style="width: 100%; margin-top: 14px;">Se Connecter</button>
+                <p style="text-align: center; margin-top: 10px; font-size: 0.8rem;">Pas encore de compte ? <a href="#" onclick="basculerFormulaireAuth('register')" style="color: var(--primary); font-weight: 600;">Créer un compte</a></p>
+            </div>
+
+            <div id="formRegisterView" style="display: none;">
+                <label for="regName">Nom complet</label>
+                <input type="text" id="regName" placeholder="Ex: Dr. Issaka">
+
+                <label for="regEmail">Adresse E-mail</label>
+                <input type="email" id="regEmail" placeholder="nom@exemple.com">
+
+                <label for="regPass">Créer un mot de Passe</label>
+                <input type="password" id="regPass" placeholder="••••••••">
+
+                <button onclick="executerInscription()" class="calc-btn" style="width: 100%; margin-top: 14px; background: #10b981;">Créer mon Compte</button>
+                <p style="text-align: center; margin-top: 10px; font-size: 0.8rem;">Déjà inscrit ? <a href="#" onclick="basculerFormulaireAuth('login')" style="color: var(--primary); font-weight: 600;">Se connecter</a></p>
+            </div>
         </div>
     </div>
 
@@ -729,7 +779,7 @@
             <button onclick="toggleAiModal()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">✕</button>
         </div>
         <div style="padding: 16px; font-size: 0.88rem; line-height: 1.4; display: flex; flex-direction: column; gap: 10px;">
-            <p style="margin: 0;">Bonjour Issaka ! 👋 Posez vos questions cliniques, partagez des bilans ou des radios.</p>
+            <p style="margin: 0;">Bonjour ! 👋 Posez vos questions cliniques, partagez des bilans ou des radios.</p>
             
             <!-- Historique / Zone de conversation avec bouton Audio 🔊 -->
             <div id="aiChatResponse" style="background: var(--input-bg); padding: 10px; border-radius: 8px; font-size: 0.82rem; min-height: 40px; max-height: 120px; overflow-y: auto;">
@@ -772,7 +822,83 @@
         let fichierActuel = null;
         let recognition = null;
         let estEnCoursDEcoute = false;
-        let derniereReponseTexte = "Bonjour Issaka ! Comment puis-je vous aider ?";
+        let derniereReponseTexte = "Bonjour ! Comment puis-je vous aider ?";
+        let utilisateurConnecte = null;
+
+        // Gestion de l'authentification et sessions
+        function toggleAuthModal() {
+            const modal = document.getElementById('authModal');
+            if (utilisateurConnecte) {
+                if (confirm(`Voulez-vous vous déconnecter de votre compte (${utilisateurConnecte.nom}) ?`)) {
+                    deconnecterUtilisateur();
+                }
+            } else {
+                modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+            }
+        }
+
+        function basculerFormulaireAuth(vue) {
+            if (vue === 'register') {
+                document.getElementById('formLoginView').style.display = 'none';
+                document.getElementById('formRegisterView').style.display = 'block';
+                document.getElementById('authModalTitle').innerText = "Créer un Nouveau Compte";
+            } else {
+                document.getElementById('formRegisterView').style.display = 'none';
+                document.getElementById('formLoginView').style.display = 'block';
+                document.getElementById('authModalTitle').innerText = "Connexion à votre Compte";
+            }
+        }
+
+        function executerInscription() {
+            const nom = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+
+            if (!nom || !email || !pass) {
+                alert("Veuillez remplir tous les champs d'inscription.");
+                return;
+            }
+
+            const profil = { nom: nom, email: email };
+            localStorage.setItem('userAccount', JSON.stringify({ profil: profil, pass: pass }));
+            connecterUtilisateur(profil);
+            alert(`Compte créé avec succès ! Bienvenue ${nom}.`);
+            toggleAuthModal();
+        }
+
+        function executerConnexion() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const localData = JSON.parse(localStorage.getItem('userAccount') || 'null');
+
+            if (!email || !pass) {
+                alert("Veuillez renseigner votre e-mail et mot de passe.");
+                return;
+            }
+
+            if (localData && localData.profil.email === email && localData.pass === pass) {
+                connecterUtilisateur(localData.profil);
+                toggleAuthModal();
+            } else {
+                alert("Identifiants incorrects. Veuillez réessayer.");
+            }
+        }
+
+        function connecterUtilisateur(profil) {
+            utilisateurConnecte = profil;
+            localStorage.setItem('activeSession', JSON.stringify(profil));
+            document.getElementById('userAuthBtn').innerText = `👤 ${profil.nom}`;
+            document.getElementById('profileStatus').innerText = `Connecté : ${profil.nom}`;
+            document.getElementById('profileSubText').innerText = `E-mail: ${profil.email}`;
+        }
+
+        function deconnecterUtilisateur() {
+            utilisateurConnecte = null;
+            localStorage.removeItem('activeSession');
+            document.getElementById('userAuthBtn').innerText = `👤 Connexion`;
+            document.getElementById('profileStatus').innerText = `Non connecté`;
+            document.getElementById('profileSubText').innerText = `Connectez-vous pour enregistrer votre profil.`;
+        }
 
         const traductions = {
             fr: {
@@ -922,7 +1048,8 @@
             
             setTimeout(() => {
                 let diagnosticFichier = fichierActuel ? ` Après examen approfondi de "${fichierActuel.name}", les paramètres biologiques et structurels sont cohérents avec une surveillance clinique requise.` : '';
-                derniereReponseTexte = `Analyse terminée.${diagnosticFichier} En tant qu'assistant de MediCalcul Express, je reste à vos côtés pour valider vos scores et vos révisions.`;
+                let enteteUser = utilisateurConnecte ? `Bonjour ${utilisateurConnecte.nom} ! ` : '';
+                derniereReponseTexte = `${enteteUser}Analyse terminée.${diagnosticFichier} En tant qu'assistant de MediCalcul Express, je reste à vos côtés pour valider vos scores et vos révisions.`;
                 
                 respBox.innerHTML = `<strong>Vous :</strong> ${questionTexte}${fichierTexte}<br><br><strong>Assistant IA :</strong> ${derniereReponseTexte}`;
                 input.value = '';
@@ -930,7 +1057,6 @@
             }, 1000);
         }
 
-        // Synthèse vocale Text-to-Speech
         function lireDerniereReponseVoix() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -1255,6 +1381,12 @@
             if (savedSize) {
                 document.documentElement.style.setProperty('--font-size', savedSize);
                 document.getElementById('sizeSelect').value = savedSize;
+            }
+
+            // Restauration de la session utilisateur si elle existe
+            const activeSession = JSON.parse(localStorage.getItem('activeSession') || 'null');
+            if (activeSession) {
+                connecterUtilisateur(activeSession);
             }
 
             document.getElementById('appCalendar').value = new Date().toISOString().split('T')[0];
