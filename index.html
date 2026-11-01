@@ -137,6 +137,16 @@
         <button class="calc-btn" onclick="calculerIMC()">Calculer l'IMC</button>
         <div id="resultatIMC" style="margin-top: 15px; font-weight: bold;">Résultat : --</div>
     </div>
+    <!-- Convertisseur de Température -->
+    <div class="container">
+        <h3 style="margin-top: 0;">Conversion de Température</h3>
+        
+        <label for="tempC">Celsius (°C)</label>
+        <input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
+
+        <label for="tempF">Fahrenheit (°F)</label>
+        <input type="number" id="tempF" placeholder="Ex: 98.6" oninput="convertTemp('F')">
+    </div>
 
     <!-- Scripts JavaScript -->
     <script>
@@ -148,7 +158,28 @@
             } else {
                 menu.style.right = '0px';
             }
+             // Fonction de conversion de température instantanée
+        function convertTemp(unit) {
+            const cInput = document.getElementById('tempC');
+            const fInput = document.getElementById('tempF');
+            
+            if (unit === 'C') {
+                const c = parseFloat(cInput.value);
+                if (!isNaN(c)) {
+                    fInput.value = (c * 9/5 + 32).toFixed(1);
+                } else {
+                    fInput.value = '';
+                }
+            } else {
+                const f = parseFloat(fInput.value);
+                if (!isNaN(f)) {
+                    cInput.value = ((f - 32) * 5/9).toFixed(1);
+                } else {
+                    cInput.value = '';
+                }
+            }
         }
+   }
     </script>
 
     <script>
