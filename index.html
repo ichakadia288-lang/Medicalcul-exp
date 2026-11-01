@@ -543,6 +543,10 @@
                 <option value="h_min" id="optHMin">Heures vers Minutes</option>
                 <option value="min_sec" id="optMinSec">Minutes vers Secondes</option>
                 <option value="sec_min" id="optSecMin">Secondes vers Minutes</option>
+                <option value="j_h" id="optJ_H">Jours vers Heures</option>
+                <option value="h_j" id="optH_J">Heures vers Jours</option>
+                <option value="m_j" id="optM_J">Mois vers Jours (30j)</option>
+                <option value="a_j" id="optA_J">Années vers Jours (365j)</option>
             </select>
         </div>
         <div id="resultatTemps" style="margin-top: 5px; color: var(--primary);">Résultat : --</div>
@@ -559,7 +563,7 @@
       <div style="background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; color: #1e293b;">
         <h3 style="margin-top: 0;">Mentions Légales & Confidentialité</h3>
         <p><strong>1. Éditeur de l'application :</strong> MediCalcul Express est un outil gratuit de calculs et conversions médicales.</p>
-        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effectuent localement sur votre appareil.</p>
+        <p><strong>2. Protection des données :</strong> Aucune donnée médicale ou personnelle renseignée dans les calculatrices n'est stockée ni transmise à des serveurs tiers. Tous les calculs s'effécutent localement sur votre appareil.</p>
         <p><strong>3. Utilisation des cookies & Publicités :</strong> Ce site peut faire appel à des régies publicitaires tierces (telles que Google AdSense) qui utilisent des cookies pour diffuser des annonces adaptées basées sur vos visites ultérieures.</p>
         <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Fermer</button>
       </div>
@@ -599,7 +603,9 @@
                 masseTitle: "Conversion de Masse", masseVal: "Valeur", optMgUg: "mg vers µg", optUgMg: "µg vers mg",
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
                 tempTitle: "Conversion de Température",
-                tempsTitle: "Conversion de Temps", tempsVal: "Valeur", optHMin: "Heures vers Minutes", optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes",
+                tempsTitle: "Conversion de Temps", tempsVal: "Valeur", 
+                optHMin: "Heures vers Minutes", optMinSec: "Minutes vers Secondes", optSecMin: "Secondes vers Minutes",
+                optJ_H: "Jours vers Heures", optH_J: "Heures vers Jours", optM_J: "Mois vers Jours (30j)", optA_J: "Années vers Jours (365j)",
                 footerText: "© 2026 MediCalcul Express — Tous droits réservés", legalText: "Mentions Légales & Confidentialité",
                 quizTitle: "Quiz : Quantité des Éléments", btnTrue: "VRAI", btnFalse: "FAUX",
                 qWater: "Le corps humain contient environ 60% d'eau.",
@@ -652,7 +658,9 @@
                 masseTitle: "Mass Conversion", masseVal: "Value", optMgUg: "mg to µg", optUgMg: "µg to mg",
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
                 tempTitle: "Temperature Conversion",
-                tempsTitle: "Time Conversion", tempsVal: "Value", optHMin: "Hours to Minutes", optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes",
+                tempsTitle: "Time Conversion", tempsVal: "Value", 
+                optHMin: "Hours to Minutes", optMinSec: "Minutes to Seconds", optSecMin: "Seconds to Minutes",
+                optJ_H: "Days to Hours", optH_J: "Hours to Days", optM_J: "Months to Days (30d)", optA_J: "Years to Days (365d)",
                 footerText: "© 2026 MediCalcul Express — All rights reserved", legalText: "Legal Notices & Privacy",
                 quizTitle: "Quiz: Quantity of Elements", btnTrue: "TRUE", btnFalse: "FALSE",
                 qWater: "The human body is about 60% water.",
@@ -777,9 +785,15 @@
             document.getElementById('txtTempTitle').innerText = t.tempTitle;
             document.getElementById('txtTempsTitle').innerText = t.tempsTitle;
             document.getElementById('txtTempsVal').innerText = t.tempsVal;
+            
             document.getElementById('optHMin').innerText = t.optHMin;
             document.getElementById('optMinSec').innerText = t.optMinSec;
             document.getElementById('optSecMin').innerText = t.optSecMin;
+            document.getElementById('optJ_H').innerText = t.optJ_H;
+            document.getElementById('optH_J').innerText = t.optH_J;
+            document.getElementById('optM_J').innerText = t.optM_J;
+            document.getElementById('optA_J').innerText = t.optA_J;
+
             document.getElementById('footerCopyright').innerText = t.footerText;
             document.getElementById('footerLegal').innerText = t.legalText;
             
@@ -1181,9 +1195,14 @@
             const unit = document.getElementById('tempsUnit').value;
             const resDiv = document.getElementById('resultatTemps');
             if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
+            
             if (unit === 'h_min') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} minutes`;
             else if (unit === 'min_sec') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} secondes`;
-            else resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
+            else if (unit === 'sec_min') resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
+            else if (unit === 'j_h') resDiv.innerText = `Résultat : ${(val * 24).toFixed(0)} heures`;
+            else if (unit === 'h_j') resDiv.innerText = `Résultat : ${(val / 24).toFixed(2)} jours`;
+            else if (unit === 'm_j') resDiv.innerText = `Résultat : ${(val * 30).toFixed(0)} jours`;
+            else if (unit === 'a_j') resDiv.innerText = `Résultat : ${(val * 365).toFixed(0)} jours`;
         }
 
         function toggleDarkMode() {
