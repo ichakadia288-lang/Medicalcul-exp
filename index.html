@@ -270,7 +270,7 @@
             background: var(--border);
         }
 
-        /* Conteneur du bouton flottant (60% : ~41px) avec animation lumineuse renforcée */
+        /* Conteneur du bouton flottant (60% de taille : ~41px) avec étoile bleu ciel */
         .floating-ai-wrapper {
             position: fixed;
             bottom: 24px;
@@ -284,17 +284,16 @@
             height: 41px;
             border-radius: 50%;
             overflow: hidden;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
             cursor: pointer;
-            border: 2px solid #38bdf8;
+            border: 2px solid var(--primary);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             background: var(--card-bg);
-            position: relative;
-            box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
-            animation: pulseGlow 2s infinite cubic-bezier(0.66, 0, 0, 1);
-            transition: transform 0.2s ease;
         }
 
         .floating-ai-btn:hover {
-            transform: scale(1.12);
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(2, 132, 199, 0.6);
         }
 
         .floating-ai-btn img {
@@ -303,34 +302,21 @@
             object-fit: cover;
         }
 
-        /* Animation de pulsation lumineuse du halo (Glow) */
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8);
-            }
-            70% {
-                box-shadow: 0 0 0 14px rgba(56, 189, 248, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
-            }
-        }
-
-        /* Petite étoile bleu ciel scintillante en haut */
+        /* Petite étoile bleu ciel en haut de l'icône */
         .ai-star-badge {
             position: absolute;
-            top: -7px;
-            right: -3px;
+            top: -6px;
+            right: -2px;
             color: #38bdf8;
-            font-size: 1.2rem;
-            text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+            font-size: 1.1rem;
+            text-shadow: 0 0 6px rgba(56, 189, 248, 0.8);
             pointer-events: none;
-            animation: pulseStar 1.2s infinite ease-in-out;
+            animation: pulseStar 1.5s infinite ease-in-out;
         }
 
         @keyframes pulseStar {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
-            50% { transform: scale(1.3) rotate(15deg); opacity: 1; }
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.25); opacity: 1; }
         }
 
         /* Fenêtre modale de l'Assistant IA avec champ et vocal */
@@ -749,7 +735,7 @@
         </div>
     </div>
 
-    <!-- BOUTON FLOTTANT ASSISTANCE IA (60% + Animation Lumineuse Pulsante + Étoile) -->
+    <!-- BOUTON FLOTTANT ASSISTANCE IA (60% de taille + Étoile bleu ciel en haut) -->
     <div id="floatingAiBtn" class="floating-ai-wrapper">
         <div class="floating-ai-btn" onclick="toggleAiModal()">
             <img src="assistant-icon.png" alt="Assistance IA">
