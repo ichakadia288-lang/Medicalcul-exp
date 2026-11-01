@@ -7,6 +7,8 @@
     <!-- Lien vers le manifeste pour l'installation PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0284c7">
+    <!-- Importation de la police moderne Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Variables pour les thèmes */
         :root {
@@ -28,7 +30,7 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
@@ -86,6 +88,7 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         button.calc-btn {
@@ -97,6 +100,7 @@
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
         
         .badge-urg {
@@ -128,10 +132,10 @@
 
     <!-- Barre de menu supérieure -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border);">
-        <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite[span_1](start_span)[span_1](end_span) -->
+        <!-- Bloc gauche : Icône pure à gauche et titre décalé à droite -->
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="logo.png" alt="Icône" style="height: 35px; width: auto; object-fit: contain; display: block; border-radius: 6px;">
-            <h3 id="appTitleHeader" style="margin: 0; font-size: 19px; line-height: 1;">MediCalcul Express</h3>
+            <h3 id="appTitleHeader" style="margin: 0; font-size: 19px; line-height: 1; font-weight: 700;">MediCalcul Express</h3>
         </div>
         
         <!-- Bloc droit : Sélecteur de langue + Bouton menu -->
@@ -199,11 +203,11 @@
 
     <!-- Contenu principal -->
     <div class="container">
-        <h2 style="text-align: center; margin-top: 0;">MediCalcul Express</h2>
+        <h2 style="text-align: center; margin-top: 0; font-weight: 700;">MediCalcul Express</h2>
         <p style="text-align: center; color: var(--border);" id="txtSubTitle">Outils de calculs et conversions médicales rapides</p>
 
         <!-- Calculatrice IMC -->
-        <h3 id="txtImcTitle">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
+        <h3 id="txtImcTitle" style="font-weight: 600;">Calcul de l'IMC (Indice de Masse Corporelle)</h3>
         <label for="poids" id="txtPoids">Poids (kg)</label>
         <input type="number" id="poids" placeholder="Ex: 70">
 
@@ -217,9 +221,9 @@
 
     <!-- MODULE URGENCES & RÉANIMATION -->
     <div class="container" style="border-left: 4px solid #ef4444;">
-        <h3 style="margin-top: 0;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
+        <h3 style="margin-top: 0; font-weight: 700;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
-        <h4 style="color: var(--primary);" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
+        <h4 style="color: var(--primary); font-weight: 600;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance Créatinine - Cockcroft)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="crPoids" id="txtCrPoids">Poids (kg)</label>
@@ -243,7 +247,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <h4 style="color: var(--primary);" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
+        <h4 style="color: var(--primary); font-weight: 600;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
         <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label>
         <input type="number" id="pedPoids" placeholder="Ex: 15">
         <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label>
@@ -253,7 +257,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <h4 style="color: var(--primary);" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
+        <h4 style="color: var(--primary); font-weight: 600;" id="txtEauTitle">3. Déficit en Eau (Formule de Adrogué-Madias / Natrémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="eauPoids" id="txtEauPoids">Poids (kg)</label>
@@ -270,7 +274,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-        <h4 style="color: var(--primary);" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
+        <h4 style="color: var(--primary); font-weight: 600;" id="txtCorrTitle">4. Correction Ionique (Natrémie Corrigée / hyperglycémie)</h4>
         <div style="display: flex; gap: 10px;">
             <div style="flex: 1;">
                 <label for="corrNa" id="txtCorrNa">Na+ mesurée (mmol/L)</label>
@@ -288,7 +292,7 @@
 
     <!-- Convertisseur d'Unités de Masse -->
     <div class="container">
-        <h3 style="margin-top: 0;" id="txtMasseTitle">Conversion de Masse</h3>
+        <h3 style="margin-top: 0; font-weight: 600;" id="txtMasseTitle">Conversion de Masse</h3>
         <label for="masseVal" id="txtMasseVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="masseVal" placeholder="Valeur" oninput="convertMasse()">
@@ -302,7 +306,7 @@
 
     <!-- Convertisseur d'Unités de Volume -->
     <div class="container">
-        <h3 style="margin-top: 0;" id="txtVolTitle">Conversion de Volume</h3>
+        <h3 style="margin-top: 0; font-weight: 600;" id="txtVolTitle">Conversion de Volume</h3>
         <label for="volVal" id="txtVolVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="volVal" placeholder="Valeur" oninput="convertVolume()">
@@ -316,7 +320,7 @@
 
     <!-- Convertisseur de Température -->
     <div class="container">
-        <h3 style="margin-top: 0;" id="txtTempTitle">Conversion de Température</h3>
+        <h3 style="margin-top: 0; font-weight: 600;" id="txtTempTitle">Conversion de Température</h3>
         <label for="tempC">Celsius (°C)</label>
         <input type="number" id="tempC" placeholder="Ex: 37" oninput="convertTemp('C')">
 
@@ -326,7 +330,7 @@
 
     <!-- Convertisseur de Temps -->
     <div class="container">
-        <h3 style="margin-top: 0;" id="txtTempsTitle">Conversion de Temps</h3>
+        <h3 style="margin-top: 0; font-weight: 600;" id="txtTempsTitle">Conversion de Temps</h3>
         <label for="tempsVal" id="txtTempsVal">Valeur</label>
         <div style="display: flex; gap: 10px;">
             <input type="number" id="tempsVal" placeholder="Valeur" oninput="convertTemps()">
