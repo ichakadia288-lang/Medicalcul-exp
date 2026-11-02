@@ -202,6 +202,7 @@
         .hist-name { font-weight: 700; font-size: 0.82rem; color: var(--primary); }
         .hist-res { font-size: 0.85rem; word-break: break-word; }
         .hist-time { font-size: 0.7rem; opacity: 0.55; margin-top: 2px; }
+        .hist-actions { display: grid; grid-template-columns: repeat(2, 34px); gap: 6px; }
         .hist-btn { background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; width: 34px; height: 34px; cursor: pointer; font-size: 0.95rem; }
         .tool-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; scroll-margin-top: 70px; }
         .tool-head > :first-child { flex: 1; min-width: 0; }
@@ -2038,7 +2039,15 @@
                 const d = document.createElement('div'); d.className = 'hist-time';
                 d.textContent = new Date(e.ts).toLocaleString(undefined, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 main.append(n, r, d);
-                ligne.append(main, bouton('hist-btn', '📋', () => copierResultat(i), 'Copier'), bouton('hist-btn', '📤', () => partagerResultat(i), 'Partager'));
+                const actions = document.createElement('div');
+                actions.className = 'hist-actions';
+                actions.append(
+                    bouton('hist-btn', '📋', () => copierResultat(i), 'Copier'),
+                    bouton('hist-btn', '📤', () => partagerResultat(i), 'Partager le texte'),
+                    bouton('hist-btn', '🖼️', () => partagerImage(i), 'Partager en image'),
+                    bouton('hist-btn', '📄', () => partagerPdf(i), 'Partager en PDF')
+                );
+                ligne.append(main, actions);
                 histList.appendChild(ligne);
             });
         }
@@ -2062,6 +2071,154 @@
                 return r;
             };
         });
+
+        /* ---------- PARTAGE DE FICHIERS : image / PDF d'un résultat ---------- */
+        function chargerImage(src) {
+            return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+        }
+
+        function decouperTexte(g, texte, largeur) {
+            const lignes = [];
+            let ligne = '';
+            texte.split(' ').forEach(mot => {
+                const test = ligne ? ligne + ' ' + mot : mot;
+                if (g.measureText(test).width > largeur && ligne) { lignes.push(ligne); ligne = mot; } else { ligne = test; }
+            });
+            if (ligne) lignes.push(ligne);
+            return lignes;
+        }
+
+        async function creerCanvasCarte(e, avecLogo) {
+            const W = 800, H = 500;
+            const c = document.createElement('canvas');
+            c.width = W; c.height = H;
+            const g = c.getContext('2d');
+            g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+            const degrade = g.createLinearGradient(0, 0, W, 0);
+            degrade.addColorStop(0, '#0284c7'); degrade.addColorStop(1, '#0369a1');
+            g.fillStyle = degrade; g.fillRect(0, 0, W, 96);
+
+            let x = 40;
+            const logo = avecLogo ? await chargerImage('icon-192.png') : null;
+            if (logo) { g.drawImage(logo, 24, 14, 68, 68); x = 108; }
+            g.fillStyle = '#ffffff'; g.font = 'bold 34px sans-serif'; g.textBaseline = 'middle';
+            g.fillText('MediCalcul Express', x, 48);
+
+            g.textBaseline = 'alphabetic';
+            const t = trouverOutil(e.id);
+            g.fillStyle = '#0369a1'; g.font = 'bold 30px sans-serif';
+            g.fillText(t ? nomOutil(t) : '', 40, 165);
+
+            g.fillStyle = '#0f172a'; g.font = 'bold 38px sans-serif';
+            decouperTexte(g, e.resultat, W - 80).slice(0, 5).forEach((l, i) => g.fillText(l, 40, 235 + i * 52));
+
+            g.fillStyle = '#64748b'; g.font = '22px sans-serif';
+            g.fillText(new Date(e.ts).toLocaleString(), 40, H - 68);
+            g.font = 'italic 20px sans-serif';
+            g.fillText("Aide au calcul : ne remplace pas un avis médical.", 40, H - 32);
+            return c;
+        }
+
+        async function blobCarte(e, type, qualite) {
+            for (const avecLogo of [true, false]) {
+                try {
+                    const c = await creerCanvasCarte(e, avecLogo);
+                    return await new Promise((ok, ko) => c.toBlob(b => b ? ok(b) : ko(new Error('blob')), type, qualite));
+                } catch (err) { /* canvas bloqué : nouvel essai sans logo */ }
+            }
+            return null;
+        }
+
+        // PDF d'une page contenant l'image JPEG de la fiche
+        function creerPdf(jpeg, w, h) {
+            const pw = Math.round(w * 0.75), ph = Math.round(h * 0.75);
+            const enc = new TextEncoder();
+            const parts = [], offs = [];
+            let len = 0;
+            const add = (x) => { const b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); len += b.length; };
+            const obj = (n, corps) => { offs[n] = len; add(`${n} 0 obj\n${corps}\nendobj\n`); };
+
+            add('%PDF-1.4\n');
+            obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+            obj(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+            obj(3, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);
+            offs[4] = len;
+            add(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+            add(jpeg);
+            add('\nendstream\nendobj\n');
+            const flux = `q ${pw} 0 0 ${ph} 0 0 cm /Im0 Do Q`;
+            obj(5, `<< /Length ${flux.length} >>\nstream\n${flux}\nendstream`);
+            const debutXref = len;
+            let xref = 'xref\n0 6\n0000000000 65535 f \n';
+            for (let n = 1; n <= 5; n++) xref += String(offs[n]).padStart(10, '0') + ' 00000 n \n';
+            xref += `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${debutXref}\n%%EOF`;
+            add(xref);
+            return new Blob(parts, { type: 'application/pdf' });
+        }
+
+        async function partagerFichier(fichier, titre) {
+            if (navigator.canShare && navigator.canShare({ files: [fichier] })) {
+                try { await navigator.share({ files: [fichier], title: titre }); return; }
+                catch (err) { if (err && err.name === 'AbortError') return; }
+            }
+            // Repli : téléchargement du fichier
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(fichier);
+            a.download = fichier.name;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+            toast('Fichier téléchargé');
+        }
+
+        async function partagerImage(i) {
+            const e = lireHistorique()[i];
+            if (!e) return;
+            const blob = await blobCarte(e, 'image/png');
+            if (!blob) return toast('Création impossible');
+            await partagerFichier(new File([blob], 'resultat-medicalcul.png', { type: 'image/png' }), 'MediCalcul Express');
+        }
+
+        async function partagerPdf(i) {
+            const e = lireHistorique()[i];
+            if (!e) return;
+            const blob = await blobCarte(e, 'image/jpeg', 0.92);
+            if (!blob) return toast('Création impossible');
+            const jpeg = new Uint8Array(await blob.arrayBuffer());
+            const pdf = creerPdf(jpeg, 800, 500);
+            await partagerFichier(new File([pdf], 'resultat-medicalcul.pdf', { type: 'application/pdf' }), 'MediCalcul Express');
+        }
+
+        /* ---------- RÉCEPTION d'un fichier partagé depuis une autre application ---------- */
+        async function traiterPartageEntrant() {
+            const params = new URLSearchParams(location.search);
+            if (!params.get('partage')) return;
+            history.replaceState(null, '', '/');
+            const respBox = document.getElementById('aiChatResponse');
+            document.getElementById('aiModal').style.display = 'flex';
+            try {
+                const cache = await caches.open('partage');
+                const rep = await cache.match('/fichier-partage');
+                if (rep) {
+                    const blob = await rep.blob();
+                    const nom = decodeURIComponent(rep.headers.get('X-Nom') || 'fichier');
+                    await cache.delete('/fichier-partage');
+                    if (blob.type === 'application/pdf' || blob.type.startsWith('image/')) {
+                        fichierActuel = new File([blob], nom, { type: blob.type });
+                        document.getElementById('fileNameDisplay').innerText = `📎 ${nom}`;
+                        document.getElementById('filePreviewContainer').style.display = 'flex';
+                        respBox.textContent = "Fichier reçu. Touchez Envoyer pour l'analyser. N'envoyez aucune donnée identifiant un patient.";
+                    } else {
+                        respBox.textContent = "Format non pris en charge (image ou PDF uniquement).";
+                    }
+                }
+                const t = params.get('t');
+                if (t) document.getElementById('aiUserInput').value = t;
+            } catch (err) {
+                respBox.textContent = "Impossible de récupérer le fichier partagé.";
+            }
+        }
 
         /* ---------- INSTALLATION DE L'APPLICATION ---------- */
         let evtInstall = null;
@@ -2124,6 +2281,7 @@
             changerLangue();
             installerEtoiles();
             majAccueil();
+            traiterPartageEntrant();
             if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone) afficherInstall(true);
             majEtatReseau();
             if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
