@@ -322,6 +322,21 @@
             font-size: 1.2rem; font-weight: 700;
             box-shadow: 0 6px 14px rgba(2, 132, 199, 0.3);
         }
+        .avatar { background-size: cover; background-position: center; }
+        .user-row .avatar { width: 56px; height: 56px; font-size: 1.4rem; }
+        .avatar-wrap { position: relative; cursor: pointer; flex-shrink: 0; }
+        .avatar-cam {
+            position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px;
+            border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
+        }
+        .photo-actions { display: flex; gap: 8px; margin-top: 14px; }
+        .photo-btn {
+            flex: 1; padding: 9px 6px; border-radius: 10px; cursor: pointer;
+            background: var(--card-bg); color: var(--text); border: 1px solid var(--border);
+            font-family: inherit; font-weight: 600; font-size: 0.78rem;
+        }
+        .photo-btn:hover { border-color: var(--primary); }
         .auth-title { font-weight: 700; font-size: 0.95rem; }
         .auth-sub { font-size: 0.75rem; opacity: 0.7; margin-top: 2px; line-height: 1.3; }
         .auth-tabs {
@@ -513,12 +528,21 @@
 
             <div id="authUser" style="display: none;">
                 <div class="user-row">
-                    <div class="avatar" id="userAvatar">?</div>
+                    <div class="avatar-wrap" onclick="document.getElementById('photoInput').click()" role="button" aria-label="Changer la photo de profil">
+                        <div class="avatar" id="userAvatar">?</div>
+                        <span class="avatar-cam">📷</span>
+                    </div>
                     <div style="min-width: 0;">
                         <div class="user-name" id="userName"></div>
                         <div class="user-mail" id="userMail"></div>
                     </div>
                 </div>
+                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="choisirPhotoProfil(this)">
+                <div class="photo-actions">
+                    <button type="button" id="btnPhoto" class="photo-btn" onclick="document.getElementById('photoInput').click()">Ajouter une photo</button>
+                    <button type="button" id="btnPhotoDel" class="photo-btn" style="display: none;" onclick="supprimerPhotoProfil()">Supprimer</button>
+                </div>
+                <div id="photoMsg" class="auth-msg" role="status"></div>
                 <button type="button" id="btnLogout" class="logout-btn" onclick="deconnecterUtilisateur()">Se déconnecter</button>
             </div>
         </div>
@@ -956,6 +980,67 @@
             }
         }
 
+        /* ---------- PHOTO DE PROFIL (stockée uniquement sur l'appareil) ---------- */
+        function clePhoto() {
+            return utilisateurConnecte ? 'profilePhoto:' + utilisateurConnecte.email : null;
+        }
+
+        function afficherMsgPhoto(texte) {
+            const m = document.getElementById('photoMsg');
+            m.textContent = texte || '';
+            m.className = 'auth-msg err';
+        }
+
+        function afficherAvatar() {
+            const av = document.getElementById('userAvatar');
+            const cle = clePhoto();
+            let photo = cle ? localStorage.getItem(cle) : null;
+            if (photo && !photo.startsWith('data:image/jpeg;base64,')) photo = null;
+            if (photo) {
+                av.style.backgroundImage = `url("${photo}")`;
+                av.textContent = '';
+            } else {
+                av.style.backgroundImage = '';
+                av.textContent = (utilisateurConnecte && utilisateurConnecte.nom ? utilisateurConnecte.nom : '?').trim().charAt(0).toUpperCase();
+            }
+            document.getElementById('btnPhotoDel').style.display = photo ? 'block' : 'none';
+            document.getElementById('btnPhoto').textContent = photo ? 'Changer' : 'Ajouter une photo';
+        }
+
+        // Recadre l'image en carré centré, la réduit à 256 px et l'enregistre en JPEG
+        function choisirPhotoProfil(input) {
+            const f = input.files && input.files[0];
+            input.value = '';
+            afficherMsgPhoto('');
+            if (!f || !utilisateurConnecte) return;
+            if (!f.type.startsWith('image/')) return afficherMsgPhoto("Choisissez un fichier image.");
+
+            const url = URL.createObjectURL(f);
+            const img = new Image();
+            img.onload = () => {
+                const T = 256;
+                const c = document.createElement('canvas');
+                c.width = T; c.height = T;
+                const cote = Math.min(img.width, img.height);
+                c.getContext('2d').drawImage(img, (img.width - cote) / 2, (img.height - cote) / 2, cote, cote, 0, 0, T, T);
+                URL.revokeObjectURL(url);
+                try {
+                    localStorage.setItem(clePhoto(), c.toDataURL('image/jpeg', 0.85));
+                    afficherAvatar();
+                } catch (e) {
+                    afficherMsgPhoto("Impossible d'enregistrer la photo (espace insuffisant).");
+                }
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); afficherMsgPhoto("Image illisible."); };
+            img.src = url;
+        }
+
+        function supprimerPhotoProfil() {
+            const cle = clePhoto();
+            if (cle) localStorage.removeItem(cle);
+            afficherAvatar();
+        }
+
         function connecterUtilisateur(profil) {
             utilisateurConnecte = profil;
             localStorage.setItem('activeSession', JSON.stringify(profil));
@@ -963,7 +1048,7 @@
             document.getElementById('authUser').style.display = 'block';
             document.getElementById('userName').textContent = profil.nom;
             document.getElementById('userMail').textContent = profil.email;
-            document.getElementById('userAvatar').textContent = (profil.nom || '?').trim().charAt(0).toUpperCase();
+            afficherAvatar();
             afficherMsgAuth('');
         }
 
@@ -993,7 +1078,7 @@
                 quizTitle: "Quiz Médical & Flashcards", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
                 chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
                 addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
-                tabLogin: "Connexion", tabRegister: "Inscription", btnLogin: "Se connecter", btnRegister: "Créer mon compte", btnLogout: "Se déconnecter",
+                tabLogin: "Connexion", tabRegister: "Inscription", btnLogin: "Se connecter", btnRegister: "Créer mon compte", btnLogout: "Se déconnecter", btnPhoto: "Ajouter une photo", btnPhotoDel: "Supprimer",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
@@ -1012,7 +1097,7 @@
                 quizTitle: "Medical Quiz & Flashcards", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
                 chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
                 addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
-                tabLogin: "Log in", tabRegister: "Sign up", btnLogin: "Log in", btnRegister: "Create account", btnLogout: "Log out",
+                tabLogin: "Log in", tabRegister: "Sign up", btnLogin: "Log in", btnRegister: "Create account", btnLogout: "Log out", btnPhoto: "Add a photo", btnPhotoDel: "Remove",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
