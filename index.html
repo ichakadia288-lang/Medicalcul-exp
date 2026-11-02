@@ -302,41 +302,69 @@
             animation: slideUp 0.3s ease;
         }
 
-        #authModal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 280px;
-            max-width: 45%;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            animation: fadeIn 0.25s ease;
-        }
-
-        @media (max-width: 480px) {
-            #authModal {
-                width: 270px;
-                max-width: 88%;
-            }
-        }
-
         #aiChatResponse:empty { display: none; }
+
+        /* ---------- Compte utilisateur (menu) ---------- */
+        .account-card {
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 18px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+        }
+        .auth-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .auth-badge, .avatar {
+            width: 44px; height: 44px; flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; font-weight: 700;
+            box-shadow: 0 6px 14px rgba(2, 132, 199, 0.3);
+        }
+        .auth-title { font-weight: 700; font-size: 0.95rem; }
+        .auth-sub { font-size: 0.75rem; opacity: 0.7; margin-top: 2px; line-height: 1.3; }
+        .auth-tabs {
+            display: flex; gap: 4px; padding: 4px; margin-bottom: 8px;
+            background: var(--bg); border-radius: 12px;
+        }
+        .auth-tab {
+            flex: 1; border: none; background: transparent; color: var(--text);
+            padding: 8px 6px; border-radius: 9px; cursor: pointer;
+            font-family: inherit; font-weight: 600; font-size: 0.8rem; opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .auth-tab.active {
+            background: var(--card-bg); color: var(--primary); opacity: 1;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12);
+        }
+        .field { position: relative; margin-top: 10px; }
+        .field input { margin-top: 0; height: 44px; padding-left: 40px; padding-right: 40px; border-radius: 12px; }
+        .field .ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 0.95rem; opacity: 0.6; pointer-events: none; }
+        .field .eye {
+            position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; padding: 8px; font-size: 1rem; color: var(--text);
+        }
+        .auth-hint { font-size: 0.72rem; opacity: 0.6; margin: 6px 2px 0; }
+        .auth-submit { width: 100%; margin-top: 14px; padding: 12px; border-radius: 12px; font-size: 0.9rem; }
+        .auth-submit:disabled { opacity: 0.6; cursor: wait; }
+        .auth-msg { font-size: 0.78rem; margin-top: 10px; line-height: 1.35; }
+        .auth-msg:empty { display: none; }
+        .auth-msg.err { color: #ef4444; }
+        .auth-msg.ok { color: #10b981; }
+        .user-row { display: flex; align-items: center; gap: 12px; }
+        .user-name { font-weight: 700; font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-mail { font-size: 0.75rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .logout-btn {
+            width: 100%; margin-top: 14px; padding: 10px; border-radius: 12px; cursor: pointer;
+            background: transparent; color: #ef4444; border: 1px solid #ef4444;
+            font-family: inherit; font-weight: 600; font-size: 0.85rem;
+        }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.08); }
 
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -46%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
         .ai-input-pill {
@@ -431,8 +459,6 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px;">
-            <button id="userAuthBtn" onclick="toggleAuthModal()" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--primary); display: flex; align-items: center; gap: 3px;">👤 Connexion</button>
-
             <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 4px 6px; font-size: 0.8rem; width: auto; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
                 <option value="fr">FR</option>
                 <option value="en">EN</option>
@@ -447,9 +473,54 @@
             <button onclick="toggleMenu()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);">✕</button>
         </div>
 
-        <div id="userProfileSection" style="margin-bottom: 20px; padding: 12px; background: var(--input-bg); border-radius: 10px; font-size: 0.85rem;">
-            <div style="font-weight: 600; color: var(--primary);" id="profileStatus">Non connecté</div>
-            <div style="opacity: 0.7; font-size: 0.8rem; margin-top: 4px;" id="profileSubText">Connectez-vous pour enregistrer votre profil.</div>
+        <div id="accountCard" class="account-card">
+            <div id="authGuest">
+                <div class="auth-head">
+                    <div class="auth-badge">👤</div>
+                    <div>
+                        <div class="auth-title">Mon compte</div>
+                        <div class="auth-sub">Connectez-vous pour enregistrer votre profil</div>
+                    </div>
+                </div>
+
+                <div class="auth-tabs">
+                    <button type="button" id="tabLogin" class="auth-tab active" onclick="basculerFormulaireAuth('login')">Connexion</button>
+                    <button type="button" id="tabRegister" class="auth-tab" onclick="basculerFormulaireAuth('register')">Inscription</button>
+                </div>
+
+                <form id="formLoginView" onsubmit="event.preventDefault(); executerConnexion();">
+                    <div class="field"><span class="ico">✉️</span><input type="email" id="loginEmail" placeholder="E-mail" autocomplete="email" aria-label="E-mail"></div>
+                    <div class="field">
+                        <span class="ico">🔒</span><input type="password" id="loginPass" placeholder="Mot de passe" autocomplete="current-password" aria-label="Mot de passe">
+                        <button type="button" class="eye" onclick="toggleMotDePasse('loginPass', this)" aria-label="Afficher le mot de passe">👁️</button>
+                    </div>
+                    <button type="submit" id="btnLogin" class="calc-btn auth-submit">Se connecter</button>
+                </form>
+
+                <form id="formRegisterView" style="display: none;" onsubmit="event.preventDefault(); executerInscription();">
+                    <div class="field"><span class="ico">🧑‍⚕️</span><input type="text" id="regName" placeholder="Nom complet" autocomplete="name" aria-label="Nom complet"></div>
+                    <div class="field"><span class="ico">✉️</span><input type="email" id="regEmail" placeholder="E-mail" autocomplete="email" aria-label="E-mail"></div>
+                    <div class="field">
+                        <span class="ico">🔒</span><input type="password" id="regPass" placeholder="Mot de passe" autocomplete="new-password" aria-label="Mot de passe">
+                        <button type="button" class="eye" onclick="toggleMotDePasse('regPass', this)" aria-label="Afficher le mot de passe">👁️</button>
+                    </div>
+                    <div class="auth-hint">6 caractères minimum</div>
+                    <button type="submit" id="btnRegister" class="calc-btn auth-submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">Créer mon compte</button>
+                </form>
+
+                <div id="authMsg" class="auth-msg" role="status"></div>
+            </div>
+
+            <div id="authUser" style="display: none;">
+                <div class="user-row">
+                    <div class="avatar" id="userAvatar">?</div>
+                    <div style="min-width: 0;">
+                        <div class="user-name" id="userName"></div>
+                        <div class="user-mail" id="userMail"></div>
+                    </div>
+                </div>
+                <button type="button" id="btnLogout" class="logout-btn" onclick="deconnecterUtilisateur()">Se déconnecter</button>
+            </div>
         </div>
 
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
@@ -493,39 +564,6 @@
         <div style="margin-bottom: 20px;">
             <span id="txtCalTitle" style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 8px; color: var(--primary);">Calendrier & Date</span>
             <input type="date" id="appCalendar" style="margin: 0; cursor: pointer;">
-        </div>
-    </div>
-
-    <div id="authModal">
-        <div style="background: var(--primary-gradient); color: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.85rem;">
-            <span id="authModalTitle">Connexion</span>
-            <button onclick="toggleAuthModal()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer;">✕</button>
-        </div>
-        <div style="padding: 14px; font-size: 0.82rem; display: flex; flex-direction: column; gap: 8px;">
-            <div id="formLoginView">
-                <label for="loginEmail" style="margin-top: 4px; font-size: 0.78rem;">E-mail</label>
-                <input type="email" id="loginEmail" placeholder="nom@exemple.com">
-
-                <label for="loginPass" style="margin-top: 6px; font-size: 0.78rem;">Mot de Passe</label>
-                <input type="password" id="loginPass" placeholder="••••••••">
-
-                <button onclick="executerConnexion()" class="calc-btn" style="width: 100%; margin-top: 12px; padding: 8px; font-size: 0.82rem;">Se Connecter</button>
-                <p style="text-align: center; margin: 10px 0 0 0; font-size: 0.75rem;">Pas de compte ? <a href="#" onclick="basculerFormulaireAuth('register')" style="color: var(--primary); font-weight: 600;">Créer un compte</a></p>
-            </div>
-
-            <div id="formRegisterView" style="display: none;">
-                <label for="regName" style="margin-top: 4px; font-size: 0.78rem;">Nom complet</label>
-                <input type="text" id="regName" placeholder="Ex: Dr. Issaka">
-
-                <label for="regEmail" style="margin-top: 6px; font-size: 0.78rem;">E-mail</label>
-                <input type="email" id="regEmail" placeholder="nom@exemple.com">
-
-                <label for="regPass" style="margin-top: 6px; font-size: 0.78rem;">Mot de Passe</label>
-                <input type="password" id="regPass" placeholder="••••••••">
-
-                <button onclick="executerInscription()" class="calc-btn" style="width: 100%; margin-top: 12px; padding: 8px; font-size: 0.82rem; background: #10b981;">Créer mon Compte</button>
-                <p style="text-align: center; margin: 10px 0 0 0; font-size: 0.75rem;">Déjà inscrit ? <a href="#" onclick="basculerFormulaireAuth('login')" style="color: var(--primary); font-weight: 600;">Connexion</a></p>
-            </div>
         </div>
     </div>
 
@@ -838,27 +876,26 @@
             return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function toggleAuthModal() {
-            const modal = document.getElementById('authModal');
-            if (utilisateurConnecte) {
-                if (confirm(`Voulez-vous vous déconnecter de votre compte (${utilisateurConnecte.nom}) ?`)) {
-                    deconnecterUtilisateur();
-                }
-            } else {
-                modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-            }
+        function toggleMotDePasse(id, btn) {
+            const champ = document.getElementById(id);
+            const visible = champ.type === 'text';
+            champ.type = visible ? 'password' : 'text';
+            btn.textContent = visible ? '👁️' : '🙈';
+        }
+
+        function afficherMsgAuth(texte, type) {
+            const m = document.getElementById('authMsg');
+            m.textContent = texte || '';
+            m.className = 'auth-msg ' + (type || '');
         }
 
         function basculerFormulaireAuth(vue) {
-            if (vue === 'register') {
-                document.getElementById('formLoginView').style.display = 'none';
-                document.getElementById('formRegisterView').style.display = 'block';
-                document.getElementById('authModalTitle').innerText = "Créer un Compte";
-            } else {
-                document.getElementById('formRegisterView').style.display = 'none';
-                document.getElementById('formLoginView').style.display = 'block';
-                document.getElementById('authModalTitle').innerText = "Connexion";
-            }
+            const inscription = vue === 'register';
+            document.getElementById('formLoginView').style.display = inscription ? 'none' : 'block';
+            document.getElementById('formRegisterView').style.display = inscription ? 'block' : 'none';
+            document.getElementById('tabLogin').classList.toggle('active', !inscription);
+            document.getElementById('tabRegister').classList.toggle('active', inscription);
+            afficherMsgAuth('');
         }
 
         async function executerInscription() {
@@ -866,64 +903,76 @@
             const email = document.getElementById('regEmail').value.trim();
             const pass = document.getElementById('regPass').value.trim();
 
-            if (!nom || !email || !pass) {
-                alert("Veuillez remplir tous les champs.");
-                return;
+            if (!nom || !email || !pass) return afficherMsgAuth("Veuillez remplir tous les champs.", 'err');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return afficherMsgAuth("Adresse e-mail invalide.", 'err');
+            if (pass.length < 6) return afficherMsgAuth("Mot de passe : 6 caractères minimum.", 'err');
+
+            const btn = document.getElementById('btnRegister');
+            btn.disabled = true;
+            try {
+                const profil = { nom: nom, email: email };
+                const sel = nouveauSel();
+                localStorage.setItem('userAccount', JSON.stringify({ profil: profil, sel: sel, hash: await hacher(pass, sel) }));
+                connecterUtilisateur(profil);
+                ['regName', 'regEmail', 'regPass'].forEach(id => { document.getElementById(id).value = ''; });
+            } catch (e) {
+                afficherMsgAuth("Impossible de créer le compte sur cet appareil.", 'err');
+            } finally {
+                btn.disabled = false;
             }
-
-            const profil = { nom: nom, email: email };
-            const sel = nouveauSel();
-            localStorage.setItem('userAccount', JSON.stringify({ profil: profil, sel: sel, hash: await hacher(pass, sel) }));
-            connecterUtilisateur(profil);
-
-            document.getElementById('authModal').style.display = 'none';
-            alert(`Compte créé avec succès ! Bienvenue ${nom}.`);
         }
 
         async function executerConnexion() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
-            const data = JSON.parse(localStorage.getItem('userAccount') || 'null');
+            if (!email || !pass) return afficherMsgAuth("Renseignez votre e-mail et votre mot de passe.", 'err');
 
-            if (!email || !pass) {
-                alert("Veuillez renseigner votre e-mail et mot de passe.");
-                return;
-            }
-
-            let ok = false;
-            if (data && data.profil && data.profil.email === email) {
-                if (data.hash) {
-                    ok = (await hacher(pass, data.sel)) === data.hash;
-                } else if (data.pass !== undefined && data.pass === pass) {
-                    // Ancien compte en clair : migration vers un mot de passe haché
-                    const sel = nouveauSel();
-                    localStorage.setItem('userAccount', JSON.stringify({ profil: data.profil, sel: sel, hash: await hacher(pass, sel) }));
-                    ok = true;
+            const btn = document.getElementById('btnLogin');
+            btn.disabled = true;
+            try {
+                const data = JSON.parse(localStorage.getItem('userAccount') || 'null');
+                let ok = false;
+                if (data && data.profil && data.profil.email === email) {
+                    if (data.hash) {
+                        ok = (await hacher(pass, data.sel)) === data.hash;
+                    } else if (data.pass !== undefined && data.pass === pass) {
+                        // Ancien compte en clair : migration vers un mot de passe haché
+                        const sel = nouveauSel();
+                        localStorage.setItem('userAccount', JSON.stringify({ profil: data.profil, sel: sel, hash: await hacher(pass, sel) }));
+                        ok = true;
+                    }
                 }
-            }
-
-            if (ok) {
-                connecterUtilisateur(data.profil);
-                document.getElementById('authModal').style.display = 'none';
-            } else {
-                alert("Identifiants incorrects. Veuillez réessayer.");
+                if (ok) {
+                    connecterUtilisateur(data.profil);
+                    document.getElementById('loginEmail').value = '';
+                    document.getElementById('loginPass').value = '';
+                } else {
+                    afficherMsgAuth("E-mail ou mot de passe incorrect.", 'err');
+                }
+            } catch (e) {
+                afficherMsgAuth("Connexion impossible. Réessayez.", 'err');
+            } finally {
+                btn.disabled = false;
             }
         }
 
         function connecterUtilisateur(profil) {
             utilisateurConnecte = profil;
             localStorage.setItem('activeSession', JSON.stringify(profil));
-            document.getElementById('userAuthBtn').innerText = `👤 ${profil.nom}`;
-            document.getElementById('profileStatus').innerText = `Connecté : ${profil.nom}`;
-            document.getElementById('profileSubText').innerText = `E-mail: ${profil.email}`;
+            document.getElementById('authGuest').style.display = 'none';
+            document.getElementById('authUser').style.display = 'block';
+            document.getElementById('userName').textContent = profil.nom;
+            document.getElementById('userMail').textContent = profil.email;
+            document.getElementById('userAvatar').textContent = (profil.nom || '?').trim().charAt(0).toUpperCase();
+            afficherMsgAuth('');
         }
 
         function deconnecterUtilisateur() {
             utilisateurConnecte = null;
             localStorage.removeItem('activeSession');
-            document.getElementById('userAuthBtn').innerText = `👤 Connexion`;
-            document.getElementById('profileStatus').innerText = `Non connecté`;
-            document.getElementById('profileSubText').innerText = `Connectez-vous pour enregistrer votre profil.`;
+            document.getElementById('authUser').style.display = 'none';
+            document.getElementById('authGuest').style.display = 'block';
+            basculerFormulaireAuth('login');
         }
 
         /* ---------- TRADUCTIONS ---------- */
@@ -944,6 +993,7 @@
                 quizTitle: "Quiz Médical & Flashcards", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
                 chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
                 addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
+                tabLogin: "Connexion", tabRegister: "Inscription", btnLogin: "Se connecter", btnRegister: "Créer mon compte", btnLogout: "Se déconnecter",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
@@ -962,6 +1012,7 @@
                 quizTitle: "Medical Quiz & Flashcards", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
                 chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
                 addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
+                tabLogin: "Log in", tabRegister: "Sign up", btnLogin: "Log in", btnRegister: "Create account", btnLogout: "Log out",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
