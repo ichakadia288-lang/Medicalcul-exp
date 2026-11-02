@@ -646,6 +646,9 @@
             <span id="txtCalTitle" style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 8px; color: var(--primary);">Calendrier & Date</span>
             <input type="date" id="appCalendar" style="margin: 0; cursor: pointer;">
         </div>
+        <div>
+            <button type="button" id="btnApropos" class="photo-btn" style="width: 100%; padding: 12px;" onclick="ouvrirApropos()">ℹ️ À propos et sources</button>
+        </div>
     </div>
 
     <!-- ACCUEIL -->
@@ -870,6 +873,11 @@
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="quizTitle">Quiz Médical & Flashcards</h3>
             <p style="opacity: 0.7; font-size: 0.82rem;" id="quizDesc">Testez vos connaissances et révisez vos fiches cliniques</p>
 
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 12px;">
+                <select id="quizCat" onchange="changerCategorieQuiz()" style="flex: 1; margin: 0;" aria-label="Catégorie"></select>
+                <span id="quizSerie" style="font-size: 0.8rem; font-weight: 700; white-space: nowrap;"></span>
+            </div>
+
             <div id="quizCard" style="margin-top: 16px;">
                 <p id="quizQuestion" style="font-weight: 500; min-height: 50px; font-size: 1rem;"></p>
                 <div id="quizButtons" style="display: flex; gap: 10px; margin-top: 15px;">
@@ -877,6 +885,9 @@
                     <button onclick="repondreQuiz(false)" class="calc-btn" style="background: #ef4444;" id="btnFalse">FAUX</button>
                 </div>
                 <div id="quizFeedback" style="margin-top: 14px; font-weight: 600;"></div>
+                <div id="quizExplication" style="display: none; margin-top: 8px; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; font-size: 0.85rem; line-height: 1.45;"></div>
+                <button type="button" id="btnQuizNext" class="calc-btn" style="display: none; width: 100%; margin-top: 12px;" onclick="questionSuivante()">Question suivante</button>
+                <button type="button" id="btnQuizNew" class="calc-btn" style="display: none; width: 100%; margin-top: 12px;" onclick="chargerQuestionQuiz(true)">Nouvelle série</button>
                 <div id="quizScore" style="margin-top: 8px; opacity: 0.8; font-size: 0.85rem;"></div>
             </div>
         </div>
@@ -992,6 +1003,40 @@
         </div>
     </div>
 
+    <!-- À PROPOS & SOURCES -->
+    <div id="aproposView" class="section-view">
+        <div class="container">
+            <h3 id="aproposTitle" style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);">À propos et sources</h3>
+
+            <div style="padding: 12px 14px; border-radius: 12px; border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.1); font-size: 0.85rem; line-height: 1.5;">
+                <strong>⚠️ Avertissement médical</strong><br>
+                MediCalcul Express est une aide au calcul et à la révision. Il ne remplace ni le jugement d'un professionnel de santé, ni les protocoles locaux, ni la notice ou le RCP des médicaments. Vérifiez toujours les résultats avant toute décision clinique. En cas d'urgence vitale, appelez immédiatement les secours.
+            </div>
+
+            <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Assistant IA et confidentialité</h4>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
+                <li>L'assistant peut se tromper : ses réponses sont indicatives et doivent être vérifiées.</li>
+                <li>Vos questions et les fichiers joints sont envoyés à un service d'intelligence artificielle externe. N'envoyez jamais d'information permettant d'identifier un patient (nom, date de naissance, numéro de dossier).</li>
+                <li>Votre compte, votre photo, vos favoris et votre historique restent enregistrés uniquement sur cet appareil.</li>
+            </ul>
+
+            <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Sources des formules</h4>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
+                <li><strong>IMC</strong> : poids (kg) / taille² (m²), classes de l'Organisation mondiale de la santé (adultes).</li>
+                <li><strong>Clairance de la créatinine</strong> : formule de Cockcroft et Gault (Nephron, 1976 ; 16:31-41), avec la créatinine en µmol/L et un coefficient de 0,85 chez la femme.</li>
+                <li><strong>Déficit en eau</strong> : déficit = 0,6 × poids × (natrémie / 140 − 1), applicable en hypernatrémie. Référence : Adrogué HJ, Madias NE, N Engl J Med 2000 ; 342:1493-1499.</li>
+                <li><strong>Score de Glasgow</strong> : Teasdale G, Jennett B, Lancet 1974 ; 2:81-84.</li>
+                <li><strong>Surface corporelle</strong> : formule de Mosteller, N Engl J Med 1987 ; 317:1098.</li>
+                <li><strong>Débit de perfusion</strong> : débit (mL/h) = volume / durée ; gouttes par minute = volume × gouttes par mL / durée en minutes.</li>
+                <li><strong>Posologie pédiatrique</strong> : dose totale = poids × dose en mg/kg. Respectez la dose maximale et le RCP du médicament.</li>
+                <li><strong>Fréquence cardiaque</strong> : valeurs usuelles de l'adulte au repos, 60 à 100 battements par minute.</li>
+                <li><strong>Glycémie</strong> : repères usuels à jeun de 0,70 à 1,10 g/L. L'application n'indique aucune dose d'insuline.</li>
+            </ul>
+
+            <p style="font-size: 0.78rem; opacity: 0.7; margin: 18px 0 0;">Les formules sont fournies à titre indicatif. Version 1.0 · novembre 2026.</p>
+        </div>
+    </div>
+
     <!-- BOUTON FLOTTANT IA -->
     <div id="floatingAiBtn" class="floating-ai-wrapper">
         <div class="floating-ai-btn" onclick="toggleAiModal()">
@@ -1037,6 +1082,7 @@
 
     <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
+      <p style="margin: 6px 0 0;"><a href="#" id="footerApropos" onclick="ouvrirApropos(); return false;" style="color: var(--primary); font-weight: 600;">À propos, sources et avertissement</a></p>
     </footer>
 
     <script>
@@ -1244,7 +1290,7 @@
                 searchPh: "Rechercher un outil…", favTitle: "⭐ Favoris", histTitle: "🕘 Derniers calculs", btnClearHist: "Effacer", catOutils: "Outils Cliniques", perfTitle: "Débit de perfusion", perfVol: "Volume à perfuser (mL)", perfH: "Durée : heures", perfMin: "minutes", perfGtt: "Perfuseur (gouttes/mL)", btnPerf: "Calculer le débit",
                 gcsTitle: "Score de Glasgow (GCS)", gcsY: "Ouverture des yeux", gcsV: "Réponse verbale", gcsM: "Réponse motrice",
                 bsaTitle: "Surface corporelle (Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la surface",
-                footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
+                footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés", btnApropos: "ℹ️ À propos et sources", footerApropos: "À propos, sources et avertissement", aproposTitle: "À propos et sources", btnQuizNext: "Question suivante", btnQuizNew: "Nouvelle série"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
@@ -1266,7 +1312,7 @@
                 searchPh: "Search a tool…", favTitle: "⭐ Favorites", histTitle: "🕘 Recent calculations", btnClearHist: "Clear", catOutils: "Clinical Tools", perfTitle: "Infusion rate", perfVol: "Volume to infuse (mL)", perfH: "Duration: hours", perfMin: "minutes", perfGtt: "Drip set (drops/mL)", btnPerf: "Calculate rate",
                 gcsTitle: "Glasgow Coma Scale (GCS)", gcsY: "Eye opening", gcsV: "Verbal response", gcsM: "Motor response",
                 bsaTitle: "Body Surface Area (Mosteller)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
-                footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
+                footerCopyright: "© 2026 MediCalcul Express — All rights reserved", btnApropos: "ℹ️ About and sources", footerApropos: "About, sources and disclaimer", aproposTitle: "About and sources", btnQuizNext: "Next question", btnQuizNew: "New series"
             }
         };
 
@@ -1282,6 +1328,7 @@
             const rech = document.getElementById('searchTool');
             if (rech && t.searchPh) rech.placeholder = t.searchPh;
             if (typeof majAccueil === 'function') majAccueil();
+            if (typeof remplirCategoriesQuiz === 'function') { remplirCategoriesQuiz(); afficherSerie(); }
         }
 
         /* ---------- RÉACTIONS CHIMIQUES ---------- */
@@ -1509,95 +1556,222 @@
         }
 
         /* ---------- QUIZ ---------- */
+        const CATEGORIES_QUIZ = {
+            toutes: { fr: "Toutes les catégories", en: "All categories" },
+            cardio: { fr: "❤️ Cardiologie", en: "❤️ Cardiology" },
+            rein: { fr: "💧 Rein et eau", en: "💧 Kidney & water" },
+            pharma: { fr: "💊 Pharmacologie", en: "💊 Pharmacology" },
+            urgences: { fr: "🚑 Urgences", en: "🚑 Emergency" },
+            metabo: { fr: "🧬 Métabolisme", en: "🧬 Metabolism" },
+            anat: { fr: "🫁 Anatomie et physiologie", en: "🫁 Anatomy & physiology" },
+            sang: { fr: "🩸 Sang et immunité", en: "🩸 Blood & immunity" }
+        };
+
+        // q = affirmation, r = vrai/faux, c = catégorie, e = explication affichée après la réponse
         const banqueQuestions = [
-            { q: "Le corps humain compte normalement 2 reins.", r: true },
-            { q: "Il y a 206 os chez l'adulte humain standard.", r: true },
-            { q: "Le cœur possède 3 ventricules.", r: false },
-            { q: "Le corps humain contient 4 poumons.", r: false },
-            { q: "L'organisme humain compte 32 dents définitives normales.", r: true },
-            { q: "L'artère aorte transporte du sang pauvre en oxygène.", r: false },
-            { q: "Le foie est la plus grande glande du corps humain.", r: true },
-            { q: "Le sang veineux est transporté par les veines vers le cœur.", r: true },
-            { q: "L'insuline est produite par le pancréas.", r: true },
-            { q: "L'estomac sécrète de l'acide chlorhydrique pour la digestion.", r: true },
-            { q: "Le système nerveux central comprend le cerveau et la moelle épinière.", r: true },
-            { q: "Les globules rouges contiennent de l'hémoglobine.", r: true },
-            { q: "La durée moyenne d'un cycle cardiaque complet est d'environ 0,8 seconde.", r: true },
-            { q: "Le taux normal de glycémie à jeun chez l'adulte est généralement entre 0,70 et 1,10 g/L.", r: true },
-            { q: "Le fémur est l'os le plus court du corps humain.", r: false },
-            { q: "La rate joue un rôle majeur dans le système immunitaire et le filtrage du sang.", r: true },
-            { q: "Le plasma représente environ 55% du volume total du sang.", r: true },
-            { q: "Les reins filtrent le sang pour produire l'urine.", r: true },
-            { q: "Le cervelet est principalement responsable de l'équilibre et de la coordination motrice.", r: true },
-            { q: "La valve tricuspide est située entre l'oreillette gauche et le ventricule gauche.", r: false }
+            { q: "Le corps humain compte normalement 2 reins.", r: true, c: "rein", e: "Deux reins, situés à l'arrière de l'abdomen. On peut vivre avec un seul rein fonctionnel." },
+            { q: "Il y a 206 os chez l'adulte humain standard.", r: true, c: "anat", e: "L'adulte a 206 os. Le nouveau-né en a environ 270, dont certains se soudent en grandissant." },
+            { q: "Le cœur possède 3 ventricules.", r: false, c: "cardio", e: "Le cœur a 2 ventricules (droit et gauche) et 2 oreillettes." },
+            { q: "Le corps humain contient 4 poumons.", r: false, c: "anat", e: "Il y a 2 poumons : le droit a 3 lobes, le gauche en a 2." },
+            { q: "L'organisme humain compte 32 dents définitives normales.", r: true, c: "anat", e: "32 dents, dont les 4 dents de sagesse. Il y en a 28 sans elles." },
+            { q: "L'artère aorte transporte du sang pauvre en oxygène.", r: false, c: "cardio", e: "L'aorte transporte du sang riche en oxygène, issu du ventricule gauche. Ce sont les artères pulmonaires qui portent du sang pauvre en oxygène." },
+            { q: "Le foie est la plus grande glande du corps humain.", r: true, c: "anat", e: "Le foie pèse environ 1,5 kg. C'est la plus grande glande, et le plus gros organe interne." },
+            { q: "Le sang veineux est transporté par les veines vers le cœur.", r: true, c: "cardio", e: "Les veines ramènent le sang vers le cœur. Exception : les veines pulmonaires transportent du sang oxygéné." },
+            { q: "L'insuline est produite par le pancréas.", r: true, c: "metabo", e: "Elle est sécrétée par les cellules bêta des îlots de Langerhans et abaisse la glycémie." },
+            { q: "L'estomac sécrète de l'acide chlorhydrique pour la digestion.", r: true, c: "anat", e: "Les cellules pariétales sécrètent l'acide chlorhydrique. Le pH gastrique est d'environ 1 à 2." },
+            { q: "Le système nerveux central comprend le cerveau et la moelle épinière.", r: true, c: "anat", e: "Le système nerveux central est formé de l'encéphale et de la moelle épinière. Le reste constitue le système nerveux périphérique." },
+            { q: "Les globules rouges contiennent de l'hémoglobine.", r: true, c: "sang", e: "L'hémoglobine fixe l'oxygène dans les poumons et le libère dans les tissus." },
+            { q: "La durée moyenne d'un cycle cardiaque complet est d'environ 0,8 seconde.", r: true, c: "cardio", e: "À 75 battements par minute, un cycle dure 60 / 75 = 0,8 seconde." },
+            { q: "Le taux normal de glycémie à jeun chez l'adulte est généralement entre 0,70 et 1,10 g/L.", r: true, c: "metabo", e: "Soit environ 3,9 à 6,1 mmol/L. Un diabète est évoqué à partir de 1,26 g/L à jeun, confirmé sur deux dosages." },
+            { q: "Le fémur est l'os le plus court du corps humain.", r: false, c: "anat", e: "Le fémur est l'os le plus long et le plus solide. Le plus petit est l'étrier, dans l'oreille moyenne." },
+            { q: "La rate joue un rôle majeur dans le système immunitaire et le filtrage du sang.", r: true, c: "sang", e: "Elle filtre le sang, élimine les globules rouges vieillis et participe à la défense immunitaire." },
+            { q: "Le plasma représente environ 55% du volume total du sang.", r: true, c: "sang", e: "Le plasma représente environ 55 % du sang, les cellules (éléments figurés) environ 45 %." },
+            { q: "Les reins filtrent le sang pour produire l'urine.", r: true, c: "rein", e: "Les néphrons filtrent le sang. Un adulte produit environ 1,5 litre d'urine par jour." },
+            { q: "Le cervelet est principalement responsable de l'équilibre et de la coordination motrice.", r: true, c: "anat", e: "Le cervelet coordonne les mouvements et participe à l'équilibre." },
+            { q: "La valve tricuspide est située entre l'oreillette gauche et le ventricule gauche.", r: false, c: "cardio", e: "La tricuspide sépare l'oreillette droite et le ventricule droit. À gauche, c'est la valve mitrale." },
+
+            // Cardiologie
+            { q: "La fréquence cardiaque normale de l'adulte au repos est comprise entre 60 et 100 battements par minute.", r: true, c: "cardio", e: "En dessous de 60 : bradycardie. Au-dessus de 100 : tachycardie." },
+            { q: "Le nœud sinusal est le pacemaker naturel du cœur.", r: true, c: "cardio", e: "Situé dans l'oreillette droite, il donne le rythme du cœur (rythme sinusal)." },
+            { q: "Une pression artérielle de 140/90 mmHg ou plus, retrouvée de façon répétée, évoque une hypertension artérielle.", r: true, c: "cardio", e: "Le seuil de 140/90 mmHg au cabinet doit être retrouvé sur plusieurs mesures." },
+            { q: "Le ventricule gauche envoie le sang vers les poumons.", r: false, c: "cardio", e: "Le ventricule droit envoie le sang aux poumons par l'artère pulmonaire. Le gauche l'envoie dans l'aorte, vers tout le corps." },
+            { q: "Sur un électrocardiogramme, l'onde P correspond à la dépolarisation des oreillettes.", r: true, c: "cardio", e: "Le complexe QRS correspond à la dépolarisation des ventricules." },
+            { q: "L'onde T de l'électrocardiogramme correspond à la dépolarisation des oreillettes.", r: false, c: "cardio", e: "L'onde T traduit la repolarisation des ventricules. L'onde P correspond aux oreillettes." },
+            { q: "Le débit cardiaque est égal à la fréquence cardiaque multipliée par le volume d'éjection systolique.", r: true, c: "cardio", e: "Environ 5 L/min au repos chez l'adulte (par exemple 70 battements × 70 mL)." },
+            { q: "La fibrillation auriculaire expose à un risque accru d'accident vasculaire cérébral.", r: true, c: "cardio", e: "Des caillots peuvent se former dans l'oreillette puis migrer vers le cerveau." },
+
+            // Rein et eau
+            { q: "La clairance de la créatinine permet d'estimer le débit de filtration glomérulaire.", r: true, c: "rein", e: "La formule de Cockcroft-Gault utilise l'âge, le poids, le sexe et la créatininémie." },
+            { q: "Une hypernatrémie correspond à une natrémie supérieure à 145 mmol/L.", r: true, c: "rein", e: "La natrémie normale se situe entre 135 et 145 mmol/L." },
+            { q: "Une natrémie de 155 mmol/L correspond à une hyponatrémie.", r: false, c: "rein", e: "155 mmol/L est supérieur à 145 : c'est une hypernatrémie. L'hyponatrémie commence en dessous de 135." },
+            { q: "La kaliémie normale se situe entre 3,5 et 5,0 mmol/L.", r: true, c: "rein", e: "En dehors de ces valeurs, on parle d'hypokaliémie ou d'hyperkaliémie." },
+            { q: "Une hyperkaliémie sévère peut provoquer des troubles du rythme cardiaque.", r: true, c: "rein", e: "Le potassium agit sur l'excitabilité du cœur : une hyperkaliémie sévère est une urgence." },
+            { q: "L'eau représente environ 60 % du poids corporel chez l'homme adulte.", r: true, c: "rein", e: "Environ 60 % chez l'homme, un peu moins chez la femme et chez le sujet âgé. C'est le coefficient utilisé pour le déficit en eau." },
+            { q: "Le néphron est l'unité fonctionnelle du rein.", r: true, c: "rein", e: "Chaque rein contient environ un million de néphrons." },
+            { q: "L'hormone antidiurétique (ADH) augmente l'élimination d'eau par les reins.", r: false, c: "rein", e: "L'ADH augmente la réabsorption d'eau : les urines deviennent plus concentrées et moins abondantes." },
+            { q: "Les reins produisent l'insuline.", r: false, c: "rein", e: "L'insuline est produite par le pancréas. Les reins produisent notamment l'érythropoïétine et la rénine." },
+
+            // Pharmacologie
+            { q: "La demi-vie d'un médicament est le temps nécessaire pour que sa concentration dans le sang diminue de moitié.", r: true, c: "pharma", e: "Après environ 5 demi-vies, un médicament est presque entièrement éliminé." },
+            { q: "Chez un patient insuffisant rénal, la posologie des médicaments éliminés par le rein peut devoir être adaptée.", r: true, c: "pharma", e: "C'est la raison pour laquelle on estime la clairance de la créatinine avant de prescrire certains médicaments." },
+            { q: "Le paracétamol est un anti-inflammatoire non stéroïdien (AINS).", r: false, c: "pharma", e: "Le paracétamol est un antalgique et un antipyrétique, sans effet anti-inflammatoire significatif. L'ibuprofène et le diclofénac sont des AINS." },
+            { q: "Une surdose de paracétamol peut provoquer une atteinte grave du foie.", r: true, c: "pharma", e: "L'antidote est la N-acétylcystéine, d'autant plus efficace qu'elle est donnée tôt." },
+            { q: "La biodisponibilité d'un médicament administré par voie intraveineuse est de 100 %.", r: true, c: "pharma", e: "Le médicament passe directement dans le sang, sans phase d'absorption." },
+            { q: "Les antibiotiques sont efficaces contre les virus.", r: false, c: "pharma", e: "Les antibiotiques agissent sur les bactéries, pas sur les virus (grippe, rhume...)." },
+            { q: "La dose pédiatrique d'un médicament se calcule toujours en prenant une fraction de la dose adulte.", r: false, c: "pharma", e: "Elle se calcule en mg/kg selon le médicament, sans dépasser la dose maximale. Il faut suivre le RCP." },
+            { q: "Un médicament à marge thérapeutique étroite ne nécessite jamais de surveillance.", r: false, c: "pharma", e: "Pour la digoxine ou le lithium, l'écart entre dose efficace et dose toxique est faible : une surveillance est nécessaire." },
+
+            // Urgences
+            { q: "Le score de Glasgow varie de 3 à 15.", r: true, c: "urgences", e: "Yeux (1 à 4) + verbal (1 à 5) + moteur (1 à 6). 15 correspond à une conscience normale." },
+            { q: "Un score de Glasgow de 8 ou moins traduit une altération sévère de la conscience.", r: true, c: "urgences", e: "Au score de 8 ou moins, les voies aériennes sont menacées : une prise en charge urgente est nécessaire." },
+            { q: "Un score de Glasgow de 15 traduit un coma profond.", r: false, c: "urgences", e: "15 est le score maximal : conscience normale. Un coma profond est proche de 3." },
+            { q: "Pour une réanimation cardio-pulmonaire de l'adulte, les compressions thoraciques se font à environ 100 à 120 par minute.", r: true, c: "urgences", e: "Les compressions doivent être profondes, rapides, avec un relâchement complet du thorax." },
+            { q: "Le rapport compressions / insufflations en réanimation de base de l'adulte est de 30 pour 2.", r: true, c: "urgences", e: "Trente compressions thoraciques, puis deux insufflations." },
+            { q: "Une saturation en oxygène (SpO₂) normale est généralement supérieure ou égale à 95 %.", r: true, c: "urgences", e: "En dessous de 90 %, il y a une hypoxémie importante. Certains patients (BPCO) ont des cibles différentes." },
+            { q: "Une température corporelle supérieure ou égale à 38 °C définit habituellement la fièvre.", r: true, c: "urgences", e: "La température normale est d'environ 36,5 à 37,5 °C." },
+            { q: "Une hypoglycémie se définit habituellement par une glycémie inférieure à 0,70 g/L.", r: true, c: "urgences", e: "Soit environ 3,9 mmol/L. Les symptômes (sueurs, tremblements, confusion) imposent un resucrage." },
+            { q: "Devant une personne inconsciente qui respire, on la place en position latérale de sécurité.", r: true, c: "urgences", e: "Cette position dégage les voies aériennes et évite l'inhalation de vomissements. Il faut ensuite alerter les secours." },
+
+            // Métabolisme
+            { q: "Le diabète de type 1 est caractérisé par un déficit de sécrétion d'insuline.", r: true, c: "metabo", e: "Il est dû à la destruction des cellules bêta du pancréas. Un traitement par insuline est nécessaire." },
+            { q: "Le glucagon augmente la glycémie.", r: true, c: "metabo", e: "Il stimule la libération du glucose par le foie. C'est l'hormone opposée à l'insuline." },
+            { q: "L'insuline est une hormone qui augmente la glycémie.", r: false, c: "metabo", e: "L'insuline diminue la glycémie en favorisant l'entrée du glucose dans les cellules." },
+            { q: "L'hémoglobine glyquée (HbA1c) reflète l'équilibre de la glycémie sur les 2 à 3 derniers mois.", r: true, c: "metabo", e: "Elle est utilisée pour surveiller le diabète au long cours." },
+            { q: "La glycolyse se déroule dans le cytoplasme de la cellule.", r: true, c: "metabo", e: "Elle transforme le glucose en pyruvate et produit un peu d'ATP, avec ou sans oxygène." },
+            { q: "Un IMC de 27 kg/m² correspond à une corpulence normale chez l'adulte.", r: false, c: "metabo", e: "La corpulence normale va de 18,5 à 24,9. Entre 25 et 29,9, on parle de surpoids." },
+
+            // Anatomie et physiologie
+            { q: "Les échanges gazeux entre l'air et le sang ont lieu au niveau des alvéoles pulmonaires.", r: true, c: "anat", e: "L'oxygène passe dans le sang et le dioxyde de carbone est éliminé." },
+            { q: "La glande thyroïde est située à la face antérieure du cou.", r: true, c: "anat", e: "Elle sécrète les hormones thyroïdiennes, qui régulent le métabolisme." },
+            { q: "Le pH sanguin normal est compris entre 7,35 et 7,45.", r: true, c: "anat", e: "En dessous de 7,35 : acidose. Au-dessus de 7,45 : alcalose." },
+            { q: "Le nerf vague (X) ralentit la fréquence cardiaque.", r: true, c: "anat", e: "Il appartient au système parasympathique, qui freine le cœur." },
+            { q: "La bile est produite par la vésicule biliaire.", r: false, c: "anat", e: "La bile est produite par le foie. La vésicule biliaire la stocke et la concentre." },
+            { q: "La rate est située dans la partie supérieure droite de l'abdomen.", r: false, c: "anat", e: "La rate est en haut à gauche, sous les côtes. C'est le foie qui est à droite." },
+
+            // Sang et immunité
+            { q: "Les plaquettes jouent un rôle essentiel dans la coagulation du sang.", r: true, c: "sang", e: "Elles forment un clou plaquettaire qui bouche la brèche d'un vaisseau." },
+            { q: "Le groupe sanguin O négatif est considéré comme donneur universel pour les globules rouges.", r: true, c: "sang", e: "Ses globules rouges n'ont ni antigène A, B, ni Rhésus. Le groupe AB positif est, lui, receveur universel." },
+            { q: "Le groupe sanguin AB positif est le donneur universel de globules rouges.", r: false, c: "sang", e: "Le donneur universel est O négatif. AB positif est le receveur universel." },
+            { q: "Les globules blancs transportent l'oxygène dans le sang.", r: false, c: "sang", e: "L'oxygène est transporté par l'hémoglobine des globules rouges. Les globules blancs défendent l'organisme." },
+            { q: "Une anémie se caractérise par un taux d'hémoglobine abaissé.", r: true, c: "sang", e: "Les seuils dépendent du sexe et de l'âge : environ 13 g/dL chez l'homme adulte et 12 g/dL chez la femme adulte." },
+            { q: "Les anticorps sont produits par les lymphocytes B (plasmocytes).", r: true, c: "sang", e: "Après activation, les lymphocytes B se transforment en plasmocytes, qui sécrètent les anticorps." },
+            { q: "La vaccination stimule le système immunitaire pour créer une mémoire immunitaire.", r: true, c: "sang", e: "Le vaccin présente un antigène sans provoquer la maladie, ce qui prépare l'organisme à une rencontre ultérieure." }
         ];
 
-        let questionsJour = [];
-        let currentQuizIndex = 0;
+        const TAILLE_SERIE = 10;
+        let serieQuiz = [];
+        let idxQuiz = 0;
         let scoreQuiz = 0;
+        let quizRepondu = false;
 
-        function preparerQuestionsDuJour() {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const dernierJourJoue = localStorage.getItem('quizDate');
-            let savedIndices = localStorage.getItem('quizIndices');
-
-            if (dernierJourJoue === todayStr && savedIndices) {
-                const indices = JSON.parse(savedIndices);
-                questionsJour = indices.map(i => banqueQuestions[i]);
-                currentQuizIndex = parseInt(localStorage.getItem('quizIndex') || '0');
-                scoreQuiz = parseInt(localStorage.getItem('quizScore') || '0');
-            } else {
-                let indicesMelanges = [...Array(banqueQuestions.length).keys()].sort(() => 0.5 - Math.random());
-                let nbQuestions = Math.min(15, banqueQuestions.length);
-                let indicesSelectionnes = indicesMelanges.slice(0, nbQuestions);
-
-                questionsJour = indicesSelectionnes.map(i => banqueQuestions[i]);
-                currentQuizIndex = 0;
-                scoreQuiz = 0;
-
-                localStorage.setItem('quizDate', todayStr);
-                localStorage.setItem('quizIndices', JSON.stringify(indicesSelectionnes));
-                localStorage.setItem('quizIndex', '0');
-                localStorage.setItem('quizScore', '0');
-            }
+        function remplirCategoriesQuiz() {
+            const sel = document.getElementById('quizCat');
+            if (!sel) return;
+            const lang = langueActive();
+            const courante = sel.value || 'toutes';
+            sel.textContent = '';
+            Object.keys(CATEGORIES_QUIZ).forEach(k => {
+                const o = document.createElement('option');
+                o.value = k;
+                o.textContent = CATEGORIES_QUIZ[k][lang] || CATEGORIES_QUIZ[k].fr;
+                sel.appendChild(o);
+            });
+            sel.value = courante;
         }
 
-        function chargerQuestionQuiz() {
-            preparerQuestionsDuJour();
-            const btnBox = document.getElementById('quizButtons');
+        function melanger(tab) {
+            const a = [...tab];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
 
-            if (currentQuizIndex >= questionsJour.length) {
-                document.getElementById('quizQuestion').innerText = `Session de révision terminée !\nVotre score : ${scoreQuiz} / ${questionsJour.length}\n\nRevenez demain pour une nouvelle série !`;
+        function nouvelleSerieQuiz() {
+            const cat = document.getElementById('quizCat').value || 'toutes';
+            const pool = banqueQuestions.filter(x => cat === 'toutes' || x.c === cat);
+            serieQuiz = melanger(pool).slice(0, TAILLE_SERIE);
+            idxQuiz = 0;
+            scoreQuiz = 0;
+            quizRepondu = false;
+        }
+
+        function afficherSerie() {
+            const s = document.getElementById('quizSerie');
+            if (!s) return;
+            s.textContent = serieQuiz.length ? `${Math.min(idxQuiz + 1, serieQuiz.length)} / ${serieQuiz.length}` : '';
+        }
+
+        function changerCategorieQuiz() { chargerQuestionQuiz(true); }
+
+        function chargerQuestionQuiz(nouvelle) {
+            if (!document.getElementById('quizCat').options.length) remplirCategoriesQuiz();
+            if (nouvelle === true || !serieQuiz.length) nouvelleSerieQuiz();
+            // Réponse déjà donnée et série en cours : l'affichage est conservé tel quel
+            if (quizRepondu && idxQuiz < serieQuiz.length) return;
+            afficherQuestionQuiz();
+        }
+
+        function afficherQuestionQuiz() {
+            const btnBox = document.getElementById('quizButtons');
+            const feedback = document.getElementById('quizFeedback');
+            const expl = document.getElementById('quizExplication');
+            feedback.textContent = '';
+            expl.style.display = 'none';
+            expl.textContent = '';
+            document.getElementById('btnQuizNext').style.display = 'none';
+            document.getElementById('btnQuizNew').style.display = 'none';
+            document.getElementById('btnTrue').disabled = false;
+            document.getElementById('btnFalse').disabled = false;
+            afficherSerie();
+
+            if (!serieQuiz.length) {
+                document.getElementById('quizQuestion').textContent = "Aucune question dans cette catégorie.";
                 btnBox.style.display = 'none';
-                document.getElementById('quizScore').innerText = "Objectif atteint ✓";
+                document.getElementById('quizScore').textContent = '';
+                return;
+            }
+
+            if (idxQuiz >= serieQuiz.length) {
+                document.getElementById('quizQuestion').textContent = `Série terminée ! Votre score : ${scoreQuiz} / ${serieQuiz.length}`;
+                btnBox.style.display = 'none';
+                document.getElementById('quizScore').textContent = '';
+                document.getElementById('btnQuizNew').style.display = 'block';
                 return;
             }
 
             btnBox.style.display = 'flex';
-            document.getElementById('quizQuestion').innerText = questionsJour[currentQuizIndex].q;
-            document.getElementById('quizFeedback').innerText = '';
-            document.getElementById('quizScore').innerText = `Flashcard ${currentQuizIndex + 1} / ${questionsJour.length}`;
+            document.getElementById('quizQuestion').textContent = serieQuiz[idxQuiz].q;
+            document.getElementById('quizScore').textContent = `Score : ${scoreQuiz}`;
         }
 
         function repondreQuiz(userAns) {
-            if (currentQuizIndex >= questionsJour.length) return;
-
-            const correct = questionsJour[currentQuizIndex].r;
+            if (quizRepondu || idxQuiz >= serieQuiz.length) return;
+            quizRepondu = true;
+            const item = serieQuiz[idxQuiz];
             const feedback = document.getElementById('quizFeedback');
-            if (userAns === correct) {
-                feedback.innerText = "Bonne réponse ! ✓";
+            if (userAns === item.r) {
+                feedback.textContent = "Bonne réponse ! ✓";
                 feedback.style.color = "#10b981";
                 scoreQuiz++;
             } else {
-                feedback.innerText = "Mauvaise réponse. ✗";
+                feedback.textContent = item.r ? "Mauvaise réponse. L'affirmation est VRAIE. ✗" : "Mauvaise réponse. L'affirmation est FAUSSE. ✗";
                 feedback.style.color = "#ef4444";
             }
+            const expl = document.getElementById('quizExplication');
+            expl.textContent = item.e || '';
+            expl.style.display = item.e ? 'block' : 'none';
+            document.getElementById('btnTrue').disabled = true;
+            document.getElementById('btnFalse').disabled = true;
+            document.getElementById('quizScore').textContent = `Score : ${scoreQuiz}`;
+            document.getElementById('btnQuizNext').style.display = 'block';
+        }
 
-            currentQuizIndex++;
-            localStorage.setItem('quizIndex', currentQuizIndex);
-            localStorage.setItem('quizScore', scoreQuiz);
-
-            setTimeout(() => { chargerQuestionQuiz(); }, 1200);
+        function questionSuivante() {
+            idxQuiz++;
+            quizRepondu = false;
+            afficherQuestionQuiz();
         }
 
         /* ---------- NAVIGATION & MENU ---------- */
@@ -1615,6 +1789,11 @@
                 chargerSelectReactions();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function ouvrirApropos() {
+            document.getElementById('sideMenu').style.right = '-300px';
+            ouvrirSection('aproposView');
         }
 
         function retourAccueil() {
