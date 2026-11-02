@@ -168,6 +168,11 @@
             line-height: 1.3;
         }
 
+        .category-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+        #offlineBar {
+            display: none; text-align: center; padding: 6px 12px; font-size: 0.78rem; font-weight: 600;
+            background: #f59e0b; color: #1f2937;
+        }
         .section-view { display: none; }
         .section-view.active { display: block; }
 
@@ -482,6 +487,8 @@
         </div>
     </header>
 
+    <div id="offlineBar">📴 Mode hors-ligne : les calculs fonctionnent, l'assistant IA est indisponible.</div>
+
     <div id="sideMenu" style="position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--card-bg); box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; padding: 24px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
@@ -622,6 +629,10 @@
             <div class="category-card" onclick="ouvrirSection('chimieView')">
                 <div class="category-icon">🧪</div>
                 <h4 class="category-title" id="catChimie">Réactions Chimiques & Infinités</h4>
+            </div>
+            <div class="category-card" onclick="ouvrirSection('outilsView')">
+                <div class="category-icon">🩺</div>
+                <h4 class="category-title" id="catOutils">Outils Cliniques</h4>
             </div>
         </div>
     </div>
@@ -827,6 +838,80 @@
             <div class="action-row">
                 <button class="calc-btn" onclick="ajouterReactionPersonnalisee()" id="btnAddReaction">Enregistrer dans ma base</button>
             </div>
+        </div>
+    </div>
+
+    <!-- OUTILS CLINIQUES -->
+    <div id="outilsView" class="section-view">
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtPerfTitle">Débit de perfusion</h3>
+            <label for="perfVol" id="txtPerfVol">Volume à perfuser (mL)</label>
+            <input type="number" id="perfVol" placeholder="Ex: 500">
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;"><label for="perfH" id="txtPerfH">Durée : heures</label><input type="number" id="perfH" placeholder="Ex: 4"></div>
+                <div style="flex: 1;"><label for="perfMin" id="txtPerfMin">minutes</label><input type="number" id="perfMin" placeholder="Ex: 30"></div>
+            </div>
+            <label for="perfGtt" id="txtPerfGtt">Perfuseur (gouttes/mL)</label>
+            <select id="perfGtt">
+                <option value="20">20 gouttes/mL (standard)</option>
+                <option value="15">15 gouttes/mL (transfusion)</option>
+                <option value="60">60 gouttes/mL (microgoutte)</option>
+            </select>
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerPerfusion()" id="btnPerf">Calculer le débit</button>
+                <button class="reset-icon-btn" onclick="resetPerf()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resPerf" style="margin-top: 10px; font-weight: 600;">Débit : --</div>
+            <div id="interpPerf" style="margin-top: 4px; font-size: 0.85rem;"></div>
+        </div>
+
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtGcsTitle">Score de Glasgow (GCS)</h3>
+            <label for="gcsY" id="txtGcsY">Ouverture des yeux</label>
+            <select id="gcsY" onchange="calculerGlasgow()">
+                <option value="">Choisir…</option>
+                <option value="4">4 – Spontanée</option>
+                <option value="3">3 – À la demande (voix)</option>
+                <option value="2">2 – À la douleur</option>
+                <option value="1">1 – Aucune</option>
+            </select>
+            <label for="gcsV" id="txtGcsV">Réponse verbale</label>
+            <select id="gcsV" onchange="calculerGlasgow()">
+                <option value="">Choisir…</option>
+                <option value="5">5 – Orientée</option>
+                <option value="4">4 – Confuse</option>
+                <option value="3">3 – Mots inappropriés</option>
+                <option value="2">2 – Sons incompréhensibles</option>
+                <option value="1">1 – Aucune</option>
+            </select>
+            <label for="gcsM" id="txtGcsM">Réponse motrice</label>
+            <select id="gcsM" onchange="calculerGlasgow()">
+                <option value="">Choisir…</option>
+                <option value="6">6 – Obéit aux ordres</option>
+                <option value="5">5 – Oriente vers la douleur</option>
+                <option value="4">4 – Évitement (retrait)</option>
+                <option value="3">3 – Flexion anormale</option>
+                <option value="2">2 – Extension anormale</option>
+                <option value="1">1 – Aucune</option>
+            </select>
+            <div class="action-row">
+                <div id="resGcs" style="flex: 1; font-weight: 600;">Score : --</div>
+                <button class="reset-icon-btn" onclick="resetGcs()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="interpGcs" style="margin-top: 4px; font-size: 0.85rem;"></div>
+        </div>
+
+        <div class="container">
+            <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtBsaTitle">Surface corporelle (Mosteller)</h3>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex: 1;"><label for="bsaPoids" id="txtBsaPoids">Poids (kg)</label><input type="number" id="bsaPoids" placeholder="Ex: 70"></div>
+                <div style="flex: 1;"><label for="bsaTaille" id="txtBsaTaille">Taille (cm)</label><input type="number" id="bsaTaille" placeholder="Ex: 175"></div>
+            </div>
+            <div class="action-row">
+                <button class="calc-btn" onclick="calculerBSA()" id="btnBsa">Calculer la surface</button>
+                <button class="reset-icon-btn" onclick="resetBsa()" title="Réinitialiser">&#8634;</button>
+            </div>
+            <div id="resBsa" style="margin-top: 10px; font-weight: 600;">Surface : --</div>
         </div>
     </div>
 
@@ -1079,6 +1164,9 @@
                 chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
                 addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
                 tabLogin: "Connexion", tabRegister: "Inscription", btnLogin: "Se connecter", btnRegister: "Créer mon compte", btnLogout: "Se déconnecter", btnPhoto: "Ajouter une photo", btnPhotoDel: "Supprimer",
+                catOutils: "Outils Cliniques", perfTitle: "Débit de perfusion", perfVol: "Volume à perfuser (mL)", perfH: "Durée : heures", perfMin: "minutes", perfGtt: "Perfuseur (gouttes/mL)", btnPerf: "Calculer le débit",
+                gcsTitle: "Score de Glasgow (GCS)", gcsY: "Ouverture des yeux", gcsV: "Réponse verbale", gcsM: "Réponse motrice",
+                bsaTitle: "Surface corporelle (Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la surface",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
             },
             en: {
@@ -1098,6 +1186,9 @@
                 chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
                 addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
                 tabLogin: "Log in", tabRegister: "Sign up", btnLogin: "Log in", btnRegister: "Create account", btnLogout: "Log out", btnPhoto: "Add a photo", btnPhotoDel: "Remove",
+                catOutils: "Clinical Tools", perfTitle: "Infusion rate", perfVol: "Volume to infuse (mL)", perfH: "Duration: hours", perfMin: "minutes", perfGtt: "Drip set (drops/mL)", btnPerf: "Calculate rate",
+                gcsTitle: "Glasgow Coma Scale (GCS)", gcsY: "Eye opening", gcsV: "Verbal response", gcsM: "Motor response",
+                bsaTitle: "Body Surface Area (Mosteller)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
             }
         };
@@ -1246,6 +1337,10 @@
             const respBox = document.getElementById('aiChatResponse');
             const val = input.value.trim();
             if (!val && !fichierActuel) return;
+            if (!navigator.onLine) {
+                respBox.innerHTML = '<span style="color:#ef4444;">Hors-ligne : l\'assistant nécessite une connexion internet.</span>';
+                return;
+            }
 
             envoiEnCours = true;
             const nomFichier = fichierActuel ? fichierActuel.name : '';
@@ -1567,6 +1662,57 @@
             interp.innerText = "Hypernatrémie. Coefficient 0,6 (adulte). Utiliser 0,5 chez la femme ou le sujet âgé. Correction lente, sous surveillance de la natrémie.";
         }
 
+        function calculerPerfusion() {
+            const v = parseFloat(document.getElementById('perfVol').value);
+            const h = parseFloat(document.getElementById('perfH').value) || 0;
+            const m = parseFloat(document.getElementById('perfMin').value) || 0;
+            const g = parseFloat(document.getElementById('perfGtt').value);
+            const minutes = h * 60 + m;
+            const res = document.getElementById('resPerf');
+            const detail = document.getElementById('interpPerf');
+            if (isNaN(v) || v <= 0 || minutes <= 0 || h < 0 || m < 0) {
+                res.innerText = "Entrez des valeurs valides";
+                detail.innerText = '';
+                return;
+            }
+            const mlh = v / (minutes / 60);
+            const gttMin = (v * g) / minutes;
+            res.innerText = `Débit : ${mlh.toFixed(1)} mL/h`;
+            detail.innerText = `≈ ${Math.round(gttMin)} gouttes/min (1 goutte toutes les ${(60 / gttMin).toFixed(1)} s). À vérifier avec la prescription et le matériel utilisé.`;
+        }
+
+        function calculerGlasgow() {
+            const y = parseInt(document.getElementById('gcsY').value);
+            const v = parseInt(document.getElementById('gcsV').value);
+            const m = parseInt(document.getElementById('gcsM').value);
+            const res = document.getElementById('resGcs');
+            const interp = document.getElementById('interpGcs');
+            if (isNaN(y) || isNaN(v) || isNaN(m)) {
+                res.innerText = 'Score : --';
+                interp.innerText = '';
+                return;
+            }
+            const total = y + v + m;
+            const niveau = total === 15 ? "Conscience normale"
+                : total >= 13 ? "Altération légère de la conscience"
+                : total >= 9 ? "Altération modérée de la conscience"
+                : "Altération sévère (coma) : évaluation urgente, protection des voies aériennes à discuter";
+            res.innerText = `Score : ${total} / 15 (Y${y} V${v} M${m})`;
+            interp.innerText = niveau;
+        }
+
+        function calculerBSA() {
+            const p = parseFloat(document.getElementById('bsaPoids').value);
+            const t = parseFloat(document.getElementById('bsaTaille').value);
+            const res = document.getElementById('resBsa');
+            if (isNaN(p) || isNaN(t) || p <= 0 || t <= 0) { res.innerText = "Entrez des valeurs valides"; return; }
+            res.innerText = `Surface : ${Math.sqrt((t * p) / 3600).toFixed(2)} m²`;
+        }
+
+        function resetPerf() { ['perfVol', 'perfH', 'perfMin'].forEach(id => { document.getElementById(id).value = ''; }); document.getElementById('resPerf').innerText = 'Débit : --'; document.getElementById('interpPerf').innerText = ''; }
+        function resetGcs() { ['gcsY', 'gcsV', 'gcsM'].forEach(id => { document.getElementById(id).value = ''; }); calculerGlasgow(); }
+        function resetBsa() { document.getElementById('bsaPoids').value = ''; document.getElementById('bsaTaille').value = ''; document.getElementById('resBsa').innerText = 'Surface : --'; }
+
         function calculerFC() {
             let fc = parseFloat(document.getElementById('fcVal').value);
             if (isNaN(fc)) return;
@@ -1654,7 +1800,15 @@
 
             document.getElementById('floatingAiBtn').style.display = 'block';
             changerLangue();
+            majEtatReseau();
+            if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
         });
+
+        function majEtatReseau() {
+            document.getElementById('offlineBar').style.display = navigator.onLine ? 'none' : 'block';
+        }
+        window.addEventListener('online', majEtatReseau);
+        window.addEventListener('offline', majEtatReseau);
     </script>
 </body>
 </html>
