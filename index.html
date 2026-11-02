@@ -173,6 +173,53 @@
             display: none; text-align: center; padding: 6px 12px; font-size: 0.78rem; font-weight: 600;
             background: #f59e0b; color: #1f2937;
         }
+        .home-block { max-width: 480px; margin: 12px auto 0; padding: 0 20px; box-sizing: border-box; }
+        .home-search {
+            display: flex; align-items: center; gap: 8px; padding: 0 14px; height: 46px;
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 23px; box-shadow: var(--shadow);
+        }
+        .home-search input { border: none; background: transparent; margin: 0; padding: 0; height: 100%; box-shadow: none; }
+        .home-search input:focus { box-shadow: none; }
+        .home-label { font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .home-label button { background: none; border: none; color: var(--primary); font-family: inherit; font-size: 0.78rem; font-weight: 600; cursor: pointer; padding: 2px 0; }
+        .chip {
+            display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; margin: 0 6px 6px 0;
+            border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
+            font-family: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+        }
+        .chip:hover { border-color: var(--primary); }
+        .result-item {
+            display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left;
+            padding: 12px 14px; margin-bottom: 8px; border-radius: 14px; cursor: pointer;
+            background: var(--card-bg); border: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 0.9rem; font-weight: 600;
+        }
+        .result-item small { opacity: 0.6; font-weight: 500; }
+        .hist-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 8px;
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+        }
+        .hist-main { flex: 1; min-width: 0; }
+        .hist-name { font-weight: 700; font-size: 0.82rem; color: var(--primary); }
+        .hist-res { font-size: 0.85rem; word-break: break-word; }
+        .hist-time { font-size: 0.7rem; opacity: 0.55; margin-top: 2px; }
+        .hist-btn { background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; width: 34px; height: 34px; cursor: pointer; font-size: 0.95rem; }
+        .tool-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; scroll-margin-top: 70px; }
+        .tool-head > :first-child { flex: 1; min-width: 0; }
+        .star-btn { background: none; border: none; font-size: 1.35rem; line-height: 1; cursor: pointer; color: #f59e0b; padding: 4px; flex-shrink: 0; }
+        .install-banner {
+            display: none; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px;
+            background: var(--primary-gradient); color: #fff; font-size: 0.82rem; font-weight: 600;
+        }
+        .install-banner span { flex: 1; }
+        .install-banner button { border: none; border-radius: 10px; padding: 7px 12px; font-family: inherit; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+        #btnInstall { background: #fff; color: #0369a1; }
+        #btnInstallClose { background: transparent; color: #fff; padding: 4px 6px; }
+        #toast {
+            position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 12000;
+            background: #0f172a; color: #fff; padding: 10px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+            opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+        }
+        #toast.show { opacity: 1; }
         .section-view { display: none; }
         .section-view.active { display: block; }
 
@@ -487,6 +534,8 @@
         </div>
     </header>
 
+    <div id="toast" role="status"></div>
+
     <div id="offlineBar">📴 Mode hors-ligne : les calculs fonctionnent, l'assistant IA est indisponible.</div>
 
     <div id="sideMenu" style="position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--card-bg); box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; padding: 24px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
@@ -605,7 +654,34 @@
             <p style="margin: 0; opacity: 0.7; font-size: 0.85rem;" id="txtHomeSub">Accédez rapidement à vos outils de calculs médicaux</p>
         </div>
 
-        <div class="dashboard-grid">
+        <div class="home-block">
+            <div id="installBanner" class="install-banner">
+                <span id="installTexte">📲 Installer MediCalcul sur votre téléphone</span>
+                <button type="button" id="btnInstall" onclick="installerApp()">Installer</button>
+                <button type="button" id="btnInstallClose" onclick="fermerInstall()" aria-label="Fermer">✕</button>
+            </div>
+        </div>
+
+        <div class="home-block">
+            <div class="home-search">
+                <span>🔍</span>
+                <input type="search" id="searchTool" placeholder="Rechercher un outil…" oninput="majAccueil()" autocomplete="off" aria-label="Rechercher un outil">
+            </div>
+        </div>
+
+        <div class="home-block" id="searchResults" style="display: none;"></div>
+
+        <div class="home-block" id="favSection" style="display: none;">
+            <div class="home-label"><span id="txtFavTitle">⭐ Favoris</span></div>
+            <div id="favList"></div>
+        </div>
+
+        <div class="home-block" id="histSection" style="display: none;">
+            <div class="home-label"><span id="txtHistTitle">🕘 Derniers calculs</span><button type="button" id="btnClearHist" onclick="effacerHistorique()">Effacer</button></div>
+            <div id="histList"></div>
+        </div>
+
+        <div class="dashboard-grid" id="homeGrid">
             <div class="category-card" onclick="ouvrirSection('imcView')">
                 <div class="category-icon">⚖️</div>
                 <h4 class="category-title" id="catImc">Masse Corporelle (IMC)</h4>
@@ -1164,7 +1240,7 @@
                 chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
                 addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
                 tabLogin: "Connexion", tabRegister: "Inscription", btnLogin: "Se connecter", btnRegister: "Créer mon compte", btnLogout: "Se déconnecter", btnPhoto: "Ajouter une photo", btnPhotoDel: "Supprimer",
-                catOutils: "Outils Cliniques", perfTitle: "Débit de perfusion", perfVol: "Volume à perfuser (mL)", perfH: "Durée : heures", perfMin: "minutes", perfGtt: "Perfuseur (gouttes/mL)", btnPerf: "Calculer le débit",
+                searchPh: "Rechercher un outil…", favTitle: "⭐ Favoris", histTitle: "🕘 Derniers calculs", btnClearHist: "Effacer", catOutils: "Outils Cliniques", perfTitle: "Débit de perfusion", perfVol: "Volume à perfuser (mL)", perfH: "Durée : heures", perfMin: "minutes", perfGtt: "Perfuseur (gouttes/mL)", btnPerf: "Calculer le débit",
                 gcsTitle: "Score de Glasgow (GCS)", gcsY: "Ouverture des yeux", gcsV: "Réponse verbale", gcsM: "Réponse motrice",
                 bsaTitle: "Surface corporelle (Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la surface",
                 footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés"
@@ -1186,7 +1262,7 @@
                 chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
                 addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
                 tabLogin: "Log in", tabRegister: "Sign up", btnLogin: "Log in", btnRegister: "Create account", btnLogout: "Log out", btnPhoto: "Add a photo", btnPhotoDel: "Remove",
-                catOutils: "Clinical Tools", perfTitle: "Infusion rate", perfVol: "Volume to infuse (mL)", perfH: "Duration: hours", perfMin: "minutes", perfGtt: "Drip set (drops/mL)", btnPerf: "Calculate rate",
+                searchPh: "Search a tool…", favTitle: "⭐ Favorites", histTitle: "🕘 Recent calculations", btnClearHist: "Clear", catOutils: "Clinical Tools", perfTitle: "Infusion rate", perfVol: "Volume to infuse (mL)", perfH: "Duration: hours", perfMin: "minutes", perfGtt: "Drip set (drops/mL)", btnPerf: "Calculate rate",
                 gcsTitle: "Glasgow Coma Scale (GCS)", gcsY: "Eye opening", gcsV: "Verbal response", gcsM: "Motor response",
                 bsaTitle: "Body Surface Area (Mosteller)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
                 footerCopyright: "© 2026 MediCalcul Express — All rights reserved"
@@ -1202,6 +1278,9 @@
                 const el = document.getElementById('txt' + k.charAt(0).toUpperCase() + k.slice(1)) || document.getElementById(k);
                 if (el && !['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)) el.innerText = t[k];
             }
+            const rech = document.getElementById('searchTool');
+            if (rech && t.searchPh) rech.placeholder = t.searchPh;
+            if (typeof majAccueil === 'function') majAccueil();
         }
 
         /* ---------- RÉACTIONS CHIMIQUES ---------- */
@@ -1541,6 +1620,7 @@
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
             document.getElementById('homeView').classList.add('active');
             document.getElementById('backBtn').style.display = 'none';
+            majAccueil();
 
             document.getElementById('floatingAiBtn').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1769,6 +1849,248 @@
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         }
 
+        /* ---------- ACCUEIL INTELLIGENT : recherche, favoris, historique ---------- */
+        const OUTILS = [
+            { id: 'imc', fr: "Calcul de l'IMC", en: "BMI calculation", mots: "imc bmi poids taille corpulence obesite", vue: 'imcView', ancre: 'txtImcTitle' },
+            { id: 'cockcroft', fr: "Clairance rénale (Cockcroft)", en: "Renal clearance (Cockcroft)", mots: "creatinine rein dfg clairance renal kidney", vue: 'urgencesView', ancre: 'txtCockcroftTitle' },
+            { id: 'pediatrie', fr: "Posologie pédiatrique", en: "Pediatric dosage", mots: "dose enfant mg/kg pediatrie child", vue: 'urgencesView', ancre: 'txtPedTitle' },
+            { id: 'glycemie', fr: "Glycémie (interprétation)", en: "Blood glucose (interpretation)", mots: "glycemie glucose hyperglycemie hypoglycemie diabete insuline", vue: 'urgencesView', ancre: 'txtInsTitle' },
+            { id: 'eau', fr: "Déficit en eau", en: "Water deficit", mots: "natremie sodium hypernatremie adrogue eau", vue: 'urgencesView', ancre: 'txtEauTitle' },
+            { id: 'masse', fr: "Conversion de masse", en: "Mass conversion", mots: "mg ug microgramme masse poids", vue: 'convertisseursView', ancre: 'txtMasseTitle' },
+            { id: 'volume', fr: "Conversion de volume", en: "Volume conversion", mots: "litre ml volume", vue: 'convertisseursView', ancre: 'txtVolTitle' },
+            { id: 'temperature', fr: "Conversion de température", en: "Temperature conversion", mots: "celsius fahrenheit temperature fievre", vue: 'convertisseursView', ancre: 'txtTempTitle' },
+            { id: 'temps', fr: "Conversion de temps", en: "Time conversion", mots: "minutes heures jours secondes duree", vue: 'convertisseursView', ancre: 'txtTempsTitle' },
+            { id: 'fc', fr: "Fréquence cardiaque", en: "Heart rate", mots: "bpm pouls tachycardie bradycardie coeur cardio", vue: 'cardioView', ancre: 'txtCardioTitle' },
+            { id: 'perfusion', fr: "Débit de perfusion", en: "Infusion rate", mots: "perfusion goutte debit ml/h", vue: 'outilsView', ancre: 'txtPerfTitle' },
+            { id: 'glasgow', fr: "Score de Glasgow", en: "Glasgow Coma Scale", mots: "glasgow gcs coma conscience", vue: 'outilsView', ancre: 'txtGcsTitle' },
+            { id: 'bsa', fr: "Surface corporelle", en: "Body surface area", mots: "mosteller bsa surface", vue: 'outilsView', ancre: 'txtBsaTitle' },
+            { id: 'quiz', fr: "Quiz & Flashcards", en: "Quiz & Flashcards", mots: "quiz flashcards revision questions", vue: 'quizView', ancre: 'quizTitle' },
+            { id: 'chimie', fr: "Réactions chimiques", en: "Chemical reactions", mots: "reaction tampon atp glycolyse hemoglobine", vue: 'chimieView', ancre: 'chimieTitle' }
+        ];
+
+        function langueActive() { return document.getElementById('langSelect').value; }
+        function nomOutil(t) { return langueActive() === 'en' ? t.en : t.fr; }
+        function trouverOutil(id) { return OUTILS.find(t => t.id === id); }
+        function normaliser(x) { return String(x).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+        function lireJSON(cle, defaut) { try { return JSON.parse(localStorage.getItem(cle)) || defaut; } catch (e) { return defaut; } }
+
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => t.classList.remove('show'), 1800);
+        }
+
+        function ouvrirOutil(id) {
+            const t = trouverOutil(id);
+            if (!t) return;
+            document.getElementById('searchTool').value = '';
+            ouvrirSection(t.vue);
+            setTimeout(() => {
+                const el = document.getElementById(t.ancre);
+                const cible = el ? (el.closest('.tool-head') || el) : null;
+                if (cible) cible.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 120);
+        }
+
+        /* Favoris */
+        function lireFavoris() { return lireJSON('favoris', []); }
+
+        function basculerFavori(id) {
+            let fav = lireFavoris();
+            fav = fav.includes(id) ? fav.filter(x => x !== id) : [...fav, id];
+            localStorage.setItem('favoris', JSON.stringify(fav));
+            majEtoiles();
+            majAccueil();
+        }
+
+        function majEtoiles() {
+            const fav = lireFavoris();
+            document.querySelectorAll('.star-btn').forEach(b => {
+                const actif = fav.includes(b.dataset.tool);
+                b.textContent = actif ? '★' : '☆';
+                b.setAttribute('aria-label', actif ? 'Retirer des favoris' : 'Ajouter aux favoris');
+            });
+        }
+
+        // Ajoute une étoile à côté du titre de chaque outil
+        function installerEtoiles() {
+            OUTILS.forEach(t => {
+                const h = document.getElementById(t.ancre);
+                if (!h || h.parentNode.classList.contains('tool-head')) return;
+                const wrap = document.createElement('div');
+                wrap.className = 'tool-head';
+                h.parentNode.insertBefore(wrap, h);
+                wrap.appendChild(h);
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'star-btn';
+                b.dataset.tool = t.id;
+                b.onclick = () => basculerFavori(t.id);
+                wrap.appendChild(b);
+            });
+            majEtoiles();
+        }
+
+        /* Historique */
+        function lireHistorique() { return lireJSON('historique', []); }
+
+        function enregistrerHistorique(id, idsResultat, maxCar) {
+            const texte = idsResultat.map(r => document.getElementById(r).innerText.trim()).filter(Boolean).join(' — ');
+            if (!texte || texte.includes('--') || /valide|Entrez/i.test(texte)) return;
+            const resultat = texte.length > (maxCar || 140) ? texte.slice(0, maxCar || 140) + '…' : texte;
+            const h = lireHistorique();
+            if (h.length && h[0].id === id && h[0].resultat === resultat) return;
+            h.unshift({ id: id, resultat: resultat, ts: Date.now() });
+            localStorage.setItem('historique', JSON.stringify(h.slice(0, 15)));
+        }
+
+        function effacerHistorique() {
+            localStorage.removeItem('historique');
+            majAccueil();
+        }
+
+        function texteAPartager(entree) {
+            const t = trouverOutil(entree.id);
+            return `${t ? nomOutil(t) : ''} — ${entree.resultat} (MediCalcul Express)`;
+        }
+
+        async function copierResultat(i) {
+            const e = lireHistorique()[i];
+            if (!e) return;
+            try { await navigator.clipboard.writeText(texteAPartager(e)); toast('Copié ✓'); }
+            catch (err) { toast('Copie impossible'); }
+        }
+
+        async function partagerResultat(i) {
+            const e = lireHistorique()[i];
+            if (!e) return;
+            if (navigator.share) {
+                try { await navigator.share({ text: texteAPartager(e) }); } catch (err) { /* partage annulé */ }
+            } else {
+                copierResultat(i);
+            }
+        }
+
+        function bouton(classe, texte, action, titre) {
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = classe; b.textContent = texte; b.onclick = action;
+            if (titre) b.title = titre;
+            return b;
+        }
+
+        function majAccueil() {
+            const q = normaliser(document.getElementById('searchTool').value.trim());
+            const grille = document.getElementById('homeGrid');
+            const resultats = document.getElementById('searchResults');
+            const favSec = document.getElementById('favSection');
+            const histSec = document.getElementById('histSection');
+
+            if (q) {
+                grille.style.display = 'none'; favSec.style.display = 'none'; histSec.style.display = 'none';
+                resultats.style.display = 'block';
+                resultats.textContent = '';
+                const mots = q.split(/\s+/);
+                const trouves = OUTILS.filter(t => {
+                    const base = normaliser(t.fr + ' ' + t.en + ' ' + t.mots);
+                    return mots.every(m => base.includes(m));
+                });
+                if (!trouves.length) {
+                    const v = document.createElement('div');
+                    v.style.cssText = 'text-align:center;opacity:0.7;font-size:0.85rem;padding:12px;';
+                    v.textContent = langueActive() === 'en' ? 'No tool found.' : 'Aucun outil trouvé.';
+                    resultats.appendChild(v);
+                }
+                trouves.forEach(t => {
+                    const b = document.createElement('button');
+                    b.type = 'button'; b.className = 'result-item';
+                    const n = document.createElement('span'); n.textContent = nomOutil(t);
+                    const f = document.createElement('small'); f.textContent = lireFavoris().includes(t.id) ? '★' : '→';
+                    b.append(n, f);
+                    b.onclick = () => ouvrirOutil(t.id);
+                    resultats.appendChild(b);
+                });
+                return;
+            }
+
+            resultats.style.display = 'none';
+            grille.style.display = '';
+
+            const fav = lireFavoris().map(trouverOutil).filter(Boolean);
+            favSec.style.display = fav.length ? 'block' : 'none';
+            const favList = document.getElementById('favList');
+            favList.textContent = '';
+            fav.forEach(t => favList.appendChild(bouton('chip', '⭐ ' + nomOutil(t), () => ouvrirOutil(t.id))));
+
+            const hist = lireHistorique().slice(0, 5);
+            histSec.style.display = hist.length ? 'block' : 'none';
+            const histList = document.getElementById('histList');
+            histList.textContent = '';
+            hist.forEach((e, i) => {
+                const t = trouverOutil(e.id);
+                const ligne = document.createElement('div');
+                ligne.className = 'hist-item';
+                const main = document.createElement('div');
+                main.className = 'hist-main';
+                const n = document.createElement('div'); n.className = 'hist-name'; n.textContent = t ? nomOutil(t) : '';
+                const r = document.createElement('div'); r.className = 'hist-res'; r.textContent = e.resultat;
+                const d = document.createElement('div'); d.className = 'hist-time';
+                d.textContent = new Date(e.ts).toLocaleString(undefined, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+                main.append(n, r, d);
+                ligne.append(main, bouton('hist-btn', '📋', () => copierResultat(i), 'Copier'), bouton('hist-btn', '📤', () => partagerResultat(i), 'Partager'));
+                histList.appendChild(ligne);
+            });
+        }
+
+        // Chaque calcul réussi est ajouté à l'historique
+        [
+            ['calculerIMC', 'imc', ['resultatIMC', 'interpretationIMC']],
+            ['calculerCockcroft', 'cockcroft', ['resCockcroft']],
+            ['calculerPediatrie', 'pediatrie', ['resPediatrie']],
+            ['calculerInsuline', 'glycemie', ['resIns']],
+            ['calculerDeficitEau', 'eau', ['resEau']],
+            ['calculerFC', 'fc', ['resFc']],
+            ['calculerPerfusion', 'perfusion', ['resPerf']],
+            ['calculerGlasgow', 'glasgow', ['resGcs']],
+            ['calculerBSA', 'bsa', ['resBsa']]
+        ].forEach(([nom, id, res]) => {
+            const origine = window[nom];
+            window[nom] = function () {
+                const r = origine.apply(this, arguments);
+                enregistrerHistorique(id, res);
+                return r;
+            };
+        });
+
+        /* ---------- INSTALLATION DE L'APPLICATION ---------- */
+        let evtInstall = null;
+
+        function afficherInstall(ios) {
+            if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('installMasque')) return;
+            document.getElementById('installBanner').style.display = 'flex';
+            document.getElementById('installTexte').textContent = ios
+                ? "📲 Pour installer : touchez Partager, puis « Sur l'écran d'accueil »."
+                : "📲 Installer MediCalcul sur votre téléphone";
+            document.getElementById('btnInstall').style.display = ios ? 'none' : 'inline-block';
+        }
+
+        function fermerInstall() {
+            document.getElementById('installBanner').style.display = 'none';
+            localStorage.setItem('installMasque', '1');
+        }
+
+        async function installerApp() {
+            if (!evtInstall) return;
+            evtInstall.prompt();
+            await evtInstall.userChoice;
+            evtInstall = null;
+            document.getElementById('installBanner').style.display = 'none';
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); evtInstall = e; afficherInstall(false); });
+        window.addEventListener('appinstalled', () => { document.getElementById('installBanner').style.display = 'none'; });
+
         /* ---------- INITIALISATION ---------- */
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
@@ -1800,6 +2122,9 @@
 
             document.getElementById('floatingAiBtn').style.display = 'block';
             changerLangue();
+            installerEtoiles();
+            majAccueil();
+            if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone) afficherInstall(true);
             majEtatReseau();
             if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
         });
