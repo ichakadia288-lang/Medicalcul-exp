@@ -116,7 +116,6 @@
             box-sizing: border-box;
         }
 
-        /* Grille des catégories */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -142,13 +141,8 @@
             justify-content: center;
         }
 
-        .category-card:active {
-            transform: scale(0.96);
-        }
-
-        .category-card:hover {
-            border-color: var(--primary);
-        }
+        .category-card:active { transform: scale(0.96); }
+        .category-card:hover { border-color: var(--primary); }
 
         .category-icon {
             width: 64px;
@@ -172,13 +166,8 @@
             line-height: 1.3;
         }
 
-        .section-view {
-            display: none;
-        }
-
-        .section-view.active {
-            display: block;
-        }
+        .section-view { display: none; }
+        .section-view.active { display: block; }
 
         label {
             font-weight: 500;
@@ -232,10 +221,8 @@
             transition: opacity 0.2s, transform 0.1s;
         }
 
-        button.calc-btn:active {
-            transform: scale(0.98);
-        }
-        
+        button.calc-btn:active { transform: scale(0.98); }
+
         .badge-urg {
             background: #ef4444;
             color: white;
@@ -264,13 +251,12 @@
             flex-shrink: 0;
             font-weight: 900;
         }
-        
+
         .reset-icon-btn:hover {
             border-color: var(--primary);
             background: var(--border);
         }
 
-        /* Bouton flottant de l'assistant IA */
         .floating-ai-wrapper {
             position: fixed;
             bottom: 24px;
@@ -296,7 +282,6 @@
             object-fit: cover;
         }
 
-        /* Modale IA */
         #aiModal {
             position: fixed;
             bottom: 80px;
@@ -313,7 +298,6 @@
             animation: slideUp 0.3s ease;
         }
 
-        /* NOUVEAU DESIGN : Modale d'authentification miniaturisée (40-45%) avec le même fond que l'application */
         #authModal {
             position: fixed;
             top: 50%;
@@ -349,7 +333,6 @@
             to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
-        /* NOUVEAU DESIGN DE LA BARRE DE RECHERCHE DE L'ASSISTANT (Identique à l'image)[span_1](start_span)[span_1](end_span) */
         .ai-input-pill {
             display: flex;
             align-items: center;
@@ -377,9 +360,7 @@
             color: #0f172a;
         }
 
-        body.dark-mode .ai-input-pill input {
-            color: #f8fafc;
-        }
+        body.dark-mode .ai-input-pill input { color: #f8fafc; }
 
         .ai-input-pill input:focus {
             box-shadow: none;
@@ -398,11 +379,8 @@
             padding: 4px;
         }
 
-        body.dark-mode .pill-action-btn {
-            color: #f8fafc;
-        }
+        body.dark-mode .pill-action-btn { color: #f8fafc; }
 
-        /* Bouton d'ondes audio circulaire bleu vif (identique à l'image)[span_2](start_span)[span_2](end_span) */
         .wave-badge-btn {
             background: #2563eb;
             border: none;
@@ -439,17 +417,16 @@
 </head>
 <body>
 
-    <!-- Barre de menu supérieure -->
     <header>
         <div style="display: flex; align-items: center; gap: 10px;">
             <button id="backBtn" class="back-btn" onclick="retourAccueil()">← <span id="txtBack">Accueil</span></button>
             <img src="logo.png" alt="Logo" style="height: 32px; width: auto; border-radius: 6px;">
             <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px;">MediCalcul <span style="color: var(--primary);">Express</span></h3>
         </div>
-        
+
         <div style="display: flex; align-items: center; gap: 8px;">
             <button id="userAuthBtn" onclick="toggleAuthModal()" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--primary); display: flex; align-items: center; gap: 3px;">👤 Connexion</button>
-            
+
             <select id="langSelect" onchange="changerLangue()" style="margin: 0; padding: 4px 6px; font-size: 0.8rem; width: auto; background: var(--input-bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
                 <option value="fr">FR</option>
                 <option value="en">EN</option>
@@ -458,7 +435,6 @@
         </div>
     </header>
 
-    <!-- Panneau du menu latéral -->
     <div id="sideMenu" style="position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--card-bg); box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; padding: 24px; border-left: 1px solid var(--border); box-sizing: border-box; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <h4 style="margin: 0;" id="txtParam">Paramètres</h4>
@@ -469,7 +445,7 @@
             <div style="font-weight: 600; color: var(--primary);" id="profileStatus">Non connecté</div>
             <div style="opacity: 0.7; font-size: 0.8rem; margin-top: 4px;" id="profileSubText">Connectez-vous pour enregistrer votre profil.</div>
         </div>
-        
+
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
             <span id="txtDarkMode" style="font-weight: 500;">Mode Sombre</span>
             <button class="theme-toggle-btn" onclick="toggleDarkMode()"></button>
@@ -514,7 +490,6 @@
         </div>
     </div>
 
-    <!-- MODALE D'AUTHENTIFICATION MINIATURISÉE (Design épuré avec disparition automatique) -->
     <div id="authModal">
         <div style="background: var(--primary-gradient); color: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.85rem;">
             <span id="authModalTitle">Connexion</span>
@@ -548,7 +523,7 @@
         </div>
     </div>
 
-    <!-- PAGE D'ACCUEIL : GRILLE DES CATÉGORIES -->
+    <!-- ACCUEIL -->
     <div id="homeView" class="section-view active">
         <div style="text-align: center; padding: 20px 20px 10px 20px;">
             <h2 style="margin: 0 0 6px 0; font-size: 1.3rem;" id="txtHomeHeader">Sélectionnez une Catégorie</h2>
@@ -560,27 +535,22 @@
                 <div class="category-icon">⚖️</div>
                 <h4 class="category-title" id="catImc">Masse Corporelle (IMC)</h4>
             </div>
-
             <div class="category-card" onclick="ouvrirSection('urgencesView')">
                 <div class="category-icon">🏥</div>
                 <h4 class="category-title" id="catUrg">Urgences & Réanimation</h4>
             </div>
-
             <div class="category-card" onclick="ouvrirSection('convertisseursView')">
                 <div class="category-icon">⏱️</div>
                 <h4 class="category-title" id="catConv">Calculs & Convertisseurs Express</h4>
             </div>
-
             <div class="category-card" onclick="ouvrirSection('cardioView')">
                 <div class="category-icon">❤️</div>
                 <h4 class="category-title" id="catCardio">Fréquence Cardiaque</h4>
             </div>
-
             <div class="category-card" onclick="ouvrirSection('quizView')">
                 <div class="category-icon">🧠</div>
                 <h4 class="category-title" id="catQuiz">Quiz & Fiches Flashcards</h4>
             </div>
-
             <div class="category-card" onclick="ouvrirSection('chimieView')">
                 <div class="category-icon">🧪</div>
                 <h4 class="category-title" id="catChimie">Réactions Chimiques & Infinités</h4>
@@ -588,7 +558,7 @@
         </div>
     </div>
 
-    <!-- VUE 1 : CALCUL DE L'IMC -->
+    <!-- IMC -->
     <div id="imcView" class="section-view">
         <div class="container">
             <h3 id="txtImcTitle" style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);">Calcul de l'IMC</h3>
@@ -609,12 +579,11 @@
         </div>
     </div>
 
-    <!-- VUE 2 : MODULE URGENCES & RÉANIMATION -->
+    <!-- URGENCES -->
     <div id="urgencesView" class="section-view">
         <div class="container" style="border-left: 4px solid #ef4444;">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600;"><span id="txtUrgModule">Module Urgences & Réanimation</span> <span class="badge-urg">URG</span></h3>
 
-            <!-- Fonction Rénale -->
             <h4 style="color: var(--primary); margin-top: 16px; font-size: 0.95rem;" id="txtCockcroftTitle">1. Fonction Rénale (Clairance - Cockcroft)</h4>
             <div style="display: flex; gap: 10px;">
                 <div style="flex: 1;"><label for="crPoids" id="txtCrPoids">Poids (kg)</label><input type="number" id="crPoids" placeholder="Ex: 70"></div>
@@ -623,7 +592,7 @@
             <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label><input type="number" id="crCreat" placeholder="Ex: 90">
             <label for="crSexe" id="txtCrSexe">Sexe</label>
             <select id="crSexe"><option value="homme" id="optHomme">Homme</option><option value="femme" id="optFemme">Femme</option></select>
-            
+
             <div class="action-row">
                 <button class="calc-btn" onclick="calculerCockcroft()" id="btnCockcroft">Calculer Clairance</button>
                 <button class="reset-icon-btn" onclick="resetCockcroft()" title="Réinitialiser">&#8634;</button>
@@ -633,11 +602,10 @@
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-            <!-- Posologie Pédiatrique -->
             <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
             <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label><input type="number" id="pedPoids" placeholder="Ex: 15">
             <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label><input type="number" id="pedDoseKg" placeholder="Ex: 15">
-            
+
             <div class="action-row">
                 <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
                 <button class="reset-icon-btn" onclick="resetPed()" title="Réinitialiser">&#8634;</button>
@@ -646,27 +614,23 @@
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-            <!-- Ajustement Insuline & Glycémie -->
-            <h4 style="color: var(--primary); font-size: 0.95rem;">3. Ajustement Insuline Rapide & Hyperglycémie</h4>
-            <div style="display: flex; gap: 10px;">
-                <div style="flex: 1;"><label>Glycémie (g/L)</label><input type="number" id="insGly" placeholder="Ex: 2.5"></div>
-                <div style="flex: 1;"><label>Poids (kg)</label><input type="number" id="insPoids" placeholder="Ex: 70"></div>
-            </div>
+            <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtInsTitle">3. Hyperglycémie — Aide à l'interprétation</h4>
+            <label for="insGly">Glycémie (g/L)</label>
+            <input type="number" id="insGly" placeholder="Ex: 2.5" step="0.01">
             <div class="action-row">
-                <button class="calc-btn" onclick="calculerInsuline()">Calculer Dose d'Insuline</button>
-                <button class="reset-icon-btn" onclick="document.getElementById('insGly').value=''; document.getElementById('insPoids').value=''; document.getElementById('resIns').innerText='Dose recommandée : --';" title="Réinitialiser">&#8634;</button>
+                <button class="calc-btn" onclick="calculerInsuline()" id="btnIns">Interpréter la glycémie</button>
+                <button class="reset-icon-btn" onclick="resetIns()" title="Réinitialiser">&#8634;</button>
             </div>
-            <div id="resIns" style="margin-top: 10px; font-weight: 600;">Dose recommandée : --</div>
+            <div id="resIns" style="margin-top: 10px; font-weight: 600;">Interprétation : --</div>
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
-            <!-- Déficit en Eau -->
             <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtEauTitle">4. Déficit en Eau (Adrogué-Madias)</h4>
             <div style="display: flex; gap: 10px;">
                 <div style="flex: 1;"><label for="eauPoids" id="txtEauPoids">Poids (kg)</label><input type="number" id="eauPoids" placeholder="Ex: 70"></div>
                 <div style="flex: 1;"><label for="eauNa" id="txtEauNa">Natrémie (mmol/L)</label><input type="number" id="eauNa" placeholder="Ex: 155"></div>
             </div>
-            
+
             <div class="action-row">
                 <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
                 <button class="reset-icon-btn" onclick="resetEau()" title="Réinitialiser">&#8634;</button>
@@ -676,7 +640,7 @@
         </div>
     </div>
 
-    <!-- VUE 3 : CALCULS & CONVERTISSEURS EXPRESS -->
+    <!-- CONVERTISSEURS -->
     <div id="convertisseursView" class="section-view">
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtMasseTitle">Conversion de Masse</h3>
@@ -729,7 +693,7 @@
         </div>
     </div>
 
-    <!-- VUE 4 : FRÉQUENCE CARDIAQUE -->
+    <!-- CARDIO -->
     <div id="cardioView" class="section-view">
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="txtCardioTitle">Module Fréquence Cardiaque</h3>
@@ -744,12 +708,12 @@
         </div>
     </div>
 
-    <!-- VUE 5 : QUIZ & FLASHCARDS -->
+    <!-- QUIZ -->
     <div id="quizView" class="section-view">
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="quizTitle">Quiz Médical & Flashcards</h3>
             <p style="opacity: 0.7; font-size: 0.82rem;" id="quizDesc">Testez vos connaissances et révisez vos fiches cliniques</p>
-            
+
             <div id="quizCard" style="margin-top: 16px;">
                 <p id="quizQuestion" style="font-weight: 500; min-height: 50px; font-size: 1rem;"></p>
                 <div id="quizButtons" style="display: flex; gap: 10px; margin-top: 15px;">
@@ -762,20 +726,19 @@
         </div>
     </div>
 
-    <!-- VUE 6 : RÉACTIONS CHIMIQUES -->
+    <!-- CHIMIE -->
     <div id="chimieView" class="section-view">
         <div class="container">
             <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);" id="chimieTitle">Réactions Chimiques & Infinités</h3>
             <p style="opacity: 0.7; font-size: 0.82rem;" id="chimieDesc">Consultez les réactions ou ajoutez vos propres réactions personnalisées à l'infini</p>
 
             <label for="selectReaction" id="lblSelectReaction">Sélectionner une réaction</label>
-            <select id="selectReaction" onchange="afficherReactionChimique()">
-            </select>
+            <select id="selectReaction" onchange="afficherReactionChimique()"></select>
 
             <div id="reactionResultBox" style="margin-top: 16px; background: var(--input-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--border);">
                 <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;" id="eqTitle">Équation :</div>
                 <div id="eqEquation" style="font-family: monospace; font-size: 0.95rem; margin-bottom: 12px;"></div>
-                
+
                 <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;" id="utilTitle">Efficacité & Utilité Clinique :</div>
                 <div id="eqUtility" style="font-size: 0.88rem; line-height: 1.4;"></div>
             </div>
@@ -783,7 +746,7 @@
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
             <h4 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;" id="addCustomTitle">➕ Ajouter une nouvelle réaction personnalisée</h4>
-            
+
             <label for="customNom" id="lblCustomNom">Nom de la réaction / métabolisme</label>
             <input type="text" id="customNom" placeholder="Ex: Cycle de Krebs, Synthèse...">
 
@@ -799,43 +762,38 @@
         </div>
     </div>
 
-    <!-- BOUTON FLOTTANT ASSISTANCE IA -->
+    <!-- BOUTON FLOTTANT IA -->
     <div id="floatingAiBtn" class="floating-ai-wrapper">
         <div class="floating-ai-btn" onclick="toggleAiModal()">
             <img src="assistant-icon.png" alt="Assistance IA">
         </div>
     </div>
 
-    <!-- MODALE INTERACTIVE DE L'ASSISTANT IA AVEC LE NOUVEAU DESIGN DE BARRE -->
+    <!-- MODALE ASSISTANT IA -->
     <div id="aiModal">
         <div style="background: var(--primary-gradient); color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
             <span>Assistant Médical IA</span>
             <button onclick="toggleAiModal()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">✕</button>
         </div>
         <div style="padding: 16px; font-size: 0.88rem; line-height: 1.4; display: flex; flex-direction: column; gap: 10px;">
-            <p style="margin: 0;">Bonjour ! 👋 Posez vos questions cliniques, partagez des bilans ou des radios.</p>
-            
-            <!-- Historique / Zone de conversation avec bouton Audio 🔊 -->
+            <p style="margin: 0;">Assistant en cours de développement : il ne répond pas encore aux questions cliniques et n'analyse pas les fichiers.</p>
+
             <div id="aiChatResponse" style="background: var(--input-bg); padding: 10px; border-radius: 8px; font-size: 0.82rem; min-height: 40px; max-height: 120px; overflow-y: auto;">
                 Comment puis-je vous aider ?
             </div>
 
-            <!-- Aperçu du fichier / image sélectionné -->
             <div id="filePreviewContainer" style="display: none; align-items: center; gap: 8px; font-size: 0.8rem; background: var(--input-bg); padding: 6px 10px; border-radius: 8px;">
                 <span id="fileNameDisplay" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
                 <button onclick="supprimerFichierJoint()" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold;">✕</button>
             </div>
 
-            <!-- Nouvelle Barre de saisie (style identique à l'image fournie)[span_3](start_span)[span_3](end_span) -->
             <div class="ai-input-pill">
-                <button class="pill-action-btn" onclick="document.getElementById('fileInputHidden').click()" title="Joindre une image ou un fichier (Radio, Bilan)">＋</button>
+                <button class="pill-action-btn" onclick="document.getElementById('fileInputHidden').click()" title="Joindre une image ou un fichier">＋</button>
                 <input type="file" id="fileInputHidden" style="display: none;" accept="image/*,.pdf,.doc,.docx" onchange="gererFichierJoint(this)">
 
                 <input type="text" id="aiUserInput" placeholder="Demander à l'assistant..." onkeydown="if(event.key==='Enter') envoyerQuestionAi()">
 
-                <button class="pill-action-btn" onclick="basculerEnregistrementAudio()" title="Parler">🎤</button>
-
-                <button id="waveRecordBtn" class="wave-badge-btn" onclick="basculerEnregistrementAudio()" title="Enregistrement audio actif">
+                <button id="waveRecordBtn" class="wave-badge-btn" onclick="basculerEnregistrementAudio()" title="Parler">
                     <div class="wave-bar-item"></div>
                     <div class="wave-bar-item"></div>
                     <div class="wave-bar-item"></div>
@@ -849,7 +807,6 @@
         </div>
     </div>
 
-    <!-- Pied de page -->
     <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
       <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
     </footer>
@@ -858,8 +815,23 @@
         let fichierActuel = null;
         let recognition = null;
         let estEnCoursDEcoute = false;
-        let derniereReponseTexte = "Bonjour ! Comment puis-je vous aider ?";
+        let derniereReponseTexte = "Assistant IA non connecté : fonction en cours de développement.";
         let utilisateurConnecte = null;
+
+        // Échappe le HTML pour éviter les injections (XSS)
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        /* ---------- AUTHENTIFICATION (mot de passe haché SHA-256 + sel) ---------- */
+        async function hacher(pass, sel) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(sel + pass));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function nouveauSel() {
+            return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
 
         function toggleAuthModal() {
             const modal = document.getElementById('authModal');
@@ -884,7 +856,7 @@
             }
         }
 
-        function executerInscription() {
+        async function executerInscription() {
             const nom = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const pass = document.getElementById('regPass').value.trim();
@@ -895,28 +867,38 @@
             }
 
             const profil = { nom: nom, email: email };
-            localStorage.setItem('userAccount', JSON.stringify({ profil: profil, pass: pass }));
+            const sel = nouveauSel();
+            localStorage.setItem('userAccount', JSON.stringify({ profil: profil, sel: sel, hash: await hacher(pass, sel) }));
             connecterUtilisateur(profil);
-            
-            // Fait disparaître la modale automatiquement après création du compte
+
             document.getElementById('authModal').style.display = 'none';
             alert(`Compte créé avec succès ! Bienvenue ${nom}.`);
         }
 
-        function executerConnexion() {
+        async function executerConnexion() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
-            const localData = JSON.parse(localStorage.getItem('userAccount') || 'null');
+            const data = JSON.parse(localStorage.getItem('userAccount') || 'null');
 
             if (!email || !pass) {
                 alert("Veuillez renseigner votre e-mail et mot de passe.");
                 return;
             }
 
-            if (localData && localData.profil.email === email && localData.pass === pass) {
-                connecterUtilisateur(localData.profil);
-                
-                // Fait disparaître la modale automatiquement après la connexion réussie
+            let ok = false;
+            if (data && data.profil && data.profil.email === email) {
+                if (data.hash) {
+                    ok = (await hacher(pass, data.sel)) === data.hash;
+                } else if (data.pass !== undefined && data.pass === pass) {
+                    // Ancien compte en clair : migration vers un mot de passe haché
+                    const sel = nouveauSel();
+                    localStorage.setItem('userAccount', JSON.stringify({ profil: data.profil, sel: sel, hash: await hacher(pass, sel) }));
+                    ok = true;
+                }
+            }
+
+            if (ok) {
+                connecterUtilisateur(data.profil);
                 document.getElementById('authModal').style.display = 'none';
             } else {
                 alert("Identifiants incorrects. Veuillez réessayer.");
@@ -939,6 +921,7 @@
             document.getElementById('profileSubText').innerText = `Connectez-vous pour enregistrer votre profil.`;
         }
 
+        /* ---------- TRADUCTIONS ---------- */
         const traductions = {
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
@@ -948,6 +931,7 @@
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
                 pedTitle: "2. Posologie Pédiatrique (Dose / kg)", pedPoids: "Poids de l'enfant (kg)", pedDose: "Dose unitaire recommandée (mg/kg)", btnPed: "Calculer la Dose",
+                insTitle: "3. Hyperglycémie — Aide à l'interprétation", btnIns: "Interpréter la glycémie",
                 eauTitle: "4. Déficit en Eau (Adrogué-Madias)", eauPoids: "Poids (kg)", eauNa: "Natrémie (mmol/L)", btnEau: "Calculer Déficit en Eau",
                 masseTitle: "Conversion de Masse", masseVal: "Valeur", optMgUg: "mg vers µg", optUgMg: "µg vers mg",
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
@@ -965,6 +949,7 @@
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
                 pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
+                insTitle: "3. Hyperglycemia — Interpretation aid", btnIns: "Interpret glycemia",
                 eauTitle: "4. Water Deficit (Adrogué-Madias)", eauPoids: "Weight (kg)", eauNa: "Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
                 masseTitle: "Mass Conversion", masseVal: "Value", optMgUg: "mg to µg", optUgMg: "µg to mg",
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
@@ -976,6 +961,18 @@
             }
         };
 
+        // Applique la langue : cible l'ID exact ou son équivalent "txt…",
+        // et ne touche jamais aux champs de formulaire (input / select / textarea).
+        function changerLangue() {
+            const lang = document.getElementById('langSelect').value;
+            const t = traductions[lang];
+            for (let k in t) {
+                const el = document.getElementById('txt' + k.charAt(0).toUpperCase() + k.slice(1)) || document.getElementById(k);
+                if (el && !['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)) el.innerText = t[k];
+            }
+        }
+
+        /* ---------- RÉACTIONS CHIMIQUES ---------- */
         const reactionsDeBase = {
             tampon: {
                 nom: "1. Système Tampon Bicarbonate",
@@ -994,7 +991,7 @@
             },
             hemoglobine: {
                 nom: "4. Fixation de l'Oxygène sur l'Hémoglobine",
-                eq: "Hb + 4 O₂ ⇌ Hb(O₂)",
+                eq: "Hb + 4 O₂ ⇌ Hb(O₂)₄",
                 util: "Transport réversible de l'oxygène des poumons vers les tissus périphériques selon la pression partielle et le pH."
             }
         };
@@ -1008,7 +1005,7 @@
             const select = document.getElementById('selectReaction');
             select.innerHTML = '';
             const toutes = obtenirToutesLesReactions();
-            
+
             for (let id in toutes) {
                 let opt = document.createElement('option');
                 opt.value = id;
@@ -1018,14 +1015,17 @@
             afficherReactionChimique();
         }
 
+        // Affichage sans innerHTML (anti-XSS)
         function afficherReactionChimique() {
             const choix = document.getElementById('selectReaction').value;
-            const toutes = obtenirToutesLesReactions();
-            const reaction = toutes[choix];
-            if (reaction) {
-                document.getElementById('eqEquation').innerText = reaction.eq;
-                document.getElementById('eqUtility').innerHTML = `<strong>Utilité & Efficacité :</strong> ${reaction.util}`;
-            }
+            const reaction = obtenirToutesLesReactions()[choix];
+            if (!reaction) return;
+            document.getElementById('eqEquation').textContent = reaction.eq;
+            const u = document.getElementById('eqUtility');
+            u.textContent = '';
+            const s = document.createElement('strong');
+            s.textContent = 'Utilité & Efficacité : ';
+            u.append(s, reaction.util);
         }
 
         function ajouterReactionPersonnalisee() {
@@ -1040,13 +1040,8 @@
 
             let customId = 'custom_' + Date.now();
             let customObj = JSON.parse(localStorage.getItem('customReactions') || '{}');
-            
-            customObj[customId] = {
-                nom: "★ " + nom,
-                eq: eq,
-                util: util
-            };
 
+            customObj[customId] = { nom: "★ " + nom, eq: eq, util: util };
             localStorage.setItem('customReactions', JSON.stringify(customObj));
 
             document.getElementById('customNom').value = '';
@@ -1060,6 +1055,7 @@
             alert("Réaction ajoutée avec succès à votre base infinie !");
         }
 
+        /* ---------- ASSISTANT IA (non connecté : aucune analyse simulée) ---------- */
         function gererFichierJoint(input) {
             if (input.files && input.files[0]) {
                 fichierActuel = input.files[0];
@@ -1075,25 +1071,16 @@
         }
 
         function envoyerQuestionAi() {
-            let input = document.getElementById('aiUserInput');
-            let respBox = document.getElementById('aiChatResponse');
-            let val = input.value.trim();
-            if(!val && !fichierActuel) return;
+            const input = document.getElementById('aiUserInput');
+            const respBox = document.getElementById('aiChatResponse');
+            const val = input.value.trim();
+            if (!val && !fichierActuel) return;
 
-            let fichierTexte = fichierActuel ? `<br><em>[Document analysé : ${fichierActuel.name}]</em>` : '';
-            let questionTexte = val ? val : "Analyse du document médical";
-
-            respBox.innerHTML = `<strong>Vous :</strong> ${questionTexte}${fichierTexte}<br><br><em>Analyse clinique par vision IA en cours...</em>`;
-            
-            setTimeout(() => {
-                let diagnosticFichier = fichierActuel ? ` Après examen approfondi de "${fichierActuel.name}", les paramètres biologiques et structurels sont cohérents avec une surveillance clinique requise.` : '';
-                let enteteUser = utilisateurConnecte ? `Bonjour ${utilisateurConnecte.nom} ! ` : '';
-                derniereReponseTexte = `${enteteUser}Analyse terminée.${diagnosticFichier} En tant qu'assistant de MediCalcul Express, je reste à vos côtés pour valider vos scores et vos révisions.`;
-                
-                respBox.innerHTML = `<strong>Vous :</strong> ${questionTexte}${fichierTexte}<br><br><strong>Assistant IA :</strong> ${derniereReponseTexte}`;
-                input.value = '';
-                supprimerFichierJoint();
-            }, 1000);
+            derniereReponseTexte = "Assistant IA non connecté : cette fonction est en cours de développement. Aucune analyse n'a été effectuée.";
+            const fichier = fichierActuel ? `<br><em>📎 ${esc(fichierActuel.name)} (non analysé)</em>` : '';
+            respBox.innerHTML = `<strong>Vous :</strong> ${esc(val || 'Document joint')}${fichier}<br><br><strong>Assistant :</strong> ${esc(derniereReponseTexte)}`;
+            input.value = '';
+            supprimerFichierJoint();
         }
 
         function lireDerniereReponseVoix() {
@@ -1120,7 +1107,7 @@
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 recognition = new SpeechRecognition();
                 recognition.lang = 'fr-FR';
-                
+
                 recognition.onstart = function() {
                     estEnCoursDEcoute = true;
                     btn.classList.add('recording');
@@ -1145,19 +1132,17 @@
 
                 recognition.start();
             } else {
-                if (recognition) {
-                    recognition.stop();
-                }
+                if (recognition) recognition.stop();
                 arreterEnregistrementAudio();
             }
         }
 
         function arreterEnregistrementAudio() {
             estEnCoursDEcoute = false;
-            const btn = document.getElementById('waveRecordBtn');
-            btn.classList.remove('recording');
+            document.getElementById('waveRecordBtn').classList.remove('recording');
         }
 
+        /* ---------- QUIZ ---------- */
         const banqueQuestions = [
             { q: "Le corps humain compte normalement 2 reins.", r: true },
             { q: "Il y a 206 os chez l'adulte humain standard.", r: true },
@@ -1246,25 +1231,15 @@
             localStorage.setItem('quizIndex', currentQuizIndex);
             localStorage.setItem('quizScore', scoreQuiz);
 
-            setTimeout(() => {
-                chargerQuestionQuiz();
-            }, 1200);
+            setTimeout(() => { chargerQuestionQuiz(); }, 1200);
         }
 
-        function changerLangue() {
-            const lang = document.getElementById('langSelect').value;
-            const t = traductions[lang];
-            for (let id in t) {
-                const el = document.getElementById(id);
-                if (el) el.innerText = t[id];
-            }
-        }
-
+        /* ---------- NAVIGATION & MENU ---------- */
         function ouvrirSection(viewId) {
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             document.getElementById('backBtn').style.display = 'flex';
-            
+
             document.getElementById('floatingAiBtn').style.display = 'none';
             document.getElementById('aiModal').style.display = 'none';
 
@@ -1280,7 +1255,7 @@
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
             document.getElementById('homeView').classList.add('active');
             document.getElementById('backBtn').style.display = 'none';
-            
+
             document.getElementById('floatingAiBtn').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1310,64 +1285,121 @@
             localStorage.setItem('selectedSize', sizeValue);
         }
 
+        /* ---------- RÉINITIALISATIONS ---------- */
         function resetImc() { document.getElementById('poids').value=''; document.getElementById('taille').value=''; document.getElementById('resultatIMC').innerText='Résultat : --'; document.getElementById('interpretationIMC').innerText=''; }
         function resetCockcroft() { document.getElementById('crPoids').value=''; document.getElementById('crAge').value=''; document.getElementById('crCreat').value=''; document.getElementById('resCockcroft').innerText='Clairance : --'; document.getElementById('interpCockcroft').innerText=''; }
         function resetPed() { document.getElementById('pedPoids').value=''; document.getElementById('pedDoseKg').value=''; document.getElementById('resPediatrie').innerText='Dose totale : --'; }
+        function resetIns() { document.getElementById('insGly').value=''; document.getElementById('resIns').innerText='Interprétation : --'; }
         function resetEau() { document.getElementById('eauPoids').value=''; document.getElementById('eauNa').value=''; document.getElementById('resEau').innerText='Déficit estimé : --'; document.getElementById('interpEau').innerText=''; }
         function resetFc() { document.getElementById('fcVal').value=''; document.getElementById('resFc').innerText='Résultat : --'; }
 
+        /* ---------- CALCULS ---------- */
         function calculerIMC() {
-            let p = parseFloat(document.getElementById('poids').value), t = parseFloat(document.getElementById('taille').value)/100;
-            if(isNaN(p)||isNaN(t)||t<=0) { document.getElementById('resultatIMC').innerText="Entrez des valeurs valides"; return; }
-            let imc = p/(t*t);
-            document.getElementById('resultatIMC').innerText = `Résultat : ${imc.toFixed(2)}`;
+            const p = parseFloat(document.getElementById('poids').value);
+            const t = parseFloat(document.getElementById('taille').value) / 100;
+            if (isNaN(p) || isNaN(t) || p <= 0 || t <= 0) {
+                document.getElementById('resultatIMC').innerText = "Entrez des valeurs valides";
+                document.getElementById('interpretationIMC').innerText = '';
+                return;
+            }
+            const imc = p / (t * t);
+            const cat = imc < 16.5 ? "Dénutrition / maigreur sévère"
+                : imc < 18.5 ? "Insuffisance pondérale"
+                : imc < 25 ? "Corpulence normale"
+                : imc < 30 ? "Surpoids"
+                : imc < 35 ? "Obésité modérée (classe I)"
+                : imc < 40 ? "Obésité sévère (classe II)"
+                : "Obésité massive (classe III)";
+            document.getElementById('resultatIMC').innerText = `Résultat : ${imc.toFixed(2)} kg/m²`;
+            document.getElementById('interpretationIMC').innerText = `${cat} (valeurs adulte, classification OMS)`;
         }
+
         function calculerCockcroft() {
-            let p = parseFloat(document.getElementById('crPoids').value), a = parseFloat(document.getElementById('crAge').value), c = parseFloat(document.getElementById('crCreat').value);
-            if(isNaN(p)||isNaN(a)||isNaN(c)||c<=0) return;
+            const p = parseFloat(document.getElementById('crPoids').value);
+            const a = parseFloat(document.getElementById('crAge').value);
+            const c = parseFloat(document.getElementById('crCreat').value);
+            if (isNaN(p) || isNaN(a) || isNaN(c) || p <= 0 || a <= 0 || c <= 0) {
+                document.getElementById('resCockcroft').innerText = "Entrez des valeurs valides";
+                document.getElementById('interpCockcroft').innerText = '';
+                return;
+            }
             let cl = ((140 - a) * p) / (0.815 * c);
-            if(document.getElementById('crSexe').value === 'femme') cl *= 0.85;
-            document.getElementById('resCockcroft').innerText = `Clairance estimée : ${cl.toFixed(2)} mL/min`;
+            if (document.getElementById('crSexe').value === 'femme') cl *= 0.85;
+            const stade = cl >= 90 ? "Fonction rénale normale ou élevée"
+                : cl >= 60 ? "Insuffisance rénale légère"
+                : cl >= 30 ? "Insuffisance rénale modérée"
+                : cl >= 15 ? "Insuffisance rénale sévère"
+                : "Insuffisance rénale terminale";
+            document.getElementById('resCockcroft').innerText = `Clairance estimée : ${cl.toFixed(1)} mL/min`;
+            document.getElementById('interpCockcroft').innerText = `${stade}. Estimation : à confirmer cliniquement (adaptation posologique selon le médicament).`;
         }
+
         function calculerPediatrie() {
             let p = parseFloat(document.getElementById('pedPoids').value), d = parseFloat(document.getElementById('pedDoseKg').value);
-            if(isNaN(p)||isNaN(d)) return;
+            if (isNaN(p) || isNaN(d)) return;
             document.getElementById('resPediatrie').innerText = `Dose totale : ${(p*d).toFixed(2)} mg`;
         }
+
+        // Plus de dose d'insuline calculée : interprétation de la glycémie uniquement
         function calculerInsuline() {
-            let gly = parseFloat(document.getElementById('insGly').value);
-            let p = parseFloat(document.getElementById('insPoids').value);
-            if(isNaN(gly) || isNaN(p)) return;
-            let dose = ((gly - 1.0) * 0.1) * p;
-            if(dose < 0) dose = 0;
-            document.getElementById('resIns').innerText = `Dose recommandée : ${dose.toFixed(1)} UI d'insuline rapide`;
+            const g = parseFloat(document.getElementById('insGly').value);
+            const res = document.getElementById('resIns');
+            if (isNaN(g) || g <= 0) { res.innerText = "Entrez une glycémie valide (g/L)"; return; }
+            const txt = g < 0.7 ? "Hypoglycémie : resucrage selon protocole."
+                : g <= 1.1 ? "Glycémie dans la plage normale à jeun."
+                : g <= 1.8 ? "Glycémie modérément élevée."
+                : g <= 3 ? "Hyperglycémie : rechercher une cétose, avis médical."
+                : "Hyperglycémie sévère : rechercher une cétose / déshydratation, prise en charge urgente.";
+            res.innerText = `${txt} La dose d'insuline est à déterminer selon le protocole local ou la prescription médicale.`;
         }
+
+        // Formule valable uniquement en hypernatrémie
         function calculerDeficitEau() {
-            let p = parseFloat(document.getElementById('eauPoids').value), na = parseFloat(document.getElementById('eauNa').value);
-            if(isNaN(p)||isNaN(na)) return;
-            let def = 0.6 * p * ((na / 140) - 1);
-            document.getElementById('resEau').innerText = `Déficit : ${def.toFixed(2)} Litres`;
+            const p = parseFloat(document.getElementById('eauPoids').value);
+            const na = parseFloat(document.getElementById('eauNa').value);
+            const res = document.getElementById('resEau');
+            const interp = document.getElementById('interpEau');
+            if (isNaN(p) || isNaN(na) || p <= 0 || na <= 0) {
+                res.innerText = "Entrez des valeurs valides";
+                interp.innerText = '';
+                return;
+            }
+            if (na <= 145) {
+                res.innerText = "Déficit estimé : --";
+                interp.innerText = na < 135
+                    ? "Hyponatrémie : cette formule ne s'applique pas (elle concerne l'hypernatrémie)."
+                    : "Natrémie non élevée (≤ 145 mmol/L) : pas de déficit en eau à calculer.";
+                return;
+            }
+            const def = 0.6 * p * (na / 140 - 1);
+            res.innerText = `Déficit estimé : ${def.toFixed(2)} L`;
+            interp.innerText = "Hypernatrémie. Coefficient 0,6 (adulte). Utiliser 0,5 chez la femme ou le sujet âgé. Correction lente, sous surveillance de la natrémie.";
         }
+
         function calculerFC() {
             let fc = parseFloat(document.getElementById('fcVal').value);
-            if(isNaN(fc)) return;
+            if (isNaN(fc)) return;
             let statut = fc < 60 ? "Bradycardie (Lent)" : (fc > 100 ? "Tachycardie (Rapide)" : "Fréquence normale");
             document.getElementById('resFc').innerText = `Fréquence : ${fc} bpm (${statut})`;
         }
+
+        /* ---------- CONVERTISSEURS ---------- */
         function convertMasse() {
             let v = parseFloat(document.getElementById('masseVal').value);
             let u = document.getElementById('masseUnit').value;
             let resDiv = document.getElementById('resultatMasse');
-            if(isNaN(v)) { resDiv.innerText = "Résultat : --"; return; }
+            if (isNaN(v)) { resDiv.innerText = "Résultat : --"; return; }
             resDiv.innerText = u === 'mg' ? `Résultat : ${(v * 1000).toFixed(0)} µg` : `Résultat : ${(v / 1000).toFixed(6)} mg`;
         }
+
         function convertVolume() {
             let v = parseFloat(document.getElementById('volVal').value);
             let u = document.getElementById('volUnit').value;
             let resDiv = document.getElementById('resultatVolume');
-            if(isNaN(v)) { resDiv.innerText = "Résultat : --"; return; }
+            if (isNaN(v)) { resDiv.innerText = "Résultat : --"; return; }
             resDiv.innerText = u === 'L_mL' ? `Résultat : ${(v * 1000).toFixed(0)} mL` : `Résultat : ${(v / 1000).toFixed(6)} L`;
         }
+
         function convertTemp(unit) {
             let cInput = document.getElementById('tempC');
             let fInput = document.getElementById('tempF');
@@ -1379,12 +1411,13 @@
                 cInput.value = !isNaN(f) ? ((f - 32) * 5/9).toFixed(1) : '';
             }
         }
+
         function convertTemps() {
             let val = parseFloat(document.getElementById('tempsVal').value);
             let unit = document.getElementById('tempsUnit').value;
             let resDiv = document.getElementById('resultatTemps');
             if (isNaN(val)) { resDiv.innerText = "Résultat : --"; return; }
-            
+
             if (unit === 'min_sec') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} secondes`;
             else if (unit === 'sec_min') resDiv.innerText = `Résultat : ${(val / 60).toFixed(2)} minutes`;
             else if (unit === 'h_min') resDiv.innerText = `Résultat : ${(val * 60).toFixed(0)} minutes`;
@@ -1399,9 +1432,10 @@
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         }
 
+        /* ---------- INITIALISATION ---------- */
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
-            
+
             const savedFont = localStorage.getItem('selectedFont');
             if (savedFont) {
                 document.documentElement.style.setProperty('--font-family', savedFont);
@@ -1423,12 +1457,10 @@
             }
 
             const activeSession = JSON.parse(localStorage.getItem('activeSession') || 'null');
-            if (activeSession) {
-                connecterUtilisateur(activeSession);
-            }
+            if (activeSession) connecterUtilisateur(activeSession);
 
             document.getElementById('appCalendar').value = new Date().toISOString().split('T')[0];
-            
+
             document.getElementById('floatingAiBtn').style.display = 'block';
             changerLangue();
         });
