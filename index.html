@@ -682,6 +682,27 @@
         <div style="margin-top: 30px; font-size: 0.75rem; opacity: 0.5;">Après 5 essais incorrects, vous pourrez réinitialiser</div>
     </div>
 
+
+    <!-- AVERTISSEMENT AU PREMIER LANCEMENT -->
+    <div id="discModal" style="display: none; position: fixed; inset: 0; z-index: 99998; background: rgba(2, 6, 23, 0.78); align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;">
+        <div role="dialog" aria-modal="true" aria-labelledby="discTitle" style="background: var(--card-bg); color: var(--text); max-width: 440px; width: 100%; max-height: 92vh; overflow-y: auto; border-radius: 18px; padding: 20px; box-sizing: border-box; border: 1px solid var(--border);">
+            <h3 id="discTitle" style="margin: 0 0 10px; font-size: 1.1rem;">⚠️ Avant de commencer</h3>
+            <p style="margin: 0 0 10px; font-size: 0.88rem; line-height: 1.5;">MediCalcul Express s'adresse aux <strong>étudiants en santé et aux professionnels de santé</strong>. Ce n'est pas un dispositif médical.</p>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
+                <li>Les calculs, le quiz et l'assistant IA sont une aide : ils ne remplacent ni le jugement d'un professionnel, ni les protocoles locaux, ni la notice du médicament.</li>
+                <li>Vérifiez toujours les résultats avant toute décision clinique.</li>
+                <li>L'assistant IA peut se tromper. N'envoyez jamais d'information permettant d'identifier un patient.</li>
+                <li>En cas d'urgence vitale, appelez immédiatement les secours.</li>
+            </ul>
+            <label style="display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 0.85rem; opacity: 1; cursor: pointer;">
+                <input type="checkbox" id="discCheck" onchange="majBoutonDisclaimer()" style="width: auto; margin: 2px 0 0; flex-shrink: 0;">
+                <span>J'ai lu et compris cet avertissement, ainsi que les conditions d'utilisation.</span>
+            </label>
+            <button type="button" id="discBtn" class="calc-btn" disabled style="width: 100%; margin-top: 14px; padding: 12px; opacity: 0.5;" onclick="accepterDisclaimer()">Continuer</button>
+            <p style="text-align: center; margin: 12px 0 0; font-size: 0.8rem;"><a href="#" onclick="voirConditions(); return false;" style="color: var(--primary); font-weight: 600;">Lire les conditions et la confidentialité</a></p>
+        </div>
+    </div>
+
     <!-- ACCUEIL -->
     <div id="homeView" class="section-view active">
         <div style="text-align: center; padding: 20px 20px 10px 20px;">
@@ -760,6 +781,9 @@
             <label for="taille" id="txtTaille">Taille (cm)</label>
             <input type="number" id="taille" placeholder="Ex: 175">
 
+            <label for="imcAge" id="txtImcAge">Âge (ans) — facultatif</label>
+            <input type="number" id="imcAge" placeholder="Ex: 35">
+
             <div class="action-row">
                 <button class="calc-btn" onclick="calculerIMC()" id="btnImc">Calculer l'IMC</button>
                 <button class="reset-icon-btn" onclick="resetImc()" title="Réinitialiser">&#8634;</button>
@@ -791,7 +815,14 @@
                 <div style="flex: 1;"><label for="crPoids" id="txtCrPoids">Poids (kg)</label><input type="number" id="crPoids" placeholder="Ex: 70"></div>
                 <div style="flex: 1;"><label for="crAge" id="txtCrAge">Âge (ans)</label><input type="number" id="crAge" placeholder="Ex: 50"></div>
             </div>
-            <label for="crCreat" id="txtCrCreat">Créatininémie (µmol/L)</label><input type="number" id="crCreat" placeholder="Ex: 90">
+            <label for="crCreat" id="txtCrCreat">Créatininémie</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="crCreat" placeholder="Ex: 90">
+                <select id="crUnite" onchange="changerUniteCreat()" style="width: 120px;" aria-label="Unité de créatininémie">
+                    <option value="umol">µmol/L</option>
+                    <option value="mgdl">mg/dL</option>
+                </select>
+            </div>
             <label for="crSexe" id="txtCrSexe">Sexe</label>
             <select id="crSexe"><option value="homme" id="optHomme">Homme</option><option value="femme" id="optFemme">Femme</option></select>
 
@@ -815,6 +846,7 @@
             <h4 style="color: var(--primary); font-size: 0.95rem;" id="txtPedTitle">2. Posologie Pédiatrique (Dose / kg)</h4>
             <label for="pedPoids" id="txtPedPoids">Poids de l'enfant (kg)</label><input type="number" id="pedPoids" placeholder="Ex: 15">
             <label for="pedDoseKg" id="txtPedDose">Dose unitaire recommandée (mg/kg)</label><input type="number" id="pedDoseKg" placeholder="Ex: 15">
+            <label for="pedDoseMax" id="txtPedDoseMax">Dose maximale du médicament (mg) — facultatif</label><input type="number" id="pedDoseMax" placeholder="Voir le RCP, ex: 1000">
 
             <div class="action-row">
                 <button class="calc-btn" onclick="calculerPediatrie()" id="btnPed">Calculer la Dose</button>
@@ -847,6 +879,13 @@
                 <div style="flex: 1;"><label for="eauPoids" id="txtEauPoids">Poids (kg)</label><input type="number" id="eauPoids" placeholder="Ex: 70"></div>
                 <div style="flex: 1;"><label for="eauNa" id="txtEauNa">Natrémie (mmol/L)</label><input type="number" id="eauNa" placeholder="Ex: 155"></div>
             </div>
+
+            <label for="eauCoef" id="txtEauCoef">Eau corporelle totale (coefficient)</label>
+            <select id="eauCoef">
+                <option value="0.6">Homme adulte : 0,6</option>
+                <option value="0.5">Femme adulte ou homme âgé : 0,5</option>
+                <option value="0.45">Femme âgée : 0,45</option>
+            </select>
 
             <div class="action-row">
                 <button class="calc-btn" onclick="calculerDeficitEau()" id="btnEau">Calculer Déficit en Eau</button>
@@ -1119,7 +1158,38 @@
                 <li><strong>Glycémie</strong> : repères usuels à jeun de 0,70 à 1,10 g/L. L'application n'indique aucune dose d'insuline.</li>
             </ul>
 
-            <p style="font-size: 0.78rem; opacity: 0.7; margin: 18px 0 0;">Les formules sont fournies à titre indicatif. Version 1.0 · novembre 2026.</p>
+            <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">À qui s'adresse l'application</h4>
+            <p style="margin: 0; font-size: 0.85rem; line-height: 1.55;">MediCalcul Express est destiné aux étudiants en santé et aux professionnels de santé. Ce n'est pas un dispositif médical et il n'est pas conçu pour que le grand public décide seul d'un traitement. Le quiz est un outil de révision.</p>
+
+            <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Validation des contenus</h4>
+            <p id="legalRelecture" style="margin: 0; font-size: 0.85rem; line-height: 1.55;"></p>
+
+            <div id="legalEditeurBox">
+                <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Éditeur et contact</h4>
+                <p id="legalEditeur" style="margin: 0; font-size: 0.85rem; line-height: 1.55;"></p>
+            </div>
+
+            <h4 id="legalConditions" style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Conditions d'utilisation</h4>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
+                <li>L'application est fournie à titre informatif et pédagogique, « en l'état », sans garantie d'exactitude, de disponibilité ou d'adaptation à un usage particulier.</li>
+                <li>Vous restez seul responsable de l'usage que vous faites des résultats et de toute décision clinique. Dans la mesure permise par la loi, l'éditeur n'est pas responsable des conséquences de cet usage.</li>
+                <li>N'utilisez pas l'application comme seule source dans une situation d'urgence, et n'y saisissez aucune donnée permettant d'identifier un patient.</li>
+                <li>L'accès à l'assistant IA peut être limité (nombre de questions) ou interrompu à tout moment.</li>
+                <li>Ces conditions peuvent évoluer ; l'avertissement vous sera présenté à nouveau en cas de changement important.</li>
+            </ul>
+
+            <h4 id="legalPrivacy" style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Politique de confidentialité</h4>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
+                <li><strong>Stocké sur votre appareil uniquement :</strong> profil (nom, e-mail, mot de passe haché), photo, favoris, 15 derniers calculs, réactions personnalisées, réglages d'affichage, code PIN (haché) et acceptation de l'avertissement. Rien de tout cela n'est envoyé à un serveur.</li>
+                <li><strong>Calculs :</strong> ils sont faits sur votre appareil et ne sont pas transmis.</li>
+                <li><strong>Assistant IA :</strong> votre question et le fichier joint sont envoyés à notre serveur, puis transmis à Google (service Gemini) pour produire la réponse. L'application ne les enregistre pas, mais Google peut les traiter selon ses propres conditions applicables à l'offre gratuite.</li>
+                <li><strong>Adresse IP :</strong> elle est utilisée temporairement par le serveur pour limiter le nombre de questions, et l'hébergeur peut conserver des journaux techniques.</li>
+                <li><strong>Polices d'écriture :</strong> elles sont chargées depuis Google Fonts, qui voit donc votre adresse IP.</li>
+                <li>Aucun cookie publicitaire, aucun outil de statistiques.</li>
+                <li><strong>Vos données :</strong> vous pouvez tout supprimer à tout moment avec « Effacer toutes les données » dans les Paramètres, et vider l'historique depuis l'accueil.</li>
+            </ul>
+
+            <p style="font-size: 0.78rem; opacity: 0.7; margin: 18px 0 0;">Les formules sont fournies à titre indicatif. Version 1.1 · novembre 2026.</p>
         </div>
     </div>
 
@@ -1171,7 +1241,10 @@
       <p style="margin: 6px 0 0;"><a href="#" id="footerApropos" onclick="ouvrirApropos(); return false;" style="color: var(--primary); font-weight: 600;">À propos, sources et avertissement</a></p>
     </footer>
 
-    <script>let fichierActuel = null;
+    <script>// À COMPLÉTER : ces informations s'affichent dans « À propos » (laissez vide pour ne rien afficher).
+const INFOS = { editeur: 'Ichaka DIARRA', contact: 'ichakadia288@gmail.com ou 77 98 78 47', relecture: '' };
+const VERSION_AVERTISSEMENT = '1';
+let fichierActuel = null;
 let recognition = null;
 let estEnCoursDEcoute = false;
 let derniereReponseTexte = "Bonjour ! Comment puis-je vous aider ?";
@@ -1336,7 +1409,7 @@ txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "
 catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz & Flashcards", catChimie: "Réactions Chimiques & Infinités",
 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
 urgModule: "Module Urgences & Réanimation",
-cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
+cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
 pedTitle: "2. Posologie Pédiatrique (Dose / kg)", pedPoids: "Poids de l'enfant (kg)", pedDose: "Dose unitaire recommandée (mg/kg)", btnPed: "Calculer la Dose",
 insTitle: "3. Hyperglycémie — Aide à l'interprétation", btnIns: "Interpréter la glycémie",
 eauTitle: "4. Déficit en Eau (Adrogué-Madias)", eauPoids: "Poids (kg)", eauNa: "Natrémie (mmol/L)", btnEau: "Calculer Déficit en Eau",
@@ -1358,7 +1431,7 @@ txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access
 catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz & Flashcards", catChimie: "Chemical Reactions & Infinite",
 subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
 urgModule: "Emergency & ICU Module",
-cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
+cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
 pedTitle: "2. Pediatric Dosage (Dose / kg)", pedPoids: "Child weight (kg)", pedDose: "Recommended unit dose (mg/kg)", btnPed: "Calculate Dose",
 insTitle: "3. Hyperglycemia — Interpretation aid", btnIns: "Interpret glycemia",
 eauTitle: "4. Water Deficit (Adrogué-Madias)", eauPoids: "Weight (kg)", eauNa: "Natremia (mmol/L)", btnEau: "Calculate Water Deficit",
@@ -1380,7 +1453,7 @@ txtBack: "الرئيسية", txtHomeHeader: "اختر فئة", txtHomeSub: "ال
 catImc: "كتلة الجسم (BMI)", catUrg: "الطوارئ والإنعاش", catConv: "الحاسبات والمحولات", catCardio: "معدل ضربات القلب", catQuiz: "اختبار وبطاقات", catChimie: "التفاعلات الكيميائية",
 subTitle: "مؤشر كتلة الجسم والتقييم", imcTitle: "حساب مؤشر كتلة الجسم", poids: "الوزن (كغ)", taille: "الطول (سم)", btnImc: "احسب المؤشر",
 urgModule: "وحدة الطوارئ والإنعاش",
-cockcroftTitle: "1. وظائف الكلى (كرياتينين - كوككروفت)", crPoids: "الوزن (كغ)", crAge: "العمر (سنوات)", crCreat: "الكرياتينين (µmol/L)", crSexe: "الجنس", optHomme: "ذكر", optFemme: "أنثى", btnCockcroft: "احسب التصفية",
+cockcroftTitle: "1. وظائف الكلى (كرياتينين - كوككروفت)", crPoids: "الوزن (كغ)", crAge: "العمر (سنوات)", crCreat: "الكرياتينين", crSexe: "الجنس", optHomme: "ذكر", optFemme: "أنثى", btnCockcroft: "احسب التصفية",
 pedTitle: "2. الجرعة للأطفال (مغ/كغ)", pedPoids: "وزن الطفل (كغ)", pedDose: "الجرعة الموصى بها (مغ/كغ)", btnPed: "احسب الجرعة",
 insTitle: "3. ارتفاع السكر — مساعدة في التفسير", btnIns: "فسر مستوى السكر",
 eauTitle: "4. نقص الماء (Adrogué-Madias)", eauPoids: "الوزن (كغ)", eauNa: "الصوديوم (mmol/L)", btnEau: "احسب نقص الماء",
@@ -1402,7 +1475,7 @@ txtBack: "Главная", txtHomeHeader: "Выберите категорию",
 catImc: "Индекс массы тела (ИМТ)", catUrg: "Неотложная помощь", catConv: "Калькуляторы и конвертеры", catCardio: "Частота сердечных сокращений", catQuiz: "Викторина и карточки", catChimie: "Химические реакции",
 subTitle: "Индекс массы тела и оценка", imcTitle: "Расчёт ИМТ", poids: "Вес (кг)", taille: "Рост (см)", btnImc: "Рассчитать ИМТ",
 urgModule: "Модуль неотложной помощи",
-cockcroftTitle: "1. Функция почек (Клиренс - Кокрофт)", crPoids: "Вес (кг)", crAge: "Возраст (лет)", crCreat: "Креатинин (µmol/L)", crSexe: "Пол", optHomme: "Мужской", optFemme: "Женский", btnCockcroft: "Рассчитать клиренс",
+cockcroftTitle: "1. Функция почек (Клиренс - Кокрофт)", crPoids: "Вес (кг)", crAge: "Возраст (лет)", crCreat: "Креатинин", crSexe: "Пол", optHomme: "Мужской", optFemme: "Женский", btnCockcroft: "Рассчитать клиренс",
 pedTitle: "2. Детская дозировка (мг/кг)", pedPoids: "Вес ребёнка (кг)", pedDose: "Рекомендуемая доза (мг/кг)", btnPed: "Рассчитать дозу",
 insTitle: "3. Гипергликемия — помощь в интерпретации", btnIns: "Интерпретировать глюкозу",
 eauTitle: "4. Дефицит воды (Adrogué-Madias)", eauPoids: "Вес (кг)", eauNa: "Натрий (mmol/L)", btnEau: "Рассчитать дефицит воды",
@@ -1424,7 +1497,7 @@ txtBack: "Start", txtHomeHeader: "Kategorie wählen", txtHomeSub: "Schnellzugrif
 catImc: "Körpermasse (BMI)", catUrg: "Notfall & Reanimation", catConv: "Rechner & Umrechner", catCardio: "Herzfrequenz", catQuiz: "Quiz & Karteikarten", catChimie: "Chemische Reaktionen",
 subTitle: "Body-Mass-Index und Bewertung", imcTitle: "BMI-Berechnung", poids: "Gewicht (kg)", taille: "Größe (cm)", btnImc: "BMI berechnen",
 urgModule: "Notfall- & Reanimationsmodul",
-cockcroftTitle: "1. Nierenfunktion (Clearance - Cockcroft)", crPoids: "Gewicht (kg)", crAge: "Alter (Jahre)", crCreat: "Kreatinin (µmol/L)", crSexe: "Geschlecht", optHomme: "Männlich", optFemme: "Weiblich", btnCockcroft: "Clearance berechnen",
+cockcroftTitle: "1. Nierenfunktion (Clearance - Cockcroft)", crPoids: "Gewicht (kg)", crAge: "Alter (Jahre)", crCreat: "Kreatinin", crSexe: "Geschlecht", optHomme: "Männlich", optFemme: "Weiblich", btnCockcroft: "Clearance berechnen",
 pedTitle: "2. Pädiatrische Dosierung (mg/kg)", pedPoids: "Gewicht des Kindes (kg)", pedDose: "Empfohlene Dosis (mg/kg)", btnPed: "Dosis berechnen",
 insTitle: "3. Hyperglykämie — Interpretationshilfe", btnIns: "Blutzucker interpretieren",
 eauTitle: "4. Wasserdefizit (Adrogué-Madias)", eauPoids: "Gewicht (kg)", eauNa: "Natrium (mmol/L)", btnEau: "Wasserdefizit berechnen",
@@ -1592,102 +1665,4 @@ respBox.innerHTML = vous + "<em>Analyse en cours…</em>";
 const r = await fetch('/api/chat', {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ message: val, file: fichier, lang: document.getElementById('langSelect').value })
-});
-const data = await r.json().catch(() => ({}));
-if (!r.ok) throw new Error(data.error || "Assistant indisponible.");
-derniereReponseTexte = data.reply;
-respBox.innerHTML = vous + `<strong>Assistant :</strong> <span style="white-space: pre-wrap;">${esc(data.reply)}</span>`;
-input.value = '';
-supprimerFichierJoint();
-} catch (e) {
-respBox.innerHTML = vous + `<span style="color:#ef4444;">${esc(e.message || "Erreur de connexion.")}</span>`;
-} finally {
-envoiEnCours = false;
-}
-}
-function lireDerniereReponseVoix() {
-if ('speechSynthesis' in window) {
-window.speechSynthesis.cancel();
-let utterance = new SpeechSynthesisUtterance(derniereReponseTexte);
-utterance.lang = 'fr-FR';
-utterance.rate = 1.0;
-window.speechSynthesis.speak(utterance);
-} else {
-alert("La synthèse vocale n'est pas supportée par votre navigateur.");
-}
-}
-function basculerEnregistrementAudio() {
-const btn = document.getElementById('waveRecordBtn');
-const respBox = document.getElementById('aiChatResponse');
-if (!estEnCoursDEcoute) {
-if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-alert("La reconnaissance vocale n'est pas supportée par votre navigateur.");
-return;
-}
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-recognition = new SpeechRecognition();
-recognition.lang = 'fr-FR';
-recognition.onstart = function() {
-estEnCoursDEcoute = true;
-btn.classList.add('recording');
-respBox.innerHTML = "🎤 Écoute vocale active... Parlez.";
-};
-recognition.onresult = function(event) {
-let speechToText = event.results[0][0].transcript;
-document.getElementById('aiUserInput').value = speechToText;
-arreterEnregistrementAudio();
-envoyerQuestionAi();
-};
-recognition.onerror = function() {
-arreterEnregistrementAudio();
-respBox.innerHTML = "Erreur de capture vocale. Veuillez réessayer.";
-};
-recognition.onend = function() {
-arreterEnregistrementAudio();
-};
-recognition.start();
-} else {
-if (recognition) recognition.stop();
-arreterEnregistrementAudio();
-}
-}
-function arreterEnregistrementAudio() {
-estEnCoursDEcoute = false;
-document.getElementById('waveRecordBtn').classList.remove('recording');
-}
-const CATEGORIES_QUIZ = {
-toutes: { fr: "Toutes les catégories", en: "All categories" },
-cardio: { fr: "❤️ Cardiologie", en: "❤️ Cardiology" },
-rein: { fr: "💧 Rein et eau", en: "💧 Kidney & water" },
-pharma: { fr: "💊 Pharmacologie", en: "💊 Pharmacology" },
-urgences: { fr: "🚑 Urgences", en: "🚑 Emergency" },
-metabo: { fr: "🧬 Métabolisme", en: "🧬 Metabolism" },
-anat: { fr: "🫁 Anatomie et physiologie", en: "🫁 Anatomy & physiology" },
-sang: { fr: "🩸 Sang et immunité", en: "🩸 Blood & immunity" }
-};
-const banqueQuestions = [
-{ q: "Le corps humain compte normalement 2 reins.", r: true, c: "rein", e: "Deux reins, situés à l'arrière de l'abdomen. On peut vivre avec un seul rein fonctionnel." },
-{ q: "Il y a 206 os chez l'adulte humain standard.", r: true, c: "anat", e: "L'adulte a 206 os. Le nouveau-né en a environ 270, dont certains se soudent en grandissant." },
-{ q: "Le cœur possède 3 ventricules.", r: false, c: "cardio", e: "Le cœur a 2 ventricules (droit et gauche) et 2 oreillettes." },
-{ q: "Le corps humain contient 4 poumons.", r: false, c: "anat", e: "Il y a 2 poumons : le droit a 3 lobes, le gauche en a 2." },
-{ q: "L'organisme humain compte 32 dents définitives normales.", r: true, c: "anat", e: "32 dents, dont les 4 dents de sagesse. Il y en a 28 sans elles." },
-{ q: "L'artère aorte transporte du sang pauvre en oxygène.", r: false, c: "cardio", e: "L'aorte transporte du sang riche en oxygène, issu du ventricule gauche. Ce sont les artères pulmonaires qui portent du sang pauvre en oxygène." },
-{ q: "Le foie est la plus grande glande du corps humain.", r: true, c: "anat", e: "Le foie pèse environ 1,5 kg. C'est la plus grande glande, et le plus gros organe interne." },
-{ q: "Le sang veineux est transporté par les veines vers le cœur.", r: true, c: "cardio", e: "Les veines ramènent le sang vers le cœur. Exception : les veines pulmonaires transportent du sang oxygéné." },
-{ q: "L'insuline est produite par le pancréas.", r: true, c: "metabo", e: "Elle est sécrétée par les cellules bêta des îlots de Langerhans et abaisse la glycémie." },
-{ q: "L'estomac sécrète de l'acide chlorhydrique pour la digestion.", r: true, c: "anat", e: "Les cellules pariétales sécrètent l'acide chlorhydrique. Le pH gastrique est d'environ 1 à 2." },
-{ q: "Le système nerveux central comprend le cerveau et la moelle épinière.", r: true, c: "anat", e: "Le système nerveux central est formé de l'encéphale et de la moelle épinière. Le reste constitue le système nerveux périphérique." },
-{ q: "Les globules rouges contiennent de l'hémoglobine.", r: true, c: "sang", e: "L'hémoglobine fixe l'oxygène dans les poumons et le libère dans les tissus." },
-{ q: "La durée moyenne d'un cycle cardiaque complet est d'environ 0,8 seconde.", r: true, c: "cardio", e: "À 75 battements par minute, un cycle dure 60 / 75 = 0,8 seconde." },
-{ q: "Le taux normal de glycémie à jeun chez l'adulte est généralement entre 0,70 et 1,10 g/L.", r: true, c: "metabo", e: "Soit environ 3,9 à 6,1 mmol/L. Un diabète est évoqué à partir de 1,26 g/L à jeun, confirmé sur deux dosages." },
-{ q: "Le fémur est l'os le plus court du corps humain.", r: false, c: "anat", e: "Le fémur est l'os le plus long et le plus solide. Le plus petit est l'étrier, dans l'oreille moyenne." },
-{ q: "La rate joue un rôle majeur dans le système immunitaire et le filtrage du sang.", r: true, c: "sang", e: "Elle filtre le sang, élimine les globules rouges vieillis et participe à la défense immunitaire." },
-{ q: "Le plasma représente environ 55% du volume total du sang.", r: true, c: "sang", e: "Le plasma représente environ 55 % du sang, les cellules (éléments figurés) environ 45 %." },
-{ q: "Les reins filtrent le sang pour produire l'urine.", r: true, c: "rein", e: "Les néphrons filtrent le sang. Un adulte produit environ 1,5 litre d'urine par jour." },
-{ q: "Le cervelet est principalement responsable de l'équilibre et de la coordination motrice.", r: true, c: "anat", e: "Le cervelet coordonne les mouvements et participe à l'équilibre." },
-{ q: "La valve tricuspide est située entre l'oreillette gauche et le ventricule gauche.", r: false, c: "cardio", e: "La tricuspide sépare l'oreillette droite et le ventricule droit. À gauche, c'est la valve mitrale." },
-{ q: "La fréquence cardiaque normale de l'adulte au repos est comprise entre 60 et 100 battements par minute.", r: true, c: "cardio", e: "En dessous de 60 : bradycardie. Au-dessus de 100 : tachycardie." },
-{ q: "Le nœud sinusal est le pacemaker naturel du cœur.", r: true, c: "cardio", e: "Situé dans l'oreillette droite, il donne le rythme du cœur (rythme sinusal)." },
-{ q: "Une pression artérielle de 140/90 mmHg ou plus, retrouvée de façon répétée, évoque une hypertension artérielle.", r: true, c: "cardio", e: "Le seuil de 140/90 mmHg au cabinet doit être retrouvé sur plusieurs mesures." },
-{ q: "Le ventricule gauche envoie le sang vers les poumons.", r: false, c: "cardio", e: "Le ventricule droit envoie le sang aux poumons par l'artèr
+body: JSON.stringify({ message: val, file: fichier, lang: document.getEl
