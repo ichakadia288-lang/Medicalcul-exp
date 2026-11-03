@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediCalcul Express</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f4c81">
+    <meta name="theme-color" content="#0284c7">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
             --text: #0f172a;
             --card-bg: #ffffff;
-            --primary: #0f4c81;
-            --primary-gradient: linear-gradient(135deg, #0f4c81 0%, #0c3d6b 100%);
-            --border: #cbd5e1;
-            --input-bg: #f8fafc;
-            --reset-bg: #e2e8f0;
+            --primary: #0284c7;
+            --primary-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            --border: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --reset-bg: #f1f5f9;
             --reset-icon: #0f172a;
-            --shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+            --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
             --font-family: 'Inter', system-ui, -apple-system, sans-serif;
             --font-style: normal;
             --font-weight: normal;
@@ -28,16 +28,16 @@
         }
 
         body.dark-mode {
-            --bg: #0b1220;
-            --text: #f1f5f9;
-            --card-bg: #111827;
-            --primary: #3b82f6;
-            --primary-gradient: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            --bg: #030712;
+            --text: #f8fafc;
+            --card-bg: #0f172a;
+            --primary: #38bdf8;
+            --primary-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
             --border: #1e293b;
-            --input-bg: #0f172a;
+            --input-bg: #020817;
             --reset-bg: #1e293b;
-            --reset-icon: #f1f5f9;
-            --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+            --reset-icon: #f8fafc;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
         }
 
         body {
@@ -147,24 +147,22 @@
         .category-card:hover { border-color: var(--primary); }
 
         .category-icon {
-            width: 56px;
-            height: 56px;
+            width: 64px;
+            height: 64px;
             background: var(--primary-gradient);
-            border-radius: 14px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.4px;
+            font-size: 1.8rem;
             margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(15, 76, 129, 0.25);
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.3);
         }
 
         .category-title {
-            font-weight: 600;
-            font-size: 0.88rem;
+            font-weight: 700;
+            font-size: 0.9rem;
             color: var(--text);
             margin: 0;
             line-height: 1.3;
@@ -656,13 +654,13 @@
     <!-- ACCUEIL -->
     <div id="homeView" class="section-view active">
         <div style="text-align: center; padding: 20px 20px 10px 20px;">
-            <h2 style="margin: 0 0 6px 0; font-size: 1.3rem;" id="txtHomeHeader">Outils de calcul médical</h2>
-            <p style="margin: 0; opacity: 0.7; font-size: 0.85rem;" id="txtHomeSub">Calculs cliniques rapides et fiables — usage professionnel</p>
+            <h2 style="margin: 0 0 6px 0; font-size: 1.3rem;" id="txtHomeHeader">Sélectionnez une Catégorie</h2>
+            <p style="margin: 0; opacity: 0.7; font-size: 0.85rem;" id="txtHomeSub">Accédez rapidement à vos outils de calculs médicaux</p>
         </div>
 
         <div class="home-block">
             <div id="installBanner" class="install-banner">
-                <span id="installTexte">Installer MediCalcul sur votre appareil</span>
+                <span id="installTexte">📲 Installer MediCalcul sur votre téléphone</span>
                 <button type="button" id="btnInstall" onclick="installerApp()">Installer</button>
                 <button type="button" id="btnInstallClose" onclick="fermerInstall()" aria-label="Fermer">✕</button>
             </div>
@@ -670,7 +668,7 @@
 
         <div class="home-block">
             <div class="home-search">
-                <span style="opacity:0.6;font-size:0.9rem;">⌕</span>
+                <span>🔍</span>
                 <input type="search" id="searchTool" placeholder="Rechercher un outil…" oninput="majAccueil()" autocomplete="off" aria-label="Rechercher un outil">
             </div>
         </div>
@@ -678,43 +676,43 @@
         <div class="home-block" id="searchResults" style="display: none;"></div>
 
         <div class="home-block" id="favSection" style="display: none;">
-            <div class="home-label"><span id="txtFavTitle">Favoris</span></div>
+            <div class="home-label"><span id="txtFavTitle">⭐ Favoris</span></div>
             <div id="favList"></div>
         </div>
 
         <div class="home-block" id="histSection" style="display: none;">
-            <div class="home-label"><span id="txtHistTitle">Derniers calculs</span><button type="button" id="btnClearHist" onclick="effacerHistorique()">Effacer</button></div>
+            <div class="home-label"><span id="txtHistTitle">🕘 Derniers calculs</span><button type="button" id="btnClearHist" onclick="effacerHistorique()">Effacer</button></div>
             <div id="histList"></div>
         </div>
 
         <div class="dashboard-grid" id="homeGrid">
             <div class="category-card" onclick="ouvrirSection('imcView')">
-                <div class="category-icon">IMC</div>
-                <h4 class="category-title" id="catImc">Masse corporelle</h4>
+                <div class="category-icon">⚖️</div>
+                <h4 class="category-title" id="catImc">Masse Corporelle (IMC)</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('urgencesView')">
-                <div class="category-icon">URG</div>
+                <div class="category-icon">🏥</div>
                 <h4 class="category-title" id="catUrg">Urgences & Réanimation</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('convertisseursView')">
-                <div class="category-icon">CONV</div>
-                <h4 class="category-title" id="catConv">Convertisseurs</h4>
+                <div class="category-icon">⏱️</div>
+                <h4 class="category-title" id="catConv">Calculs & Convertisseurs Express</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('cardioView')">
-                <div class="category-icon">FC</div>
-                <h4 class="category-title" id="catCardio">Fréquence cardiaque</h4>
+                <div class="category-icon">❤️</div>
+                <h4 class="category-title" id="catCardio">Fréquence Cardiaque</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('quizView')">
-                <div class="category-icon">QZ</div>
-                <h4 class="category-title" id="catQuiz">Quiz & Flashcards</h4>
+                <div class="category-icon">🧠</div>
+                <h4 class="category-title" id="catQuiz">Quiz & Fiches Flashcards</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('chimieView')">
-                <div class="category-icon">CHIM</div>
-                <h4 class="category-title" id="catChimie">Réactions chimiques</h4>
+                <div class="category-icon">🧪</div>
+                <h4 class="category-title" id="catChimie">Réactions Chimiques & Infinités</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('outilsView')">
-                <div class="category-icon">CLI</div>
-                <h4 class="category-title" id="catOutils">Outils cliniques</h4>
+                <div class="category-icon">🩺</div>
+                <h4 class="category-title" id="catOutils">Outils Cliniques</h4>
             </div>
         </div>
     </div>
@@ -1010,35 +1008,32 @@
         <div class="container">
             <h3 id="aproposTitle" style="margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary);">À propos et sources</h3>
 
-            <div style="padding: 14px 16px; border-radius: 12px; border: 1px solid #b45309; background: rgba(245, 158, 11, 0.12); font-size: 0.85rem; line-height: 1.55;">
-                <strong style="display:block;margin-bottom:6px;">Avertissement médical important</strong>
-                MediCalcul Express est exclusivement une aide au calcul et à la révision. Il ne constitue en aucun cas un dispositif médical, ne remplace ni le jugement clinique d’un professionnel de santé, ni les protocoles locaux, ni le RCP des médicaments. Toute décision thérapeutique engage la responsabilité du prescripteur. Vérifiez systématiquement les résultats. En cas d’urgence vitale, contactez immédiatement les services de secours (15 / 112).
+            <div style="padding: 12px 14px; border-radius: 12px; border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.1); font-size: 0.85rem; line-height: 1.5;">
+                <strong>⚠️ Avertissement médical</strong><br>
+                MediCalcul Express est une aide au calcul et à la révision. Il ne remplace ni le jugement d'un professionnel de santé, ni les protocoles locaux, ni la notice ou le RCP des médicaments. Vérifiez toujours les résultats avant toute décision clinique. En cas d'urgence vitale, appelez immédiatement les secours.
             </div>
 
             <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Assistant IA et confidentialité</h4>
             <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
-                <li>L’assistant peut se tromper : ses réponses sont purement indicatives et doivent être vérifiées.</li>
-                <li><strong>Interdiction stricte</strong> : n’envoyez jamais d’information permettant d’identifier un patient (nom, date de naissance, n° de dossier, adresse, photo identifiable…). Les données sont transmises à un service d’IA externe.</li>
-                <li>Compte, photo, favoris et historique restent stockés uniquement sur cet appareil (aucune synchronisation serveur).</li>
+                <li>L'assistant peut se tromper : ses réponses sont indicatives et doivent être vérifiées.</li>
+                <li>Vos questions et les fichiers joints sont envoyés à un service d'intelligence artificielle externe. N'envoyez jamais d'information permettant d'identifier un patient (nom, date de naissance, numéro de dossier).</li>
+                <li>Votre compte, votre photo, vos favoris et votre historique restent enregistrés uniquement sur cet appareil.</li>
             </ul>
 
             <h4 style="color: var(--primary); font-size: 0.95rem; margin: 18px 0 6px;">Sources des formules</h4>
             <ul style="margin: 0; padding-left: 18px; font-size: 0.85rem; line-height: 1.55;">
-                <li><strong>IMC</strong> : poids (kg) / taille² (m²), classification OMS (adultes).</li>
-                <li><strong>Clairance de la créatinine</strong> : Cockcroft & Gault (Nephron, 1976 ; 16:31-41), créatinine en µmol/L, coefficient 0,85 chez la femme.</li>
-                <li><strong>Déficit en eau</strong> : 0,6 × poids × (natrémie / 140 − 1) — Adrogué HJ, Madias NE, N Engl J Med 2000 ; 342:1493-1499 (hypernatrémie uniquement).</li>
+                <li><strong>IMC</strong> : poids (kg) / taille² (m²), classes de l'Organisation mondiale de la santé (adultes).</li>
+                <li><strong>Clairance de la créatinine</strong> : formule de Cockcroft et Gault (Nephron, 1976 ; 16:31-41), avec la créatinine en µmol/L et un coefficient de 0,85 chez la femme.</li>
+                <li><strong>Déficit en eau</strong> : déficit = 0,6 × poids × (natrémie / 140 − 1), applicable en hypernatrémie. Référence : Adrogué HJ, Madias NE, N Engl J Med 2000 ; 342:1493-1499.</li>
                 <li><strong>Score de Glasgow</strong> : Teasdale G, Jennett B, Lancet 1974 ; 2:81-84.</li>
-                <li><strong>Surface corporelle</strong> : Mosteller RD, N Engl J Med 1987 ; 317:1098.</li>
-                <li><strong>Débit de perfusion</strong> : volume / durée ; gouttes/min = volume × facteur gouttes/mL / durée (min).</li>
-                <li><strong>Posologie pédiatrique</strong> : dose totale = poids × dose mg/kg. Toujours respecter la dose maximale et le RCP.</li>
-                <li><strong>Fréquence cardiaque</strong> : valeurs de référence adulte au repos 60–100 bpm.</li>
-                <li><strong>Glycémie</strong> : valeurs usuelles à jeun 0,70–1,10 g/L. Aucune dose d’insuline n’est proposée.</li>
+                <li><strong>Surface corporelle</strong> : formule de Mosteller, N Engl J Med 1987 ; 317:1098.</li>
+                <li><strong>Débit de perfusion</strong> : débit (mL/h) = volume / durée ; gouttes par minute = volume × gouttes par mL / durée en minutes.</li>
+                <li><strong>Posologie pédiatrique</strong> : dose totale = poids × dose en mg/kg. Respectez la dose maximale et le RCP du médicament.</li>
+                <li><strong>Fréquence cardiaque</strong> : valeurs usuelles de l'adulte au repos, 60 à 100 battements par minute.</li>
+                <li><strong>Glycémie</strong> : repères usuels à jeun de 0,70 à 1,10 g/L. L'application n'indique aucune dose d'insuline.</li>
             </ul>
 
-            <p style="font-size: 0.78rem; opacity: 0.75; margin: 18px 0 0; border-top: 1px solid var(--border); padding-top: 12px;">
-                Version 1.1 · Dernière révision des formules : novembre 2026<br>
-                Les formules sont fournies à titre indicatif. Vérification clinique obligatoire avant toute utilisation.
-            </p>
+            <p style="font-size: 0.78rem; opacity: 0.7; margin: 18px 0 0;">Les formules sont fournies à titre indicatif. Version 1.0 · novembre 2026.</p>
         </div>
     </div>
 
@@ -1052,11 +1047,11 @@
     <!-- MODALE ASSISTANT IA -->
     <div id="aiModal">
         <div style="background: var(--primary-gradient); color: white; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.85rem; position: sticky; top: 0;">
-            <span>Assistant médical IA</span>
+            <span>Assistant Médical IA</span>
             <button onclick="toggleAiModal()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">✕</button>
         </div>
         <div style="padding: 12px; font-size: 0.8rem; line-height: 1.35; display: flex; flex-direction: column; gap: 8px;">
-            <p style="margin: 0; opacity: 0.85; border-left: 3px solid #f59e0b; padding-left: 8px;">Aide indicative uniquement. N’envoyez <strong>jamais</strong> de données identifiant un patient (nom, date de naissance, n° de dossier…). Vérifiez toute réponse.</p>
+            <p style="margin: 0; opacity: 0.8;">Posez une question ou joignez une image / un PDF (bilan, radio). Ne remplace pas un avis médical. N'envoyez aucune donnée identifiant un patient.</p>
 
             <div id="aiChatResponse" style="background: var(--input-bg); padding: 8px; border-radius: 8px; font-size: 0.78rem; max-height: 220px; overflow-y: auto;"></div>
 
@@ -1085,10 +1080,9 @@
         </div>
     </div>
 
-    <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.82rem; opacity: 0.75;">
-      <p id="footerCopyright" style="margin:0;">© 2026 MediCalcul Express — Version 1.1</p>
-      <p style="margin: 4px 0 0; font-size: 0.75rem;">Dernière révision des formules : novembre 2026 · Usage professionnel</p>
-      <p style="margin: 8px 0 0;"><a href="#" id="footerApropos" onclick="ouvrirApropos(); return false;" style="color: var(--primary); font-weight: 600;">À propos, sources et avertissement médical</a></p>
+    <footer style="text-align: center; padding: 24px; margin-top: 30px; border-top: 1px solid var(--border); font-size: 0.85rem; opacity: 0.7;">
+      <p id="footerCopyright">© 2026 MediCalcul Express — Tous droits réservés</p>
+      <p style="margin: 6px 0 0;"><a href="#" id="footerApropos" onclick="ouvrirApropos(); return false;" style="color: var(--primary); font-weight: 600;">À propos, sources et avertissement</a></p>
     </footer>
 
     <script>
@@ -1278,8 +1272,8 @@
         const traductions = {
             fr: {
                 param: "Paramètres", darkMode: "Mode Sombre", fontTitle: "Police d'écriture", styleTitle: "Style du texte", sizeTitle: "Taille du texte", calTitle: "Calendrier & Date",
-                txtBack: "Accueil", txtHomeHeader: "Outils de calcul médical", txtHomeSub: "Calculs cliniques rapides et fiables — usage professionnel",
-                catImc: "Masse corporelle", catUrg: "Urgences & Réanimation", catConv: "Convertisseurs", catCardio: "Fréquence cardiaque", catQuiz: "Quiz & Flashcards", catChimie: "Réactions chimiques",
+                txtBack: "Accueil", txtHomeHeader: "Sélectionnez une Catégorie", txtHomeSub: "Accédez rapidement à vos outils de calculs médicaux",
+                catImc: "Masse Corporelle (IMC)", catUrg: "Urgences & Réanimation", catConv: "Calculs & Convertisseurs Express", catCardio: "Fréquence Cardiaque", catQuiz: "Quiz & Flashcards", catChimie: "Réactions Chimiques & Infinités",
                 subTitle: "Indice de Masse Corporelle et évaluation", imcTitle: "Calcul de l'IMC", poids: "Poids (kg)", taille: "Taille (cm)", btnImc: "Calculer l'IMC",
                 urgModule: "Module Urgences & Réanimation",
                 cockcroftTitle: "1. Fonction Rénale (Clairance - Cockcroft)", crPoids: "Poids (kg)", crAge: "Âge (ans)", crCreat: "Créatininémie (µmol/L)", crSexe: "Sexe", optHomme: "Homme", optFemme: "Femme", btnCockcroft: "Calculer Clairance",
@@ -1290,18 +1284,18 @@
                 volTitle: "Conversion de Volume", volVal: "Valeur", optLMl: "L vers mL", optMlL: "mL vers L",
                 tempTitle: "Conversion de Température", tempsTitle: "Conversion de Temps", tempsVal: "Valeur",
                 quizTitle: "Quiz Médical & Flashcards", quizDesc: "Testez vos connaissances en médecine et anatomie (Vrai / Faux)", btnTrue: "VRAI", btnFalse: "FAUX",
-                chimieTitle: "Réactions Chimiques", chimieDesc: "Consultez ou ajoutez vos propres réactions", lblSelectReaction: "Sélectionner une réaction",
-                addCustomTitle: "Ajouter une réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
+                chimieTitle: "Réactions Chimiques & Infinités", chimieDesc: "Consultez ou ajoutez vos propres réactions à l'infini", lblSelectReaction: "Sélectionner une réaction",
+                addCustomTitle: "➕ Ajouter une nouvelle réaction personnalisée", lblCustomNom: "Nom de la réaction / métabolisme", lblCustomEq: "Équation chimique", lblCustomUtil: "Utilité, Efficacité & Rôle biologique", btnAddReaction: "Enregistrer dans ma base",
                 tabLogin: "Connexion", tabRegister: "Inscription", btnLogin: "Se connecter", btnRegister: "Créer mon compte", btnLogout: "Se déconnecter", btnPhoto: "Ajouter une photo", btnPhotoDel: "Supprimer",
-                searchPh: "Rechercher un outil…", favTitle: "Favoris", histTitle: "Derniers calculs", btnClearHist: "Effacer", catOutils: "Outils cliniques", perfTitle: "Débit de perfusion", perfVol: "Volume à perfuser (mL)", perfH: "Durée : heures", perfMin: "minutes", perfGtt: "Perfuseur (gouttes/mL)", btnPerf: "Calculer le débit",
+                searchPh: "Rechercher un outil…", favTitle: "⭐ Favoris", histTitle: "🕘 Derniers calculs", btnClearHist: "Effacer", catOutils: "Outils Cliniques", perfTitle: "Débit de perfusion", perfVol: "Volume à perfuser (mL)", perfH: "Durée : heures", perfMin: "minutes", perfGtt: "Perfuseur (gouttes/mL)", btnPerf: "Calculer le débit",
                 gcsTitle: "Score de Glasgow (GCS)", gcsY: "Ouverture des yeux", gcsV: "Réponse verbale", gcsM: "Réponse motrice",
                 bsaTitle: "Surface corporelle (Mosteller)", bsaPoids: "Poids (kg)", bsaTaille: "Taille (cm)", btnBsa: "Calculer la surface",
-                footerCopyright: "© 2026 MediCalcul Express — Version 1.1", btnApropos: "À propos et sources", footerApropos: "À propos, sources et avertissement médical", aproposTitle: "À propos et sources", btnQuizNext: "Question suivante", btnQuizNew: "Nouvelle série"
+                footerCopyright: "© 2026 MediCalcul Express — Tous droits réservés", btnApropos: "ℹ️ À propos et sources", footerApropos: "À propos, sources et avertissement", aproposTitle: "À propos et sources", btnQuizNext: "Question suivante", btnQuizNew: "Nouvelle série"
             },
             en: {
                 param: "Settings", darkMode: "Dark Mode", fontTitle: "Font Family", styleTitle: "Text Style", sizeTitle: "Font Size", calTitle: "Calendar & Date",
-                txtBack: "Home", txtHomeHeader: "Medical calculation tools", txtHomeSub: "Fast and reliable clinical calculations — professional use",
-                catImc: "Body mass", catUrg: "Emergency & ICU", catConv: "Converters", catCardio: "Heart rate", catQuiz: "Quiz & Flashcards", catChimie: "Chemical reactions",
+                txtBack: "Home", txtHomeHeader: "Select a Category", txtHomeSub: "Quickly access your medical calculation tools",
+                catImc: "Body Mass (BMI)", catUrg: "Emergency & ICU", catConv: "Express Calculators & Converters", catCardio: "Heart Rate", catQuiz: "Medical Quiz & Flashcards", catChimie: "Chemical Reactions & Infinite",
                 subTitle: "Body Mass Index and evaluation", imcTitle: "BMI Calculation", poids: "Weight (kg)", taille: "Height (cm)", btnImc: "Calculate BMI",
                 urgModule: "Emergency & ICU Module",
                 cockcroftTitle: "1. Renal Function (Clearance - Cockcroft)", crPoids: "Weight (kg)", crAge: "Age (years)", crCreat: "Creatinine (µmol/L)", crSexe: "Gender", optHomme: "Male", optFemme: "Female", btnCockcroft: "Calculate Clearance",
@@ -1312,13 +1306,13 @@
                 volTitle: "Volume Conversion", volVal: "Value", optLMl: "L to mL", optMlL: "mL to L",
                 tempTitle: "Temperature Conversion", tempsTitle: "Time Conversion", tempsVal: "Value",
                 quizTitle: "Medical Quiz & Flashcards", quizDesc: "Test your knowledge in medicine and anatomy (True / False)", btnTrue: "TRUE", btnFalse: "FALSE",
-                chimieTitle: "Chemical Reactions", chimieDesc: "View or add your own reactions", lblSelectReaction: "Select a reaction",
-                addCustomTitle: "Add a custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
+                chimieTitle: "Chemical Reactions & Infinite", chimieDesc: "View or add your own reactions infinitely", lblSelectReaction: "Select a reaction",
+                addCustomTitle: "➕ Add a new custom reaction", lblCustomNom: "Reaction name / pathway", lblCustomEq: "Chemical equation", lblCustomUtil: "Utility, Efficiency & Biological role", btnAddReaction: "Save to my database",
                 tabLogin: "Log in", tabRegister: "Sign up", btnLogin: "Log in", btnRegister: "Create account", btnLogout: "Log out", btnPhoto: "Add a photo", btnPhotoDel: "Remove",
-                searchPh: "Search a tool…", favTitle: "Favorites", histTitle: "Recent calculations", btnClearHist: "Clear", catOutils: "Clinical tools", perfTitle: "Infusion rate", perfVol: "Volume to infuse (mL)", perfH: "Duration: hours", perfMin: "minutes", perfGtt: "Drip set (drops/mL)", btnPerf: "Calculate rate",
+                searchPh: "Search a tool…", favTitle: "⭐ Favorites", histTitle: "🕘 Recent calculations", btnClearHist: "Clear", catOutils: "Clinical Tools", perfTitle: "Infusion rate", perfVol: "Volume to infuse (mL)", perfH: "Duration: hours", perfMin: "minutes", perfGtt: "Drip set (drops/mL)", btnPerf: "Calculate rate",
                 gcsTitle: "Glasgow Coma Scale (GCS)", gcsY: "Eye opening", gcsV: "Verbal response", gcsM: "Motor response",
                 bsaTitle: "Body Surface Area (Mosteller)", bsaPoids: "Weight (kg)", bsaTaille: "Height (cm)", btnBsa: "Calculate BSA",
-                footerCopyright: "© 2026 MediCalcul Express — Version 1.1", btnApropos: "About and sources", footerApropos: "About, sources and medical disclaimer", aproposTitle: "About and sources", btnQuizNext: "Next question", btnQuizNew: "New series"
+                footerCopyright: "© 2026 MediCalcul Express — All rights reserved", btnApropos: "ℹ️ About and sources", footerApropos: "About, sources and disclaimer", aproposTitle: "About and sources", btnQuizNext: "Next question", btnQuizNew: "New series"
             }
         };
 
@@ -1848,16 +1842,10 @@
         /* ---------- CALCULS ---------- */
         function calculerIMC() {
             const p = parseFloat(document.getElementById('poids').value);
-            const tCm = parseFloat(document.getElementById('taille').value);
-            const t = tCm / 100;
+            const t = parseFloat(document.getElementById('taille').value) / 100;
             if (isNaN(p) || isNaN(t) || p <= 0 || t <= 0) {
                 document.getElementById('resultatIMC').innerText = "Entrez des valeurs valides";
                 document.getElementById('interpretationIMC').innerText = '';
-                return;
-            }
-            if (p < 20 || p > 300 || tCm < 50 || tCm > 250) {
-                document.getElementById('resultatIMC').innerText = "Valeurs hors plage réaliste";
-                document.getElementById('interpretationIMC').innerText = "Poids attendu 20–300 kg · Taille 50–250 cm. Vérifiez les unités.";
                 return;
             }
             const imc = p / (t * t);
@@ -1881,11 +1869,6 @@
                 document.getElementById('interpCockcroft').innerText = '';
                 return;
             }
-            if (p < 30 || p > 250 || a < 18 || a > 120 || c < 20 || c > 2000) {
-                document.getElementById('resCockcroft').innerText = "Valeurs hors plage réaliste";
-                document.getElementById('interpCockcroft').innerText = "Poids 30–250 kg · Âge 18–120 ans · Créatinine 20–2000 µmol/L.";
-                return;
-            }
             let cl = ((140 - a) * p) / (0.815 * c);
             if (document.getElementById('crSexe').value === 'femme') cl *= 0.85;
             const stade = cl >= 90 ? "Fonction rénale normale ou élevée"
@@ -1899,15 +1882,8 @@
 
         function calculerPediatrie() {
             let p = parseFloat(document.getElementById('pedPoids').value), d = parseFloat(document.getElementById('pedDoseKg').value);
-            if (isNaN(p) || isNaN(d) || p <= 0 || d <= 0) {
-                document.getElementById('resPediatrie').innerText = "Entrez des valeurs valides";
-                return;
-            }
-            if (p > 80 || d > 100) {
-                document.getElementById('resPediatrie').innerText = "Valeurs hors plage pédiatrique usuelle";
-                return;
-            }
-            document.getElementById('resPediatrie').innerText = `Dose totale : ${(p*d).toFixed(2)} mg — vérifier dose max et RCP`;
+            if (isNaN(p) || isNaN(d)) return;
+            document.getElementById('resPediatrie').innerText = `Dose totale : ${(p*d).toFixed(2)} mg`;
         }
 
         // Plus de dose d'insuline calculée : interprétation de la glycémie uniquement
