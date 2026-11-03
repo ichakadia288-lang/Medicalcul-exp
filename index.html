@@ -735,6 +735,14 @@
             </div>
             <div id="resultatIMC" style="margin-top: 14px; font-weight: 600;">Résultat : --</div>
             <div id="interpretationIMC" style="margin-top: 4px;"></div>
+
+            <button id="btnCopiloteIMC" class="calc-btn" 
+                    style="display: none; margin-top: 14px; background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);"
+                    onclick="lancerCopilote('imc')">
+                Analyser avec le Co-pilote
+            </button>
+
+            <div id="copiloteResultIMC" style="display: none; margin-top: 14px; padding: 14px; background: var(--input-bg); border-radius: 12px; border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.5;"></div>
         </div>
     </div>
 
@@ -758,6 +766,14 @@
             </div>
             <div id="resCockcroft" style="margin-top: 10px; font-weight: 600;">Clairance : --</div>
             <div id="interpCockcroft" style="margin-top: 4px;"></div>
+
+            <button id="btnCopiloteCockcroft" class="calc-btn" 
+                    style="display: none; margin-top: 14px; background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);"
+                    onclick="lancerCopilote('cockcroft')">
+                Analyser avec le Co-pilote
+            </button>
+
+            <div id="copiloteResultCockcroft" style="display: none; margin-top: 14px; padding: 14px; background: var(--input-bg); border-radius: 12px; border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.5;"></div>
 
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
 
@@ -1832,8 +1848,23 @@
         }
 
         /* ---------- RÉINITIALISATIONS ---------- */
-        function resetImc() { document.getElementById('poids').value=''; document.getElementById('taille').value=''; document.getElementById('resultatIMC').innerText='Résultat : --'; document.getElementById('interpretationIMC').innerText=''; }
-        function resetCockcroft() { document.getElementById('crPoids').value=''; document.getElementById('crAge').value=''; document.getElementById('crCreat').value=''; document.getElementById('resCockcroft').innerText='Clairance : --'; document.getElementById('interpCockcroft').innerText=''; }
+        function resetImc() { 
+            document.getElementById('poids').value=''; 
+            document.getElementById('taille').value=''; 
+            document.getElementById('resultatIMC').innerText='Résultat : --'; 
+            document.getElementById('interpretationIMC').innerText=''; 
+            document.getElementById('btnCopiloteIMC').style.display = 'none';
+            document.getElementById('copiloteResultIMC').style.display = 'none';
+        }
+        function resetCockcroft() { 
+            document.getElementById('crPoids').value=''; 
+            document.getElementById('crAge').value=''; 
+            document.getElementById('crCreat').value=''; 
+            document.getElementById('resCockcroft').innerText='Clairance : --'; 
+            document.getElementById('interpCockcroft').innerText=''; 
+            document.getElementById('btnCopiloteCockcroft').style.display = 'none';
+            document.getElementById('copiloteResultCockcroft').style.display = 'none';
+        }
         function resetPed() { document.getElementById('pedPoids').value=''; document.getElementById('pedDoseKg').value=''; document.getElementById('resPediatrie').innerText='Dose totale : --'; }
         function resetIns() { document.getElementById('insGly').value=''; document.getElementById('resIns').innerText='Interprétation : --'; }
         function resetEau() { document.getElementById('eauPoids').value=''; document.getElementById('eauNa').value=''; document.getElementById('resEau').innerText='Déficit estimé : --'; document.getElementById('interpEau').innerText=''; }
@@ -1846,6 +1877,8 @@
             if (isNaN(p) || isNaN(t) || p <= 0 || t <= 0) {
                 document.getElementById('resultatIMC').innerText = "Entrez des valeurs valides";
                 document.getElementById('interpretationIMC').innerText = '';
+                document.getElementById('btnCopiloteIMC').style.display = 'none';
+                document.getElementById('copiloteResultIMC').style.display = 'none';
                 return;
             }
             const imc = p / (t * t);
@@ -1858,6 +1891,9 @@
                 : "Obésité massive (classe III)";
             document.getElementById('resultatIMC').innerText = `Résultat : ${imc.toFixed(2)} kg/m²`;
             document.getElementById('interpretationIMC').innerText = `${cat} (valeurs adulte, classification OMS)`;
+
+            document.getElementById('btnCopiloteIMC').style.display = 'block';
+            document.getElementById('copiloteResultIMC').style.display = 'none';
         }
 
         function calculerCockcroft() {
@@ -1867,6 +1903,8 @@
             if (isNaN(p) || isNaN(a) || isNaN(c) || p <= 0 || a <= 0 || c <= 0) {
                 document.getElementById('resCockcroft').innerText = "Entrez des valeurs valides";
                 document.getElementById('interpCockcroft').innerText = '';
+                document.getElementById('btnCopiloteCockcroft').style.display = 'none';
+                document.getElementById('copiloteResultCockcroft').style.display = 'none';
                 return;
             }
             let cl = ((140 - a) * p) / (0.815 * c);
@@ -1878,6 +1916,128 @@
                 : "Insuffisance rénale terminale";
             document.getElementById('resCockcroft').innerText = `Clairance estimée : ${cl.toFixed(1)} mL/min`;
             document.getElementById('interpCockcroft').innerText = `${stade}. Estimation : à confirmer cliniquement (adaptation posologique selon le médicament).`;
+
+            document.getElementById('btnCopiloteCockcroft').style.display = 'block';
+            document.getElementById('copiloteResultCockcroft').style.display = 'none';
+        }
+
+        // ---------- CO-PILOTE CLINIQUE (version locale gratuite) ----------
+        function lancerCopilote(type) {
+            try {
+                let conteneur = null;
+                let analyse = '';
+
+                if (type === 'imc') {
+                    conteneur = document.getElementById('copiloteResultIMC');
+                    const poids = parseFloat(document.getElementById('poids').value);
+                    const tailleCm = parseFloat(document.getElementById('taille').value);
+                    const imc = poids / ((tailleCm / 100) * (tailleCm / 100));
+
+                    if (isNaN(imc) || imc <= 0) {
+                        analyse = "Données insuffisantes pour une analyse.";
+                    } else {
+                        let interpretation = '';
+                        let alertes = '';
+                        let recommandations = '';
+
+                        if (imc < 16.5) {
+                            interpretation = "IMC tres bas : denutrition / maigreur severe.";
+                            alertes = "Risque eleve de complications liees a la denutrition.";
+                            recommandations = "Evaluation nutritionnelle rapide, recherche de causes, prise en charge pluridisciplinaire.";
+                        } else if (imc < 18.5) {
+                            interpretation = "Insuffisance ponderale.";
+                            alertes = "Surveillance du statut nutritionnel recommandee.";
+                            recommandations = "Enquete alimentaire, recherche de pathologies sous-jacentes, suivi du poids.";
+                        } else if (imc < 25) {
+                            interpretation = "Corpulence normale selon la classification OMS.";
+                            alertes = "Aucune alerte majeure liee a l'IMC.";
+                            recommandations = "Maintenir une alimentation equilibree et une activite physique reguliere.";
+                        } else if (imc < 30) {
+                            interpretation = "Surpoids.";
+                            alertes = "Augmentation du risque cardiovasculaire et metabolique.";
+                            recommandations = "Mesures hygieno-dietetiques, activite physique, surveillance de la tension et de la glycemie.";
+                        } else if (imc < 35) {
+                            interpretation = "Obesite moderee (classe I).";
+                            alertes = "Risque cardiovasculaire et metabolique significatif.";
+                            recommandations = "Prise en charge dietetique structuree, activite physique, depistage des comorbidites.";
+                        } else if (imc < 40) {
+                            interpretation = "Obesite severe (classe II).";
+                            alertes = "Risque eleve de complications.";
+                            recommandations = "Prise en charge specialisee, evaluation des comorbidites.";
+                        } else {
+                            interpretation = "Obesite massive (classe III).";
+                            alertes = "Risque tres eleve de complications cardio-metaboliques et respiratoires.";
+                            recommandations = "Orientation vers un centre specialise en obesite, bilan complet des comorbidites.";
+                        }
+
+                        if (poids < 30 || poids > 250 || tailleCm < 120 || tailleCm > 220) {
+                            alertes += " Attention : les valeurs saisies semblent peu realistes pour un adulte. Verifiez les unites (kg et cm).";
+                        }
+
+                        analyse = "1. Interpretation\n" + interpretation + "\n\n2. Alertes\n" + (alertes || "Aucune alerte particuliere.") + "\n\n3. Recommandations\n" + recommandations + "\n\n4. Rappel\nCeci est une aide automatisee basee uniquement sur l'IMC. Elle ne remplace pas une evaluation clinique complete.";
+                    }
+                } 
+                else if (type === 'cockcroft') {
+                    conteneur = document.getElementById('copiloteResultCockcroft');
+                    const poids = parseFloat(document.getElementById('crPoids').value);
+                    const age = parseFloat(document.getElementById('crAge').value);
+                    const creat = parseFloat(document.getElementById('crCreat').value);
+                    const sexe = document.getElementById('crSexe').value;
+
+                    let cl = ((140 - age) * poids) / (0.815 * creat);
+                    if (sexe === 'femme') cl = cl * 0.85;
+
+                    if (isNaN(cl) || cl <= 0) {
+                        analyse = "Données insuffisantes pour une analyse.";
+                    } else {
+                        let interpretation = '';
+                        let alertes = '';
+                        let recommandations = '';
+
+                        if (cl >= 90) {
+                            interpretation = "Fonction renale normale ou elevee.";
+                            alertes = "Aucune alerte majeure.";
+                            recommandations = "Surveillance habituelle selon le contexte clinique.";
+                        } else if (cl >= 60) {
+                            interpretation = "Insuffisance renale legere (stade 2).";
+                            alertes = "Fonction renale legerement altere.";
+                            recommandations = "Eviter les nephrotoxiques si possible, adapter certains medicaments.";
+                        } else if (cl >= 30) {
+                            interpretation = "Insuffisance renale moderee (stade 3).";
+                            alertes = "Adaptation posologique de nombreux medicaments necessaire.";
+                            recommandations = "Reevaluer les traitements en cours, avis nephrologique selon le contexte.";
+                        } else if (cl >= 15) {
+                            interpretation = "Insuffisance renale severe (stade 4).";
+                            alertes = "Risque eleve d'accumulation medicamenteuse.";
+                            recommandations = "Adaptation stricte des posologies, avis nephrologique recommande.";
+                        } else {
+                            interpretation = "Insuffisance renale terminale (stade 5).";
+                            alertes = "Fonction renale critique.";
+                            recommandations = "Prise en charge nephrologique urgente.";
+                        }
+
+                        if (age < 18) {
+                            alertes += " La formule de Cockcroft-Gault n'est pas validee chez l'enfant.";
+                        }
+
+                        analyse = "1. Interpretation\nClairance estimee ≈ " + cl.toFixed(1) + " mL/min — " + interpretation + "\n\n2. Alertes\n" + (alertes || "Aucune alerte particuliere.") + "\n\n3. Recommandations\n" + recommandations + "\n\n4. Rappel\nEstimation uniquement (formule de Cockcroft-Gault). A confirmer cliniquement. Ne remplace pas un avis medical.";
+                    }
+                }
+
+                if (!conteneur) {
+                    alert("Erreur : zone d'analyse introuvable.");
+                    return;
+                }
+
+                conteneur.style.display = 'block';
+                conteneur.innerHTML = 
+                    '<div style="font-weight:700; color:var(--primary); margin-bottom:8px;">Analyse du Co-pilote</div>' +
+                    '<div style="white-space: pre-wrap;">' + (analyse || "Aucune analyse disponible.") + '</div>' +
+                    '<div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border); font-size:0.75rem; opacity:0.7;">' +
+                    'Analyse locale gratuite — aucune donnee envoyee sur internet.<br>Verification clinique obligatoire.</div>';
+            } catch (err) {
+                alert("Erreur Co-pilote : " + err.message);
+            }
         }
 
         function calculerPediatrie() {
