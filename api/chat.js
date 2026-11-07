@@ -146,27 +146,43 @@ module.exports = async (req, res) => {
     contents.push({ role: 'user', parts });
 
     const modele = process.env.GEMINI_MODEL || 'gemini-flash-latest';
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modele)}:generateContent`;
+    // Modèle de secours si le principal est surchargé (erreur 503 de Google). Réglable via GEMINI_FALLBACK_MODEL.
+    const secours = process.env.GEMINI_FALLBACK_MODEL || 'gemini-flash-lite-latest';
+    const corpsGemini = JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM_FR + (LANGUES[lang] && lang !== 'fr' ? '\nThe user interface is in ' + LANGUES[lang] + ': answer in ' + LANGUES[lang] + '.' : '') }] },
+        contents,
+        generationConfig: { maxOutputTokens: 1200, temperature: 0.4 }
+    });
+    const appeler = async (nomModele) => {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(nomModele)}:generateContent`;
+        const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey }, body: corpsGemini });
+        const d = await r.json().catch(() => ({}));
+        return { reponse: r, data: d };
+    };
+    const temporaire = (st) => st === 503 || st === 500 || st === 504;
+    const pause = (ms) => new Promise((ok) => setTimeout(ok, ms));
 
     try {
-        const reponse = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-            body: JSON.stringify({
-                systemInstruction: { parts: [{ text: SYSTEM_FR + (LANGUES[lang] && lang !== 'fr' ? '\nThe user interface is in ' + LANGUES[lang] + ': answer in ' + LANGUES[lang] + '.' : '') }] },
-                contents,
-                generationConfig: { maxOutputTokens: 1200, temperature: 0.4 }
-            })
-        });
-
-        const data = await reponse.json().catch(() => ({}));
+        let { reponse, data } = await appeler(modele);
+        // Google surchargé : une 2e tentative sur le même modèle, puis le modèle de secours
+        if (!reponse.ok && temporaire(reponse.status)) {
+            console.error('Gemini temporairement indisponible', reponse.status, modele, '- nouvelle tentative');
+            await pause(900);
+            ({ reponse, data } = await appeler(modele));
+            if (!reponse.ok && temporaire(reponse.status) && secours && secours !== modele) {
+                console.error('Gemini toujours indisponible', reponse.status, '- modèle de secours', secours);
+                ({ reponse, data } = await appeler(secours));
+            }
+        }
         if (!reponse.ok) {
             console.error('Erreur API Gemini', reponse.status, JSON.stringify(data));
             const quota = reponse.status === 429;
             return res.status(502).json({
                 error: quota
                     ? "Limite gratuite atteinte pour le moment. Réessayez dans quelques minutes."
-                    : "L'assistant est momentanément indisponible."
+                    : reponse.status === 503
+                        ? "Le service d'IA de Google est très sollicité en ce moment. Réessayez dans une minute."
+                        : "L'assistant est momentanément indisponible."
             });
         }
 
