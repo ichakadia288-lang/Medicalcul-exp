@@ -517,6 +517,27 @@
             0% { transform: scaleY(0.4); }
             100% { transform: scaleY(1.3); }
         }
+    
+        /* ---- Écran de verrouillage PIN ---- */
+        #pinLockScreen { display: none; position: fixed; inset: 0; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(2,132,199,0.18), transparent 60%), var(--bg); color: var(--text); overflow-y: auto; }
+        .pin-card { width: 100%; max-width: 340px; padding: 26px 20px 22px; border-radius: 28px; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(2,132,199,0.15); }
+        .pin-lock { width: 64px; height: 64px; margin: 0 auto 14px; border-radius: 20px; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; font-size: 1.9rem; box-shadow: 0 8px 20px rgba(2,132,199,0.35); }
+        .pin-title { font-size: 1.25rem; font-weight: 700; }
+        .pin-sub { opacity: 0.65; font-size: 0.88rem; margin: 4px 0 18px; }
+        .pin-dots { display: flex; justify-content: center; gap: 14px; min-height: 18px; margin-bottom: 8px; }
+        .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--primary); background: transparent; transition: background .12s, transform .12s; }
+        .pin-dot.on { background: var(--primary); transform: scale(1.15); }
+        .pin-dots.ok .pin-dot { background: #10b981; border-color: #10b981; }
+        .pin-dots.err .pin-dot { border-color: #ef4444; background: #ef4444; }
+        .pin-dots.shake { animation: pinShake .38s; }
+        @keyframes pinShake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(10px); } 60% { transform: translateX(-8px); } 80% { transform: translateX(8px); } }
+        .pin-error { color: #ef4444; font-size: 0.85rem; min-height: 22px; margin-bottom: 8px; font-weight: 600; }
+        .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
+        .pin-key { width: 68px; height: 68px; border-radius: 50%; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 1.55rem; font-weight: 600; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; transition: transform .08s, background .12s; }
+        .pin-key:active { transform: scale(0.92); background: var(--primary); color: #fff; }
+        .pin-key.vide { visibility: hidden; }
+        .pin-key.sup { font-size: 1.3rem; background: transparent; border-color: transparent; }
+        .pin-note { margin-top: 16px; font-size: 0.74rem; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -687,15 +708,21 @@
     </div>
 
     <!-- ÉCRAN DE VERROUILLAGE PIN -->
-    <div id="pinLockScreen" style="display: none; position: fixed; inset: 0; background: var(--bg); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;">
-        <div style="font-size: 1.3rem; font-weight: 700; margin-bottom: 8px;">MediCalcul Express</div>
-        <div style="opacity: 0.7; margin-bottom: 28px; font-size: 0.9rem;">Entrez votre code PIN</div>
-        <input type="tel" id="pinInput" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off"
-               style="width: 180px; text-align: center; font-size: 1.6rem; letter-spacing: 10px; padding: 14px 10px; border-radius: 14px; border: 2px solid var(--primary); background: var(--input-bg); color: var(--text); outline: none;"
-               onkeydown="if(event.key==='Enter') verifierPin()">
-        <div id="pinError" style="color: #ef4444; font-size: 0.85rem; margin-top: 14px; min-height: 22px;"></div>
-        <button class="calc-btn" style="margin-top: 18px; width: 180px; padding: 12px;" onclick="verifierPin()">Déverrouiller</button>
-        <div style="margin-top: 30px; font-size: 0.75rem; opacity: 0.5;">Après 5 essais incorrects, vous pourrez réinitialiser</div>
+    <div id="pinLockScreen" role="dialog" aria-modal="true" aria-label="Verrouillage par code PIN">
+        <div class="pin-card">
+            <div class="pin-lock" aria-hidden="true">🔒</div>
+            <div class="pin-title">MediCalcul Express</div>
+            <div class="pin-sub">Entrez votre code PIN</div>
+            <div id="pinDots" class="pin-dots" aria-hidden="true"></div>
+            <div id="pinError" class="pin-error" role="alert"></div>
+            <div class="pin-pad">
+                <button type="button" class="pin-key" onclick="pinAppuyer('1')" aria-label="1">1</button><button type="button" class="pin-key" onclick="pinAppuyer('2')" aria-label="2">2</button><button type="button" class="pin-key" onclick="pinAppuyer('3')" aria-label="3">3</button><button type="button" class="pin-key" onclick="pinAppuyer('4')" aria-label="4">4</button><button type="button" class="pin-key" onclick="pinAppuyer('5')" aria-label="5">5</button><button type="button" class="pin-key" onclick="pinAppuyer('6')" aria-label="6">6</button><button type="button" class="pin-key" onclick="pinAppuyer('7')" aria-label="7">7</button><button type="button" class="pin-key" onclick="pinAppuyer('8')" aria-label="8">8</button><button type="button" class="pin-key" onclick="pinAppuyer('9')" aria-label="9">9</button>
+                <button type="button" class="pin-key vide" tabindex="-1" aria-hidden="true"></button>
+                <button type="button" class="pin-key" onclick="pinAppuyer('0')" aria-label="0">0</button>
+                <button type="button" class="pin-key sup" onclick="pinEffacer()" aria-label="Effacer">⌫</button>
+            </div>
+            <div class="pin-note">Après 5 essais incorrects, vous pourrez réinitialiser</div>
+        </div>
     </div>
 
 
@@ -1660,7 +1687,7 @@ const respBox = document.getElementById('aiChatResponse');
 const val = input.value.trim();
 if (!val && !fichierActuel) return;
 if (val.length > 1000) { respBox.textContent = "Question trop longue (1000 caractères maximum)."; return; }
-if (fichierActuel && !codePremium()) { respBox.textContent = "L'analyse d'images et de PDF est réservée au Premium. Activez un code dans Paramètres > Premium."; return; }
+if (PREMIUM_ACTIF && fichierActuel && !codePremium()) { respBox.textContent = "L'analyse d'images et de PDF est réservée au Premium. Activez un code dans Paramètres > Premium."; return; }
 const maintenant = Date.now();
 if (maintenant - dernierEnvoiIA < 3000) { respBox.textContent = "Patientez quelques secondes avant d'envoyer une autre question."; return; }
 let envois = [];
@@ -2906,6 +2933,7 @@ return;
 }
 const hash = await hacherPin(clean);
 localStorage.setItem('appPinHash', hash);
+localStorage.setItem('appPinLen', String(clean.length));
 sessionStorage.setItem('pinUnlocked', '1');
 majStatutPin();
 alert('Code PIN enregistré avec succès.');
@@ -2917,62 +2945,104 @@ return;
 }
 if (confirm('Supprimer le code PIN ?')) {
 localStorage.removeItem('appPinHash');
+localStorage.removeItem('appPinLen');
 sessionStorage.removeItem('pinUnlocked');
 majStatutPin();
 alert('Code PIN supprimé.');
 }
 }
-async function verifierPin() {
-const input = document.getElementById('pinInput');
+let pinSaisie = '';
+let pinOccupe = false;
+function pinLongueur() { const n = parseInt(localStorage.getItem('appPinLen'), 10); return (n >= 4 && n <= 6) ? n : 0; }
+function pinRendu(etat) {
+const total = pinLongueur() || 6;
+const box = document.getElementById('pinDots');
+if (!box) return;
+let h = '';
+for (let i = 0; i < total; i++) h += '<span class="pin-dot' + (i < pinSaisie.length ? ' on' : '') + '"></span>';
+box.innerHTML = h;
+box.className = 'pin-dots' + (etat ? ' ' + etat : '');
+}
+function pinAppuyer(c) {
+if (pinOccupe) return;
+const max = pinLongueur() || 6;
+if (pinSaisie.length >= max) return;
+pinSaisie += c;
+document.getElementById('pinError').textContent = '';
+pinRendu();
+try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) { }
+const n = pinSaisie.length;
+if (pinLongueur()) { if (n === max) verifierPin(false); }
+else if (n >= 4) verifierPin(n < 6); // ancien PIN sans longueur connue : essai silencieux à 4 et 5 chiffres
+}
+function pinEffacer() {
+if (pinOccupe) return;
+pinSaisie = pinSaisie.slice(0, -1);
+pinRendu();
+}
+async function verifierPin(silencieux) {
 const error = document.getElementById('pinError');
 const hash = localStorage.getItem('appPinHash');
-if (!hash) {
-document.getElementById('pinLockScreen').style.display = 'none';
-return;
-}
-const saisie = String(input.value).trim();
-if (!saisie) {
-error.textContent = 'Entrez votre code PIN';
-return;
-}
+if (!hash) { document.getElementById('pinLockScreen').style.display = 'none'; return; }
+const saisie = pinSaisie;
+if (saisie.length < 4) return;
+pinOccupe = true;
 try {
 const essai = await hacherPin(saisie);
 if (essai === hash) {
-document.getElementById('pinLockScreen').style.display = 'none';
-input.value = '';
-error.textContent = '';
+if (!pinLongueur()) localStorage.setItem('appPinLen', String(saisie.length));
+pinRendu('ok');
 pinTentatives = 0;
 sessionStorage.setItem('pinUnlocked', '1');
-} else {
+setTimeout(() => {
+document.getElementById('pinLockScreen').style.display = 'none';
+pinSaisie = '';
+error.textContent = '';
+pinOccupe = false;
+}, 180);
+return;
+}
+if (silencieux) { pinOccupe = false; return; }
 pinTentatives++;
-error.textContent = 'Code incorrect (' + pinTentatives + ')';
-input.value = '';
-input.focus();
+error.textContent = 'Code incorrect (' + pinTentatives + '/5)';
+pinRendu('err shake');
+try { if (navigator.vibrate) navigator.vibrate([60, 40, 60]); } catch (e) { }
+setTimeout(() => { pinSaisie = ''; pinRendu(); pinOccupe = false; }, 420);
 if (pinTentatives >= 5) {
+setTimeout(() => {
 if (confirm('Trop d\'essais incorrects.\nVoulez-vous supprimer le code PIN pour récupérer l\'accès ?')) {
 localStorage.removeItem('appPinHash');
+localStorage.removeItem('appPinLen');
 sessionStorage.clear();
 document.getElementById('pinLockScreen').style.display = 'none';
 alert('Code PIN supprimé. Vous pouvez en définir un nouveau dans les Paramètres.');
 majStatutPin();
 }
-}
+}, 450);
 }
 } catch (e) {
 error.textContent = 'Erreur technique';
+pinOccupe = false;
 }
 }
 function afficherVerrouillage() {
 if (!localStorage.getItem('appPinHash')) return;
 if (sessionStorage.getItem('pinUnlocked') === '1') return;
-const ecran = document.getElementById('pinLockScreen');
-ecran.style.display = 'flex';
-setTimeout(() => { const i = document.getElementById('pinInput'); if (i) i.focus(); }, 150);
+pinSaisie = '';
+pinOccupe = false;
+pinRendu();
+document.getElementById('pinLockScreen').style.display = 'flex';
 }
+document.addEventListener('keydown', (ev) => {
+const ecran = document.getElementById('pinLockScreen');
+if (!ecran || ecran.style.display !== 'flex') return;
+if (/^[0-9]$/.test(ev.key)) { ev.preventDefault(); pinAppuyer(ev.key); }
+else if (ev.key === 'Backspace') { ev.preventDefault(); pinEffacer(); }
+});
 function effacerToutesLesDonnees() {
 if (!confirm('Êtes-vous sûr ? Cette action effacera :\n- Compte et photo\n- Historique des calculs\n- Favoris\n- Réactions personnalisées\n- Code PIN\n\nCette action est irréversible.')) return;
 if (!confirm('Dernière confirmation : tout supprimer ?')) return;
-const cles = ['userAccount', 'activeSession', 'favoris', 'historique', 'customReactions', 'appPinHash', 'profilePhoto'];
+const cles = ['userAccount', 'activeSession', 'favoris', 'historique', 'customReactions', 'appPinHash', 'appPinLen', 'profilePhoto'];
 Object.keys(localStorage).forEach(k => {
 if (k.startsWith('profilePhoto:')) localStorage.removeItem(k);
 });
@@ -2982,6 +3052,7 @@ alert('Toutes les données ont été effacées.');
 location.reload();
 }
 /* ---------- PREMIUM (codes d'activation vérifiés par le serveur) ---------- */
+const PREMIUM_ACTIF = false; // false = tout est gratuit (Premium masqué). Mettre true pour activer le Premium plus tard.
 const PREMIUM_WHATSAPP = '22377987847'; // numéro (indicatif Mali 223) où les clients demandent un code : à adapter
 function codePremium() { try { return localStorage.getItem('premiumCode') || ''; } catch (e) { return ''; } }
 function msgPremium(texte, ok) {
@@ -2990,6 +3061,9 @@ m.textContent = texte || '';
 m.style.color = ok ? '#10b981' : '#ef4444';
 }
 function majPremiumUI() {
+const bloc = document.getElementById('premiumBlock');
+if (bloc) bloc.style.display = PREMIUM_ACTIF ? 'block' : 'none';
+if (!PREMIUM_ACTIF) return;
 let expire = '';
 try { expire = localStorage.getItem('premiumExpire') || ''; } catch (e) { }
 const actif = !!codePremium();
@@ -3025,6 +3099,7 @@ majPremiumUI();
 }
 // Au démarrage : si le code a expiré ou a été retiré côté serveur, on repasse en gratuit
 async function revaliderPremium() {
+if (!PREMIUM_ACTIF) return;
 const code = codePremium();
 if (!code || !navigator.onLine) return;
 try {
