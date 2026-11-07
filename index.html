@@ -538,6 +538,63 @@
         .pin-key.vide { visibility: hidden; }
         .pin-key.sup { font-size: 1.3rem; background: transparent; border-color: transparent; }
         .pin-note { margin-top: 16px; font-size: 0.74rem; opacity: 0.5; }
+    
+        /* ---- Assistant IA : style conversation ---- */
+        #aiModal { width: min(400px, calc(100vw - 24px)); right: 12px; height: min(580px, 74vh); height: min(580px, 74dvh); max-height: none; overflow: hidden; border-radius: 22px; flex-direction: column; }
+        .ai-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--primary-gradient); color: #fff; flex: 0 0 auto; }
+        .ai-head-t { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.92rem; }
+        .ai-head-t img { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.7); object-fit: cover; }
+        .ai-hbtn { background: rgba(255,255,255,0.16); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1rem; cursor: pointer; margin-left: 6px; }
+        .ai-hbtn:active { background: rgba(255,255,255,0.32); }
+        .ai-messages { flex: 1 1 auto; overflow-y: auto; padding: 14px 12px 6px; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+        .ai-row { display: flex; }
+        .ai-row.user { justify-content: flex-end; }
+        .ai-bubble { max-width: 88%; padding: 10px 13px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; overflow-wrap: anywhere; }
+        .ai-row.user .ai-bubble { background: var(--primary-gradient); color: #fff; border-bottom-right-radius: 6px; white-space: pre-wrap; }
+        .ai-row.bot .ai-bubble { background: var(--input-bg); color: var(--text); border-bottom-left-radius: 6px; max-width: 94%; }
+        .ai-bubble.err { background: rgba(239,68,68,0.1) !important; color: #ef4444 !important; border: 1px solid rgba(239,68,68,0.35); }
+        .ai-bubble p { margin: 0 0 8px; } .ai-bubble p:last-child { margin-bottom: 0; }
+        .ai-bubble ul, .ai-bubble ol { margin: 4px 0 8px; padding-left: 20px; } .ai-bubble li { margin: 3px 0; }
+        .ai-bubble h5 { margin: 8px 0 4px; font-size: 0.95rem; color: var(--primary); }
+        .ai-bubble code { background: rgba(2,132,199,0.12); padding: 1px 5px; border-radius: 5px; font-size: 0.85em; }
+        .ai-bubble hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+        .ai-table { overflow-x: auto; margin: 6px 0; } .ai-table table { border-collapse: collapse; font-size: 0.8rem; min-width: 100%; }
+        .ai-table th, .ai-table td { border: 1px solid var(--border); padding: 4px 7px; text-align: left; } .ai-table th { background: rgba(2,132,199,0.1); }
+        .ai-chip { margin-top: 6px; font-size: 0.78rem; background: rgba(255,255,255,0.22); padding: 3px 8px; border-radius: 10px; display: inline-block; }
+        .ai-actions { display: flex; gap: 6px; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border); }
+        .ai-actions button { background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 12px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; font-family: inherit; }
+        .ai-actions button:active { background: var(--border); }
+        .ai-typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+        .ai-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); opacity: 0.4; animation: aiDot 1s infinite ease-in-out; }
+        .ai-typing i:nth-child(2) { animation-delay: 0.15s; } .ai-typing i:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes aiDot { 0%, 80%, 100% { transform: translateY(0); opacity: 0.35; } 40% { transform: translateY(-5px); opacity: 1; } }
+        .ai-welcome { text-align: center; padding: 18px 6px 4px; display: flex; flex-direction: column; gap: 8px; }
+        .ai-welcome-t { font-weight: 700; font-size: 1.05rem; } .ai-welcome-s { font-size: 0.82rem; opacity: 0.65; margin-bottom: 6px; }
+        .ai-sugg { text-align: left; background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 14px; font-size: 0.83rem; cursor: pointer; font-family: inherit; }
+        .ai-sugg:active { background: var(--input-bg); border-color: var(--primary); }
+        .ai-foot { flex: 0 0 auto; padding: 6px 12px 10px; background: var(--card-bg); }
+        .ai-notice { font-size: 0.78rem; min-height: 0; margin: 0 4px 4px; opacity: 0.9; } .ai-notice:empty { display: none; }
+        .ai-file { display: none; align-items: center; gap: 8px; font-size: 0.8rem; background: var(--input-bg); padding: 6px 10px; border-radius: 12px; margin-bottom: 6px; }
+        .ai-file span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ai-file button { background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold; }
+        .ai-composer { border: 1.5px solid var(--border); background: var(--card-bg); border-radius: 22px; padding: 8px 8px 6px 14px; transition: border-color .15s, box-shadow .15s; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .ai-composer:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2,132,199,0.15); }
+        #aiUserInput { display: block; width: 100%; border: none !important; outline: none; box-shadow: none !important; background: transparent !important; color: var(--text); resize: none; font-family: inherit; font-size: 0.95rem; line-height: 1.45; padding: 4px 0; margin: 0; min-height: 26px; max-height: 120px; overflow-y: auto; }
+        .ai-tools { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+        .ai-spacer { flex: 1; }
+        .ai-ico { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 1.15rem; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .ai-ico:active { background: var(--input-bg); }
+        .ai-ico.recording { background: #ef4444; border-color: #ef4444; color: #fff; animation: aiPulse 1s infinite; }
+        @keyframes aiPulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); } 100% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
+        .ai-send { width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--primary-gradient); color: #fff; font-size: 1.2rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: opacity .15s, transform .1s; }
+        .ai-send.vide { opacity: 0.35; } .ai-send:active { transform: scale(0.92); }
+        .ai-disc { text-align: center; font-size: 0.68rem; opacity: 0.5; margin-top: 6px; line-height: 1.3; }
+        /* ---- Scores & Biologie ---- */
+        .sc-chk { display: flex; align-items: flex-start; gap: 10px; padding: 9px 4px; font-size: 0.9rem; cursor: pointer; }
+        .sc-chk input { width: 20px; height: 20px; margin: 1px 0 0; flex: 0 0 auto; accent-color: var(--primary); }
+        .sc-res { margin-top: 12px; padding: 10px 12px; font-weight: 700; background: var(--input-bg); border-radius: 10px; border-left: 4px solid transparent; }
+        .sc-int { margin-top: 8px; font-size: 0.85rem; line-height: 1.5; }
+        .sc-src { margin-top: 12px; font-size: 0.72rem; opacity: 0.55; line-height: 1.4; }
+        .sc-copy { width: 100%; padding: 9px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -804,6 +861,10 @@
             <div class="category-card" onclick="ouvrirSection('chimieView')">
                 <div class="category-icon">🧪</div>
                 <h4 class="category-title" id="catChimie">Réactions Chimiques & Infinités</h4>
+            </div>
+            <div class="category-card" onclick="ouvrirSection('scoresView')">
+                <div class="category-icon">📊</div>
+                <h4 class="category-title" id="catScores">Scores & Biologie</h4>
             </div>
             <div class="category-card" onclick="ouvrirSection('outilsView')">
                 <div class="category-icon">🩺</div>
@@ -1171,6 +1232,9 @@
         </div>
     </div>
 
+    <!-- SCORES & BIOLOGIE (généré par le script en bas de page) -->
+    <div id="scoresView" class="section-view"></div>
+
     <!-- À PROPOS & SOURCES -->
     <div id="aproposView" class="section-view">
         <div class="container">
@@ -1244,38 +1308,32 @@
     </div>
 
     <!-- MODALE ASSISTANT IA -->
-    <div id="aiModal">
-        <div style="background: var(--primary-gradient); color: white; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.85rem; position: sticky; top: 0;">
-            <span>Assistant Médical IA</span>
-            <button onclick="toggleAiModal()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">✕</button>
+    <div id="aiModal" role="dialog" aria-label="Assistant médical IA">
+        <div class="ai-head">
+            <div class="ai-head-t"><img src="assistant-icon.png" alt=""><span>Assistant Médical IA</span></div>
+            <div>
+                <button type="button" class="ai-hbtn" onclick="nouvelleConversationIA()" title="Nouvelle conversation" aria-label="Nouvelle conversation">↺</button>
+                <button type="button" class="ai-hbtn" onclick="toggleAiModal()" title="Fermer" aria-label="Fermer">✕</button>
+            </div>
         </div>
-        <div style="padding: 12px; font-size: 0.8rem; line-height: 1.35; display: flex; flex-direction: column; gap: 8px;">
-            <p style="margin: 0; opacity: 0.8;">Posez une question ou joignez une image / un PDF (bilan, radio). Ne remplace pas un avis médical. N'envoyez aucune donnée identifiant un patient.</p>
-
-            <div id="aiChatResponse" style="background: var(--input-bg); padding: 8px; border-radius: 8px; font-size: 0.78rem; max-height: 220px; overflow-y: auto;"></div>
-
-            <div id="filePreviewContainer" style="display: none; align-items: center; gap: 8px; font-size: 0.8rem; background: var(--input-bg); padding: 6px 10px; border-radius: 8px;">
-                <span id="fileNameDisplay" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
-                <button onclick="supprimerFichierJoint()" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold;">✕</button>
+        <div id="aiMessages" class="ai-messages" aria-live="polite"></div>
+        <div class="ai-foot">
+            <div id="aiChatResponse" class="ai-notice" role="status"></div>
+            <div id="filePreviewContainer" class="ai-file">
+                <span id="fileNameDisplay"></span>
+                <button type="button" onclick="supprimerFichierJoint()" aria-label="Retirer le fichier">✕</button>
             </div>
-
-            <div class="ai-input-pill">
-                <button class="pill-action-btn" onclick="document.getElementById('fileInputHidden').click()" title="Joindre une image ou un fichier">＋</button>
-                <input type="file" id="fileInputHidden" style="display: none;" accept="image/*,.pdf" onchange="gererFichierJoint(this)">
-
-                <input type="text" id="aiUserInput" maxlength="1000" placeholder="Demander à l'assistant..." onkeydown="if(event.key==='Enter') envoyerQuestionAi()">
-
-                <button id="waveRecordBtn" class="wave-badge-btn" onclick="basculerEnregistrementAudio()" title="Parler">
-                    <div class="wave-bar-item"></div>
-                    <div class="wave-bar-item"></div>
-                    <div class="wave-bar-item"></div>
-                </button>
+            <div class="ai-composer">
+                <textarea id="aiUserInput" rows="1" maxlength="1000" placeholder="Demander à l'assistant…" aria-label="Votre question"></textarea>
+                <div class="ai-tools">
+                    <button type="button" class="ai-ico" onclick="document.getElementById('fileInputHidden').click()" title="Joindre une image ou un PDF" aria-label="Joindre un fichier">＋</button>
+                    <input type="file" id="fileInputHidden" style="display: none;" accept="image/*,.pdf" onchange="gererFichierJoint(this)">
+                    <span class="ai-spacer"></span>
+                    <button type="button" id="waveRecordBtn" class="ai-ico" onclick="basculerEnregistrementAudio()" title="Dicter" aria-label="Dicter la question">🎤</button>
+                    <button type="button" id="aiSendBtn" class="ai-send vide" onclick="envoyerQuestionAi()" aria-label="Envoyer">↑</button>
+                </div>
             </div>
-
-            <div style="display: flex; gap: 6px;">
-                <button onclick="envoyerQuestionAi()" class="calc-btn" style="padding: 8px; font-size: 0.85rem; margin-top: 4px; flex: 1;">Envoyer</button>
-                <button onclick="lireDerniereReponseVoix()" class="calc-btn" style="padding: 8px 12px; font-size: 0.85rem; margin-top: 4px; background: #10b981;" title="Écouter la réponse à haute voix">🔊 Écouter</button>
-            </div>
+            <div class="ai-disc">L'assistant peut se tromper : ne remplace pas un avis médical. N'envoyez aucune donnée identifiant un patient.</div>
         </div>
     </div>
 
@@ -1641,18 +1699,6 @@ document.getElementById('selectReaction').value = customId;
 afficherReactionChimique();
 alert("Réaction ajoutée avec succès à votre base infinie !");
 }
-function gererFichierJoint(input) {
-if (input.files && input.files[0]) {
-fichierActuel = input.files[0];
-document.getElementById('fileNameDisplay').innerText = `📎 ${fichierActuel.name}`;
-document.getElementById('filePreviewContainer').style.display = 'flex';
-}
-}
-function supprimerFichierJoint() {
-fichierActuel = null;
-document.getElementById('fileInputHidden').value = '';
-document.getElementById('filePreviewContainer').style.display = 'none';
-}
 function lireFichier(f) {
 return new Promise((resolve, reject) => {
 if (f.type === 'application/pdf') {
@@ -1680,89 +1726,219 @@ reject(new Error("Format non pris en charge (image ou PDF uniquement)."));
 }
 });
 }
+let aiHistorique = [];
+let aiAudioEnCours = false;
+function mdInline(s) {
+return s.replace(/`([^`]+)`/g, '<code>$1</code>')
+.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+.replace(/(^|[^*])\*([^*\s][^*]*)\*(?!\*)/g, '$1<em>$2</em>');
+}
+function mdVersHtml(texte) {
+const lignes = esc(texte).split('\n');
+let out = '', liste = null, para = [], table = [];
+const fermerPara = () => { if (para.length) { out += '<p>' + para.join('<br>') + '</p>'; para = []; } };
+const fermerListe = () => { if (liste) { out += '</' + liste + '>'; liste = null; } };
+const fermerTable = () => {
+if (!table.length) return;
+const rows = table.filter(r => !/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(r));
+let h = '<div class="ai-table"><table>';
+rows.forEach((r, i) => {
+const cells = r.trim().replace(/^\|/, '').replace(/\|$/, '').split('|');
+const tag = i === 0 ? 'th' : 'td';
+h += '<tr>' + cells.map(c => '<' + tag + '>' + mdInline(c.trim()) + '</' + tag + '>').join('') + '</tr>';
+});
+out += h + '</table></div>';
+table = [];
+};
+for (const l of lignes) {
+let m;
+if (/^\s*\|.*\|\s*$/.test(l)) { fermerPara(); fermerListe(); table.push(l); continue; }
+fermerTable();
+if (!l.trim()) { fermerPara(); fermerListe(); continue; }
+if (/^\s*(-{3,}|\*{3,})\s*$/.test(l)) { fermerPara(); fermerListe(); out += '<hr>'; continue; }
+if ((m = l.match(/^\s{0,3}#{1,4}\s+(.*)$/))) { fermerPara(); fermerListe(); out += '<h5>' + mdInline(m[1]) + '</h5>'; continue; }
+if ((m = l.match(/^\s*[*\-•]\s+(.*)$/))) { fermerPara(); if (liste !== 'ul') { fermerListe(); out += '<ul>'; liste = 'ul'; } out += '<li>' + mdInline(m[1]) + '</li>'; continue; }
+if ((m = l.match(/^\s*\d+[.)]\s+(.*)$/))) { fermerPara(); if (liste !== 'ol') { fermerListe(); out += '<ol>'; liste = 'ol'; } out += '<li>' + mdInline(m[1]) + '</li>'; continue; }
+fermerListe();
+para.push(mdInline(l.trim()));
+}
+fermerPara(); fermerListe(); fermerTable();
+return out;
+}
+function langVoix() { return { fr: 'fr-FR', en: 'en-US', ar: 'ar-SA', ru: 'ru-RU', de: 'de-DE' }[langueActive()] || 'fr-FR'; }
+function notifierIA(msg, erreur) {
+const n = document.getElementById('aiChatResponse');
+n.textContent = msg || '';
+n.style.color = erreur ? '#ef4444' : '';
+}
+function defilerMessages() { const z = document.getElementById('aiMessages'); z.scrollTop = z.scrollHeight; }
+function ajouterMessageIA(role, texte, options) {
+options = options || {};
+const zone = document.getElementById('aiMessages');
+const accueil = document.getElementById('aiAccueil');
+if (accueil) accueil.remove();
+const ligne = document.createElement('div');
+ligne.className = 'ai-row ' + (role === 'user' ? 'user' : 'bot');
+const bulle = document.createElement('div');
+bulle.className = 'ai-bubble' + (options.erreur ? ' err' : '');
+if (role === 'user') {
+bulle.textContent = texte;
+if (options.fichier) { const c = document.createElement('div'); c.className = 'ai-chip'; c.textContent = '📎 ' + options.fichier; bulle.appendChild(c); }
+} else if (options.typing) {
+bulle.innerHTML = '<span class="ai-typing"><i></i><i></i><i></i></span>';
+} else if (options.erreur) {
+bulle.textContent = texte;
+} else {
+bulle.innerHTML = mdVersHtml(texte);
+const actions = document.createElement('div');
+actions.className = 'ai-actions';
+const bc = document.createElement('button'); bc.type = 'button'; bc.textContent = '📋 Copier'; bc.setAttribute('aria-label', 'Copier la réponse');
+bc.onclick = () => { navigator.clipboard.writeText(texte).then(() => toast('Réponse copiée')).catch(() => toast('Copie impossible')); };
+const bl = document.createElement('button'); bl.type = 'button'; bl.textContent = '🔊 Écouter'; bl.setAttribute('aria-label', 'Écouter la réponse');
+bl.onclick = () => lireReponseVoix(texte);
+actions.append(bc, bl);
+bulle.appendChild(actions);
+}
+ligne.appendChild(bulle);
+zone.appendChild(ligne);
+defilerMessages();
+return ligne;
+}
+function afficherAccueilIA() {
+const zone = document.getElementById('aiMessages');
+if (zone.children.length) return;
+const fr = langueActive() !== 'en';
+const sugg = fr
+? ['Interpréter un bilan sanguin (NFS, ionogramme)', 'Conduite à tenir devant une fièvre chez l\'enfant', 'Différence entre acidose métabolique et respiratoire', 'Aide-moi à réviser la pharmacologie des diurétiques']
+: ['Interpret a blood test (CBC, electrolytes)', 'Approach to fever in a child', 'Metabolic vs respiratory acidosis', 'Help me revise diuretic pharmacology'];
+const a = document.createElement('div');
+a.id = 'aiAccueil'; a.className = 'ai-welcome';
+const t = document.createElement('div'); t.className = 'ai-welcome-t'; t.textContent = fr ? 'Bonjour 👋 Comment puis-je vous aider ?' : 'Hello 👋 How can I help?';
+const s = document.createElement('div'); s.className = 'ai-welcome-s'; s.textContent = fr ? 'Posez une question médicale, ou joignez une image ou un PDF (bilan, radio).' : 'Ask a medical question, or attach an image or PDF.';
+a.append(t, s);
+sugg.forEach(x => {
+const b = document.createElement('button'); b.type = 'button'; b.className = 'ai-sugg'; b.textContent = x;
+b.onclick = () => { document.getElementById('aiUserInput').value = x; ajusterZoneSaisie(); envoyerQuestionAi(); };
+a.appendChild(b);
+});
+zone.appendChild(a);
+}
+function nouvelleConversationIA() {
+aiHistorique = [];
+if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+document.getElementById('aiMessages').innerHTML = '';
+notifierIA('');
+supprimerFichierJoint();
+afficherAccueilIA();
+}
+function ajusterZoneSaisie() {
+const t = document.getElementById('aiUserInput');
+t.style.height = 'auto';
+t.style.height = Math.min(t.scrollHeight, 120) + 'px';
+majBoutonEnvoi();
+}
+function majBoutonEnvoi() {
+const b = document.getElementById('aiSendBtn');
+if (!b) return;
+const plein = !!document.getElementById('aiUserInput').value.trim() || !!fichierActuel;
+b.classList.toggle('vide', !plein);
+b.disabled = envoiEnCours;
+}
+function gererFichierJoint(input) {
+if (input.files && input.files[0]) {
+fichierActuel = input.files[0];
+document.getElementById('fileNameDisplay').innerText = `📎 ${fichierActuel.name}`;
+document.getElementById('filePreviewContainer').style.display = 'flex';
+majBoutonEnvoi();
+}
+}
+function supprimerFichierJoint() {
+fichierActuel = null;
+document.getElementById('fileInputHidden').value = '';
+document.getElementById('filePreviewContainer').style.display = 'none';
+majBoutonEnvoi();
+}
 async function envoyerQuestionAi() {
 if (envoiEnCours) return;
 const input = document.getElementById('aiUserInput');
-const respBox = document.getElementById('aiChatResponse');
 const val = input.value.trim();
 if (!val && !fichierActuel) return;
-if (val.length > 1000) { respBox.textContent = "Question trop longue (1000 caractères maximum)."; return; }
-if (PREMIUM_ACTIF && fichierActuel && !codePremium()) { respBox.textContent = "L'analyse d'images et de PDF est réservée au Premium. Activez un code dans Paramètres > Premium."; return; }
+if (val.length > 1000) { notifierIA("Question trop longue (1000 caractères maximum).", true); return; }
+if (PREMIUM_ACTIF && fichierActuel && !codePremium()) { notifierIA("L'analyse d'images et de PDF est réservée au Premium. Activez un code dans Paramètres > Premium.", true); return; }
 const maintenant = Date.now();
-if (maintenant - dernierEnvoiIA < 3000) { respBox.textContent = "Patientez quelques secondes avant d'envoyer une autre question."; return; }
+if (maintenant - dernierEnvoiIA < 3000) { notifierIA("Patientez quelques secondes avant d'envoyer une autre question.", true); return; }
 let envois = [];
 try { envois = JSON.parse(sessionStorage.getItem('envoisIA') || '[]').filter(t => maintenant - t < 3600000); } catch (e) { }
-if (envois.length >= 20) { respBox.textContent = "Limite atteinte : 20 questions par heure. Réessayez plus tard."; return; }
+if (envois.length >= 20) { notifierIA("Limite atteinte : 20 questions par heure. Réessayez plus tard.", true); return; }
+if (!navigator.onLine) { notifierIA("Hors-ligne : l'assistant nécessite une connexion internet.", true); return; }
 envois.push(maintenant);
 sessionStorage.setItem('envoisIA', JSON.stringify(envois));
 dernierEnvoiIA = maintenant;
-if (!navigator.onLine) {
-respBox.innerHTML = '<span style="color:#ef4444;">Hors-ligne : l\'assistant nécessite une connexion internet.</span>';
-return;
-}
+notifierIA('');
 envoiEnCours = true;
 const nomFichier = fichierActuel ? fichierActuel.name : '';
-const vous = `<strong>Vous :</strong> ${esc(val || 'Document joint')}${nomFichier ? `<br><em>📎 ${esc(nomFichier)}</em>` : ''}<br><br>`;
+const fichierEnvoye = fichierActuel;
+ajouterMessageIA('user', val || 'Document joint', { fichier: nomFichier });
+input.value = '';
+ajusterZoneSaisie();
+const attente = ajouterMessageIA('bot', '', { typing: true });
 try {
-const fichier = fichierActuel ? await lireFichier(fichierActuel) : null;
-respBox.innerHTML = vous + "<em>Analyse en cours…</em>";
+const fichier = fichierEnvoye ? await lireFichier(fichierEnvoye) : null;
 const r = await fetch('/api/chat', {
 method: 'POST',
 headers: Object.assign({ 'Content-Type': 'application/json' }, codePremium() ? { 'x-premium-code': codePremium() } : {}),
-body: JSON.stringify({ message: val, file: fichier, lang: document.getElementById('langSelect').value })
+body: JSON.stringify({ message: val, file: fichier, lang: document.getElementById('langSelect').value, history: aiHistorique.slice(-8) })
 });
 const data = await r.json().catch(() => ({}));
 if (!r.ok) throw new Error(data.error || "Assistant indisponible.");
-derniereReponseTexte = data.reply;
-respBox.innerHTML = vous + `<strong>Assistant :</strong> <span style="white-space: pre-wrap;">${esc(data.reply)}</span>`;
-input.value = '';
+attente.remove();
+ajouterMessageIA('bot', data.reply);
+aiHistorique.push({ role: 'user', text: (val || 'Document joint') + (nomFichier ? ' [document joint : ' + nomFichier + ']' : '') });
+aiHistorique.push({ role: 'model', text: String(data.reply).slice(0, 1500) });
+if (aiHistorique.length > 12) aiHistorique = aiHistorique.slice(-12);
 supprimerFichierJoint();
 } catch (e) {
-respBox.innerHTML = vous + `<span style="color:#ef4444;">${esc(e.message || "Erreur de connexion.")}</span>`;
+attente.remove();
+ajouterMessageIA('bot', e.message || "Erreur de connexion.", { erreur: true });
+input.value = val;
+ajusterZoneSaisie();
 } finally {
 envoiEnCours = false;
+majBoutonEnvoi();
 }
 }
-function lireDerniereReponseVoix() {
-if ('speechSynthesis' in window) {
+function lireReponseVoix(texte) {
+if (!('speechSynthesis' in window)) { toast("Synthèse vocale non disponible sur cet appareil."); return; }
+if (aiAudioEnCours) { window.speechSynthesis.cancel(); aiAudioEnCours = false; return; }
+const propre = String(texte).replace(/[*#`|]/g, ' ').replace(/\s+/g, ' ').trim();
+const u = new SpeechSynthesisUtterance(propre);
+u.lang = langVoix(); u.rate = 1.0;
+u.onend = u.onerror = () => { aiAudioEnCours = false; };
+aiAudioEnCours = true;
 window.speechSynthesis.cancel();
-let utterance = new SpeechSynthesisUtterance(derniereReponseTexte);
-utterance.lang = 'fr-FR';
-utterance.rate = 1.0;
-window.speechSynthesis.speak(utterance);
-} else {
-alert("La synthèse vocale n'est pas supportée par votre navigateur.");
-}
+window.speechSynthesis.speak(u);
 }
 function basculerEnregistrementAudio() {
 const btn = document.getElementById('waveRecordBtn');
-const respBox = document.getElementById('aiChatResponse');
 if (!estEnCoursDEcoute) {
 if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-alert("La reconnaissance vocale n'est pas supportée par votre navigateur.");
+notifierIA("La dictée vocale n'est pas disponible sur ce navigateur.", true);
 return;
 }
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-recognition = new SpeechRecognition();
-recognition.lang = 'fr-FR';
-recognition.onstart = function() {
-estEnCoursDEcoute = true;
-btn.classList.add('recording');
-respBox.innerHTML = "🎤 Écoute vocale active... Parlez.";
-};
-recognition.onresult = function(event) {
-let speechToText = event.results[0][0].transcript;
-document.getElementById('aiUserInput').value = speechToText;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+recognition = new SR();
+recognition.lang = langVoix();
+recognition.onstart = function () { estEnCoursDEcoute = true; btn.classList.add('recording'); notifierIA('🎤 Je vous écoute… parlez.'); };
+recognition.onresult = function (event) {
+const texte = event.results[0][0].transcript;
+document.getElementById('aiUserInput').value = texte;
+ajusterZoneSaisie();
 arreterEnregistrementAudio();
+notifierIA('');
 envoyerQuestionAi();
 };
-recognition.onerror = function() {
-arreterEnregistrementAudio();
-respBox.innerHTML = "Erreur de capture vocale. Veuillez réessayer.";
-};
-recognition.onend = function() {
-arreterEnregistrementAudio();
-};
+recognition.onerror = function () { arreterEnregistrementAudio(); notifierIA("Dictée impossible. Réessayez.", true); };
+recognition.onend = function () { arreterEnregistrementAudio(); };
 recognition.start();
 } else {
 if (recognition) recognition.stop();
@@ -1771,7 +1947,17 @@ arreterEnregistrementAudio();
 }
 function arreterEnregistrementAudio() {
 estEnCoursDEcoute = false;
-document.getElementById('waveRecordBtn').classList.remove('recording');
+const b = document.getElementById('waveRecordBtn');
+if (b) b.classList.remove('recording');
+}
+function installerSaisieIA() {
+const t = document.getElementById('aiUserInput');
+t.addEventListener('input', ajusterZoneSaisie);
+t.addEventListener('keydown', (ev) => {
+const tactile = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+if (ev.key === 'Enter' && !ev.shiftKey && !tactile && !ev.isComposing) { ev.preventDefault(); envoyerQuestionAi(); }
+});
+majBoutonEnvoi();
 }
 const CATEGORIES_QUIZ = {
 toutes: { fr: "Toutes les catégories", en: "All categories" },
@@ -2001,7 +2187,14 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function toggleAiModal() {
 const modal = document.getElementById('aiModal');
-modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+const ouvrir = modal.style.display !== 'flex';
+modal.style.display = ouvrir ? 'flex' : 'none';
+if (ouvrir) {
+afficherAccueilIA();
+defilerMessages();
+majBoutonEnvoi();
+if (!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches)) setTimeout(() => document.getElementById('aiUserInput').focus(), 80);
+} else if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); aiAudioEnCours = false; }
 }
 function toggleMenu() {
 const menu = document.getElementById('sideMenu');
@@ -3140,6 +3333,7 @@ const activeSession = JSON.parse(localStorage.getItem('activeSession') || 'null'
 if (activeSession) connecterUtilisateur(activeSession);
 document.getElementById('appCalendar').value = new Date().toISOString().split('T')[0];
 document.getElementById('floatingAiBtn').style.display = 'block';
+installerSaisieIA();
 changerLangue();
 installerEtoiles();
 majAccueil();
@@ -3153,5 +3347,308 @@ document.getElementById('offlineBar').style.display = navigator.onLine ? 'none' 
 }
 window.addEventListener('online', majEtatReseau);
 window.addEventListener('offline', majEtatReseau);</script>
+<script>
+/* MediCalcul Express — groupe « Scores & Biologie »
+   Fonctions de calcul pures (testables) + génération de l'interface. */
+(function (global) {
+'use strict';
+var U = {
+    aujourdhuiUTC: function () { var d = new Date(); return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); },
+    dateUTC: function (iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : NaN; },
+    iso: function (ms) { var d = new Date(ms); return d.toISOString().slice(0, 10); },
+    fr: function (ms) { var d = new Date(ms); return ('0' + d.getUTCDate()).slice(-2) + '/' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '/' + d.getUTCFullYear(); }
+};
+function ok(res, interp, niveau, extra) { return { ok: true, res: res, interp: interp || '', niveau: niveau || 'ok', extra: extra || '' }; }
+function err(msg) { return { ok: false, res: msg, interp: '', niveau: 'warn' }; }
+function dans(x, a, b) { return typeof x === 'number' && isFinite(x) && x >= a && x <= b; }
+function f(x, n) { return Number(x).toFixed(n).replace('.', ','); }
+
+/* ---------- Calculs ---------- */
+function ckdEpi2021(scrMgDl, age, femme) {
+    var k = femme ? 0.7 : 0.9, a = femme ? -0.241 : -0.302;
+    var r = scrMgDl / k;
+    return 142 * Math.pow(Math.min(r, 1), a) * Math.pow(Math.max(r, 1), -1.200) * Math.pow(0.9938, age) * (femme ? 1.012 : 1);
+}
+function stadeDfg(d) {
+    if (d >= 90) return 'G1 (normal ou élevé)';
+    if (d >= 60) return 'G2 (légèrement diminué)';
+    if (d >= 45) return 'G3a (légère à modérée)';
+    if (d >= 30) return 'G3b (modérée à sévère)';
+    if (d >= 15) return 'G4 (sévère)';
+    return 'G5 (insuffisance rénale terminale)';
+}
+function calcDfg(v) {
+    var scr = v.unite === 'mgdl' ? v.creat : v.creat / 88.4;
+    if (!dans(v.age, 18, 120)) return err('Âge adulte requis (18 à 120 ans).');
+    if (!dans(v.creat, v.unite === 'mgdl' ? 0.2 : 18, v.unite === 'mgdl' ? 20 : 1800)) return err('Créatininémie hors plage plausible.');
+    var d = ckdEpi2021(scr, v.age, v.sexe === 'f');
+    var niv = d >= 60 ? 'ok' : d >= 30 ? 'warn' : 'alert';
+    return ok('DFG estimé : ' + Math.round(d) + ' mL/min/1,73 m²', 'Stade ' + stadeDfg(d) + '. Le stade ne vaut que si l\'anomalie dure plus de 3 mois ; à confirmer avec l\'albuminurie.', niv);
+}
+function calcCha2ds2(v) {
+    var s = 0;
+    s += v.icc ? 1 : 0; s += v.hta ? 1 : 0; s += v.diab ? 1 : 0; s += v.avc ? 2 : 0; s += v.vasc ? 1 : 0;
+    s += v.age === '75' ? 2 : v.age === '65' ? 1 : 0;
+    var femme = v.sexe === 'f'; s += femme ? 1 : 0;
+    var seuil = femme ? 3 : 2;
+    var txt, niv;
+    if (s >= seuil) { txt = 'Anticoagulation orale recommandée (sauf contre-indication).'; niv = 'alert'; }
+    else if (s === seuil - 1) { txt = 'Anticoagulation à envisager, selon le contexte et le rapport bénéfice/risque.'; niv = 'warn'; }
+    else { txt = 'Risque thromboembolique faible : pas d\'anticoagulation systématique.'; niv = 'ok'; }
+    return ok('CHA₂DS₂-VASc : ' + s + ' point' + (s > 1 ? 's' : ''), txt + ' (Seuils ESC 2020 : ≥2 chez l\'homme, ≥3 chez la femme.) Évaluer aussi le risque hémorragique.', niv);
+}
+function calcWells(v) {
+    var s = 0;
+    s += v.tvp ? 3 : 0; s += v.alt ? 3 : 0; s += v.fc ? 1.5 : 0; s += v.immo ? 1.5 : 0; s += v.atcd ? 1.5 : 0; s += v.hemo ? 1 : 0; s += v.cancer ? 1 : 0;
+    var niv3 = s > 6 ? 'probabilité élevée' : s >= 2 ? 'probabilité intermédiaire' : 'probabilité faible';
+    var niv2 = s > 4 ? 'EP probable' : 'EP peu probable';
+    var niv = s > 6 ? 'alert' : s >= 2 ? 'warn' : 'ok';
+    var cat = s > 4 ? 'Si « EP probable » : angioscanner pulmonaire (ou imagerie équivalente) sans attendre les D-dimères.' : 'Si « EP peu probable » : dosage des D-dimères ; négatif = EP exclue.';
+    return ok('Wells (EP) : ' + f(s, 1) + ' point' + (s > 1 ? 's' : ''), niv3 + ' (3 niveaux) ; ' + niv2 + ' (2 niveaux). ' + cat, niv);
+}
+function calcApgar(v) {
+    var s = (+v.apparence) + (+v.pouls) + (+v.grimace) + (+v.activite) + (+v.respiration);
+    if (!isFinite(s)) return err('Complétez les 5 critères.');
+    var t, n;
+    if (s >= 7) { t = 'Nouveau-né en bon état.'; n = 'ok'; }
+    else if (s >= 4) { t = 'Dépression modérée : stimulation, aspiration, oxygène/ventilation selon l\'évolution.'; n = 'warn'; }
+    else { t = 'Dépression sévère : réanimation néonatale immédiate.'; n = 'alert'; }
+    return ok('Apgar : ' + s + ' / 10', t + ' Le score se mesure à 1 et 5 minutes (puis 10 min si < 7).', n);
+}
+function calcCalcium(v) {
+    var ca = v.uCa === 'mgdl' ? v.ca / 4.008 : v.ca;   // mmol/L
+    var alb = v.uAlb === 'gdl' ? v.alb * 10 : v.alb;   // g/L
+    if (!dans(ca, 0.5, 5)) return err('Calcémie hors plage plausible.');
+    if (!dans(alb, 5, 70)) return err('Albuminémie hors plage plausible.');
+    var corr = ca + 0.02 * (40 - alb);
+    var mg = corr * 4.008;
+    var t, n;
+    if (corr < 2.20) { t = 'Hypocalcémie corrigée (< 2,20 mmol/L).'; n = 'alert'; }
+    else if (corr > 2.60) { t = 'Hypercalcémie corrigée (> 2,60 mmol/L).'; n = 'alert'; }
+    else { t = 'Calcémie corrigée normale (2,20–2,60 mmol/L).'; n = 'ok'; }
+    return ok('Calcium corrigé : ' + f(corr, 2) + ' mmol/L (' + f(mg, 1) + ' mg/dL)', t + ' La correction est moins fiable en cas d\'hypoalbuminémie sévère : préférer le calcium ionisé si disponible.', n);
+}
+function calcTrouAnionique(v) {
+    if (!dans(v.na, 100, 180) || !dans(v.cl, 60, 140) || !dans(v.hco3, 2, 50)) return err('Valeurs hors plage plausible (Na, Cl, HCO₃⁻).');
+    var ta = v.na - (v.cl + v.hco3);
+    var txt = 'Trou anionique : ' + f(ta, 1) + ' mmol/L';
+    var interp, n;
+    var val = ta;
+    var plus = '';
+    if (v.alb !== undefined && v.alb !== null && !isNaN(v.alb)) {
+        if (!dans(v.alb, 5, 70)) return err('Albuminémie hors plage plausible.');
+        val = ta + 0.25 * (44 - v.alb);
+        plus = ' Corrigé pour l\'albumine : ' + f(val, 1) + ' mmol/L.';
+    }
+    if (val > 12) { interp = 'Trou anionique élevé : acidose métabolique à trou anionique augmenté (acidocétose, acidose lactique, insuffisance rénale, intoxications…).'; n = 'alert'; }
+    else if (val < 6) { interp = 'Trou anionique bas : vérifier l\'albumine et les erreurs de dosage.'; n = 'warn'; }
+    else { interp = 'Trou anionique normal (≈ 8 à 12 mmol/L, sans le potassium).'; n = 'ok'; }
+    return ok(txt, interp + plus, n);
+}
+function calcQtc(v) {
+    if (!dans(v.qt, 200, 700) || !dans(v.fc, 30, 220)) return err('QT (200–700 ms) et fréquence (30–220/min) requis.');
+    var rr = 60 / v.fc;
+    var baz = v.qt / Math.sqrt(rr), fri = v.qt / Math.cbrt(rr);
+    var limite = v.sexe === 'f' ? 460 : 450;
+    var n, t;
+    if (fri >= 500) { t = 'QTc très allongé (≥ 500 ms) : risque élevé de torsades de pointes ; revoir les médicaments allongeant le QT et les troubles ioniques (K, Mg, Ca).'; n = 'alert'; }
+    else if (fri > limite) { t = 'QTc allongé (> ' + limite + ' ms). Rechercher les causes réversibles (médicaments, hypokaliémie, hypomagnésémie, hypocalcémie).'; n = 'warn'; }
+    else { t = 'QTc dans les limites habituelles (≤ ' + limite + ' ms).'; n = 'ok'; }
+    return ok('QTc Fridericia : ' + Math.round(fri) + ' ms · Bazett : ' + Math.round(baz) + ' ms', t + ' Bazett surestime le QTc quand la fréquence est > 90/min ; Fridericia est plus fiable.', n);
+}
+function calcPousseSeringue(v) {
+    if (!dans(v.poids, 0.3, 300) || !(v.dose > 0) || !(v.mg > 0) || !(v.vol > 0)) return err('Complétez poids, dose, quantité de médicament et volume.');
+    var conc = v.mg * 1000 / v.vol; // µg/mL
+    var debit = v.dose * v.poids * 60 / conc;
+    var n = debit > 100 ? 'alert' : 'ok';
+    return ok('Débit : ' + f(debit, 2) + ' mL/h', 'Concentration de la seringue : ' + f(conc, 0) + ' µg/mL (' + f(conc / 1000, 2) + ' mg/mL). Vérifiez la dose maximale, la compatibilité et le protocole du service avant de programmer le pousse-seringue.' + (debit > 100 ? ' Débit très élevé : revérifiez les unités.' : ''), n);
+}
+function calcHolliday(v) {
+    if (!dans(v.poids, 3, 100)) return err('Poids de 3 à 100 kg (nouveau-nés < 3 kg : schéma spécifique).');
+    var p = v.poids, jour;
+    if (p <= 10) jour = p * 100;
+    else if (p <= 20) jour = 1000 + (p - 10) * 50;
+    else jour = 1500 + (p - 20) * 20;
+    return ok('Besoins : ' + Math.round(jour) + ' mL/jour ≈ ' + f(jour / 24, 0) + ' mL/h', 'Règle de Holliday-Segar (4-2-1) : besoins hydriques d\'entretien, à adapter à la fièvre, aux pertes digestives, à l\'état rénal et au protocole local. Ce n\'est pas un traitement de réhydratation.', 'ok');
+}
+function calcDpa(v, auj) {
+    var ddr = U.dateUTC(v.ddr);
+    var now = auj !== undefined ? auj : U.aujourdhuiUTC();
+    if (isNaN(ddr)) return err('Indiquez la date des dernières règles.');
+    var jours = Math.round((now - ddr) / 86400000);
+    if (jours < 0) return err('La date ne peut pas être dans le futur.');
+    if (jours > 310) return err('Plus de 44 semaines depuis cette date : vérifiez la date.');
+    var dpa = ddr + 280 * 86400000;
+    var sa = Math.floor(jours / 7), j = jours % 7;
+    var trim = sa < 14 ? '1er trimestre' : sa < 28 ? '2e trimestre' : '3e trimestre';
+    var n = 'ok', t;
+    if (sa < 37) { t = trim + '. Avant terme (< 37 SA).'; }
+    else if (sa < 42) { t = 'À terme (37 à 41 SA + 6 j).'; }
+    else { t = 'Terme dépassé (≥ 42 SA) : prise en charge spécialisée.'; n = 'alert'; }
+    return ok('Terme : ' + sa + ' SA + ' + j + ' j — DPA : ' + U.fr(dpa), t + ' Règle de Naegele (cycle de 28 jours) ; l\'échographie du 1er trimestre fait foi si l\'écart dépasse 7 jours.', n);
+}
+function calcQsofa(v) {
+    var s = (v.fr ? 1 : 0) + (v.pas ? 1 : 0) + (v.mental ? 1 : 0);
+    var n = s >= 2 ? 'alert' : s === 1 ? 'warn' : 'ok';
+    var t = s >= 2 ? 'Risque élevé de mauvaise évolution en cas d\'infection : recherche de dysfonction d\'organe, lactate, hémocultures, antibiothérapie et réanimation précoces selon protocole.' : 'Score < 2 : n\'élimine pas un sepsis ; surveillez et réévaluez.';
+    return ok('qSOFA : ' + s + ' / 3', t, n);
+}
+
+/* ---------- Définition des outils ---------- */
+var NUM = function (id, label, ph, min, max, step) { return { id: id, label: label, type: 'num', ph: ph, min: min, max: max, step: step || 'any' }; };
+var SEL = function (id, label, options) { return { id: id, label: label, type: 'sel', options: options }; };
+var CHK = function (id, label) { return { id: id, label: label, type: 'chk' }; };
+var SEXE = SEL('sexe', 'Sexe', [['h', 'Homme'], ['f', 'Femme']]);
+var APG = [['', 'Choisir…'], ['2', '2'], ['1', '1'], ['0', '0']];
+
+var TOOLS = [
+    { id: 'dfg', fr: 'DFG (CKD-EPI 2021)', en: 'eGFR (CKD-EPI 2021)', mots: 'dfg gfr creatinine rein renal ckd epi insuffisance', titre: 'DFG — CKD-EPI 2021',
+      champs: [NUM('age', 'Âge (ans)', 'Ex: 55', 18, 120, 1), SEXE, NUM('creat', 'Créatininémie', 'Ex: 90', 0, 2000), SEL('unite', 'Unité', [['umol', 'µmol/L'], ['mgdl', 'mg/dL']])],
+      calc: calcDfg, source: 'Inker et al., NEJM 2021 (équation sans coefficient « race »). Adulte uniquement.' },
+    { id: 'cha2ds2', fr: 'Score CHA₂DS₂-VASc', en: 'CHA₂DS₂-VASc score', mots: 'cha2ds2 vasc fibrillation atriale anticoagulation avc fa', titre: 'CHA₂DS₂-VASc (fibrillation atriale)',
+      champs: [SEL('age', 'Âge', [['0', 'Moins de 65 ans'], ['65', '65 à 74 ans'], ['75', '75 ans et plus']]), SEXE,
+          CHK('icc', 'Insuffisance cardiaque / dysfonction VG'), CHK('hta', 'Hypertension artérielle'), CHK('diab', 'Diabète'),
+          CHK('avc', 'AVC, AIT ou embolie systémique antérieur'), CHK('vasc', 'Maladie vasculaire (infarctus, artériopathie, plaque aortique)')],
+      calc: calcCha2ds2, source: 'Lip et al., Chest 2010 ; recommandations ESC 2020 sur la fibrillation atriale.' },
+    { id: 'wells', fr: 'Score de Wells (embolie pulmonaire)', en: 'Wells score (pulmonary embolism)', mots: 'wells embolie pulmonaire ep d-dimeres thrombose', titre: 'Score de Wells — embolie pulmonaire',
+      champs: [CHK('tvp', 'Signes cliniques de thrombose veineuse profonde (+3)'), CHK('alt', 'Autre diagnostic moins probable que l\'EP (+3)'), CHK('fc', 'Fréquence cardiaque > 100/min (+1,5)'),
+          CHK('immo', 'Immobilisation ≥ 3 jours ou chirurgie < 4 semaines (+1,5)'), CHK('atcd', 'Antécédent de TVP ou d\'EP (+1,5)'), CHK('hemo', 'Hémoptysie (+1)'), CHK('cancer', 'Cancer actif (+1)')],
+      calc: calcWells, source: 'Wells et al., Thromb Haemost 2000.' },
+    { id: 'apgar', fr: 'Score d\'Apgar', en: 'Apgar score', mots: 'apgar nouveau-ne naissance neonatal reanimation', titre: 'Score d\'Apgar (nouveau-né)',
+      champs: [SEL('apparence', 'Apparence (couleur) : 2 rose · 1 extrémités bleues · 0 pâle/bleu', APG), SEL('pouls', 'Pouls : 2 > 100 · 1 < 100 · 0 absent', APG),
+          SEL('grimace', 'Réactivité (grimace) : 2 cri/toux · 1 grimace · 0 aucune', APG), SEL('activite', 'Tonus : 2 actif · 1 flexion légère · 0 flasque', APG),
+          SEL('respiration', 'Respiration : 2 vigoureuse/cri · 1 faible · 0 absente', APG)],
+      calc: calcApgar, source: 'Apgar V., 1953.' },
+    { id: 'calcium', fr: 'Calcium corrigé (albumine)', en: 'Corrected calcium', mots: 'calcium calcemie albumine hypercalcemie hypocalcemie corrige', titre: 'Calcium corrigé par l\'albumine',
+      champs: [NUM('ca', 'Calcémie totale', 'Ex: 2.1', 0, 20), SEL('uCa', 'Unité de la calcémie', [['mmol', 'mmol/L'], ['mgdl', 'mg/dL']]), NUM('alb', 'Albuminémie', 'Ex: 28', 0, 100), SEL('uAlb', 'Unité de l\'albumine', [['gl', 'g/L'], ['gdl', 'g/dL']])],
+      calc: calcCalcium, source: 'Formule de Payne : Ca corrigé = Ca + 0,02 × (40 − albumine en g/L).' },
+    { id: 'trou', fr: 'Trou anionique', en: 'Anion gap', mots: 'trou anionique acidose bicarbonate chlore sodium gaz du sang', titre: 'Trou anionique plasmatique',
+      champs: [NUM('na', 'Sodium (mmol/L)', 'Ex: 140', 0, 250), NUM('cl', 'Chlore (mmol/L)', 'Ex: 104', 0, 200), NUM('hco3', 'Bicarbonates (mmol/L)', 'Ex: 24', 0, 60), NUM('alb', 'Albumine en g/L (facultatif, pour corriger)', 'Ex: 40', 0, 100)],
+      calc: calcTrouAnionique, optionnels: ['alb'], source: 'TA = Na − (Cl + HCO₃⁻) ; correction de Figge : + 0,25 × (44 − albumine g/L).' },
+    { id: 'qtc', fr: 'QTc (Bazett, Fridericia)', en: 'QTc (Bazett, Fridericia)', mots: 'qtc qt ecg torsades allongement intervalle', titre: 'QT corrigé (ECG)',
+      champs: [NUM('qt', 'Intervalle QT mesuré (ms)', 'Ex: 400', 0, 800), NUM('fc', 'Fréquence cardiaque (/min)', 'Ex: 75', 0, 300), SEXE],
+      calc: calcQtc, source: 'Bazett 1920 ; Fridericia 1920. Seuils : > 450 ms (homme), > 460 ms (femme), ≥ 500 ms (risque élevé).' },
+    { id: 'seringue', fr: 'Pousse-seringue (dose → mL/h)', en: 'Syringe pump (dose → mL/h)', mots: 'pousse seringue debit dose ug/kg/min noradrenaline dopamine dobutamine perfusion continue', titre: 'Pousse-seringue : dose → débit',
+      champs: [NUM('poids', 'Poids du patient (kg)', 'Ex: 70', 0, 400), NUM('dose', 'Dose souhaitée (µg/kg/min)', 'Ex: 0.1', 0, 1000), NUM('mg', 'Médicament dans la seringue (mg)', 'Ex: 8', 0, 100000), NUM('vol', 'Volume total de la seringue (mL)', 'Ex: 50', 0, 1000)],
+      calc: calcPousseSeringue, source: 'Débit (mL/h) = dose × poids × 60 ÷ concentration (µg/mL). Aide au calcul : ne remplace pas le protocole.' },
+    { id: 'holliday', fr: 'Besoins hydriques enfant (Holliday-Segar)', en: 'Maintenance fluids (Holliday-Segar)', mots: 'holliday segar hydratation entretien enfant pediatrie liquide perfusion 4-2-1', titre: 'Besoins hydriques d\'entretien (enfant)',
+      champs: [NUM('poids', 'Poids (kg)', 'Ex: 12', 0, 120)],
+      calc: calcHolliday, source: 'Holliday & Segar, Pediatrics 1957 (règle 4-2-1).' },
+    { id: 'dpa', fr: 'Date prévue d\'accouchement (DPA)', en: 'Due date & gestational age', mots: 'dpa grossesse terme accouchement ddr naegele semaines amenorrhee enceinte obstetrique', titre: 'Terme de la grossesse et DPA',
+      champs: [{ id: 'ddr', label: 'Date des dernières règles (DDR)', type: 'date' }],
+      calc: calcDpa, source: 'Règle de Naegele : DDR + 280 jours (9 mois + 7 jours).' },
+    { id: 'qsofa', fr: 'Score qSOFA (sepsis)', en: 'qSOFA score (sepsis)', mots: 'qsofa sepsis infection choc septique gravite', titre: 'qSOFA — dépistage du sepsis grave',
+      champs: [CHK('fr', 'Fréquence respiratoire ≥ 22/min'), CHK('pas', 'Pression artérielle systolique ≤ 100 mmHg'), CHK('mental', 'Altération de la conscience (Glasgow < 15)')],
+      calc: calcQsofa, source: 'Singer et al., JAMA 2016 (Sepsis-3).' }
+];
+
+/* ---------- Lecture des champs & interface ---------- */
+function lire(tool) {
+    var v = {};
+    tool.champs.forEach(function (c) {
+        var el = document.getElementById('sc-' + tool.id + '-' + c.id);
+        if (!el) return;
+        if (c.type === 'chk') v[c.id] = el.checked;
+        else if (c.type === 'num') {
+            var t = String(el.value).replace(',', '.').trim();
+            v[c.id] = t === '' ? ((tool.optionnels || []).indexOf(c.id) >= 0 ? null : NaN) : parseFloat(t);
+        } else v[c.id] = el.value;
+    });
+    return v;
+}
+function calculer(id) {
+    var tool = TOOLS.filter(function (t) { return t.id === id; })[0];
+    if (!tool) return;
+    var v = lire(tool);
+    var manque = tool.champs.some(function (c) {
+        if (c.type === 'num') return (v[c.id] === null ? false : isNaN(v[c.id]));
+        if (c.type === 'sel') return v[c.id] === '';
+        if (c.type === 'date') return !v[c.id];
+        return false;
+    });
+    var r = manque ? err('Complétez tous les champs.') : tool.calc(v);
+    var res = document.getElementById('scR-' + id), it = document.getElementById('scI-' + id), cp = document.getElementById('scC-' + id);
+    res.textContent = r.res;
+    it.textContent = r.interp;
+    var couleur = { ok: '#10b981', warn: '#f59e0b', alert: '#ef4444' }[r.niveau] || '#10b981';
+    res.style.borderLeft = '4px solid ' + (r.ok ? couleur : '#ef4444');
+    it.style.display = r.interp ? 'block' : 'none';
+    cp.style.display = r.ok ? 'block' : 'none';
+    if (r.ok && typeof enregistrerHistorique === 'function') { try { enregistrerHistorique(id, ['scR-' + id], 140); } catch (e) { } }
+}
+function reinit(id) {
+    var tool = TOOLS.filter(function (t) { return t.id === id; })[0];
+    if (!tool) return;
+    tool.champs.forEach(function (c) {
+        var el = document.getElementById('sc-' + id + '-' + c.id);
+        if (!el) return;
+        if (c.type === 'chk') el.checked = false;
+        else if (c.type === 'sel') el.selectedIndex = 0;
+        else el.value = '';
+    });
+    document.getElementById('scR-' + id).textContent = 'Résultat : --';
+    document.getElementById('scR-' + id).style.borderLeft = '4px solid transparent';
+    document.getElementById('scI-' + id).style.display = 'none';
+    document.getElementById('scC-' + id).style.display = 'none';
+}
+function el(tag, attrs, texte) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { if (k === 'class') e.className = attrs[k]; else e.setAttribute(k, attrs[k]); });
+    if (texte !== undefined) e.textContent = texte;
+    return e;
+}
+function construire(racine) {
+    TOOLS.forEach(function (tool) {
+        var box = el('div', { class: 'container', id: 'sc-' + tool.id });
+        box.appendChild(el('h3', { id: 'scT-' + tool.id, style: 'margin-top:0;font-size:1.1rem;font-weight:600;color:var(--primary);' }, tool.titre));
+        tool.champs.forEach(function (c) {
+            var fid = 'sc-' + tool.id + '-' + c.id;
+            if (c.type === 'chk') {
+                var l = el('label', { class: 'sc-chk', for: fid });
+                var cb = el('input', { type: 'checkbox', id: fid });
+                l.appendChild(cb); l.appendChild(el('span', null, c.label));
+                box.appendChild(l);
+                return;
+            }
+            box.appendChild(el('label', { for: fid }, c.label));
+            if (c.type === 'sel') {
+                var s = el('select', { id: fid });
+                c.options.forEach(function (o) { s.appendChild(el('option', { value: o[0] }, o[1])); });
+                box.appendChild(s);
+            } else if (c.type === 'date') {
+                box.appendChild(el('input', { type: 'date', id: fid }));
+            } else {
+                box.appendChild(el('input', { type: 'text', inputmode: 'decimal', id: fid, placeholder: c.ph || '', autocomplete: 'off' }));
+            }
+        });
+        var row = el('div', { class: 'action-row' });
+        var b = el('button', { class: 'calc-btn', type: 'button' }, 'Calculer');
+        b.onclick = function () { calculer(tool.id); };
+        var r = el('button', { class: 'reset-icon-btn', type: 'button', title: 'Réinitialiser', 'aria-label': 'Réinitialiser' }, '↺');
+        r.onclick = function () { reinit(tool.id); };
+        row.appendChild(b); row.appendChild(r); box.appendChild(row);
+        box.appendChild(el('div', { id: 'scR-' + tool.id, class: 'sc-res', role: 'status' }, 'Résultat : --'));
+        var it = el('div', { id: 'scI-' + tool.id, class: 'sc-int' }); it.style.display = 'none'; box.appendChild(it);
+        var cp = el('button', { id: 'scC-' + tool.id, class: 'photo-btn sc-copy', type: 'button' }, 'Copier le résultat');
+        cp.style.display = 'none';
+        cp.onclick = function () { if (typeof copierTexte === 'function') copierTexte('scR-' + tool.id, 'scI-' + tool.id); };
+        box.appendChild(cp);
+        box.appendChild(el('div', { class: 'sc-src' }, 'Source : ' + tool.source));
+        racine.appendChild(box);
+    });
+}
+function enregistrerOutils(OUTILS) {
+    TOOLS.forEach(function (t) {
+        OUTILS.push({ id: t.id, fr: t.fr, en: t.en, mots: t.mots, vue: 'scoresView', ancre: 'scT-' + t.id });
+    });
+}
+global.MCPRO = { TOOLS: TOOLS, calculer: calculer, reinit: reinit, construire: construire, enregistrerOutils: enregistrerOutils,
+    calc: { ckdEpi2021: ckdEpi2021, calcDfg: calcDfg, calcCha2ds2: calcCha2ds2, calcWells: calcWells, calcApgar: calcApgar, calcCalcium: calcCalcium,
+        calcTrouAnionique: calcTrouAnionique, calcQtc: calcQtc, calcPousseSeringue: calcPousseSeringue, calcHolliday: calcHolliday, calcDpa: calcDpa, calcQsofa: calcQsofa } };
+if (typeof module !== 'undefined' && module.exports) module.exports = global.MCPRO;
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+
+(function () { var r = document.getElementById('scoresView'); if (r && window.MCPRO) { MCPRO.construire(r); MCPRO.enregistrerOutils(OUTILS); } })();
+</script>
 </body>
 </html>
