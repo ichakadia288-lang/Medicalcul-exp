@@ -91,7 +91,9 @@ module.exports = async (req, res) => {
         return res.status(403).json({ error: 'Origine non autorisée.' });
     }
 
-    const premium = verifier(req.headers['x-premium-code']).valide;
+    // Tant que PREMIUM_ACTIF n'est pas « 1 » dans Vercel, tout le monde a accès à tout (images/PDF compris), avec les limites par minute/heure.
+    const PREMIUM_ACTIF = process.env.PREMIUM_ACTIF === '1';
+    const premium = !PREMIUM_ACTIF || verifier(req.headers['x-premium-code']).valide;
     const corps = req.body || {};
     if (corps.file && !premium) {
         return res.status(402).json({ error: "L'analyse d'images et de PDF est réservée au Premium. Activez un code dans Paramètres > Premium." });
