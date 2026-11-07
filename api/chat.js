@@ -69,6 +69,7 @@ const SYSTEM_FR = `Tu es l'assistant de MediCalcul Express, une application dest
 - Pour une image ou un document (bilan biologique, radio, ECG, ordonnance...) : décris ce que tu observes, signale les valeurs ou éléments notables et les points à vérifier. Tu ne poses pas de diagnostic définitif et tu précises que l'interprétation finale revient à un professionnel de santé qualifié.
 - Ne donne jamais une dose à administrer à un patient précis comme une consigne : renvoie au protocole local, au RCP du médicament ou à la prescription médicale.
 - Si la situation évoque une urgence vitale, recommande d'appeler immédiatement les secours.
+- Mets en forme avec du Markdown simple : **gras** pour les points clés, listes à puces, tableaux courts si utile.
 - Si tu n'es pas sûr, dis-le.`;
 
 module.exports = async (req, res) => {
@@ -129,6 +130,21 @@ module.exports = async (req, res) => {
     }
     parts.push({ text: texte || 'Analyse ce document médical.' });
 
+    // Historique de la conversation (texte seulement, 8 messages maximum) pour que l'assistant garde le fil
+    const contents = [];
+    (Array.isArray(corps.history) ? corps.history.slice(-8) : []).forEach((h) => {
+        if (!h || typeof h.text !== 'string') return;
+        const role = h.role === 'model' ? 'model' : 'user';
+        const text = h.text.trim().slice(0, 1500);
+        if (!text) return;
+        const dernier = contents[contents.length - 1];
+        if (dernier && dernier.role === role) dernier.parts[0].text += '\n' + text;
+        else contents.push({ role, parts: [{ text }] });
+    });
+    while (contents.length && contents[0].role !== 'user') contents.shift();
+    if (contents.length && contents[contents.length - 1].role === 'user') contents.pop();
+    contents.push({ role: 'user', parts });
+
     const modele = process.env.GEMINI_MODEL || 'gemini-flash-latest';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modele)}:generateContent`;
 
@@ -138,8 +154,8 @@ module.exports = async (req, res) => {
             headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
             body: JSON.stringify({
                 systemInstruction: { parts: [{ text: SYSTEM_FR + (LANGUES[lang] && lang !== 'fr' ? '\nThe user interface is in ' + LANGUES[lang] + ': answer in ' + LANGUES[lang] + '.' : '') }] },
-                contents: [{ role: 'user', parts }],
-                generationConfig: { maxOutputTokens: 800, temperature: 0.4 }
+                contents,
+                generationConfig: { maxOutputTokens: 1200, temperature: 0.4 }
             })
         });
 
